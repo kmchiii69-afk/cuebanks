@@ -1,0 +1,319 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #06070A;
+  --bg-1: #0B0C10;
+  --bg-2: #11131A;
+  --bg-3: #181B24;
+  --line: #1F2330;
+  --line-2: #2A2F3D;
+  --muted: #5B6075;
+  --ash: #8C92A6;
+  --bone: #F2F0E6;
+  --acid: #BFFA46;
+  --acid-d: #9FDA20;
+  --pink: #FF2DAB;
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-body: "Geist", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--bone); }
+body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+em { font-style: italic; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
+::selection { background: var(--acid); color: var(--bg); }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+.pulse { animation: pulse 1.8s ease-in-out infinite; }
+
+@keyframes glow-acid {
+  0%, 100% { text-shadow: 0 0 36px rgba(191,250,70,0.35); }
+  50%       { text-shadow: 0 0 64px rgba(191,250,70,0.55); }
+}
+.glow-acid { animation: glow-acid 4s ease-in-out infinite; }
+
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes lbIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes rrFade {
+  from { opacity: 0; transform: translateX(12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 26px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  background: var(--acid);
+  color: var(--bg);
+  border: 0;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px var(--acid), 0 0 32px rgba(191,250,70,0.20);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+  cursor: pointer;
+}
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 1px var(--acid), 0 0 48px rgba(191,250,70,0.36);
+}
+.btn-lg { padding: 22px 36px; font-size: 14px; letter-spacing: 0.16em; }
+.btn-ghost {
+  background: transparent;
+  color: var(--bone);
+  box-shadow: 0 0 0 1px var(--line-2);
+}
+.btn-ghost:hover { box-shadow: 0 0 0 1px var(--acid); color: var(--acid); }
+
+/* DayVsSwing slider thumb */
+input[type="range"].qc-dv-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--line-2);
+  border-radius: 2px;
+  outline: none;
+}
+/* Slow "I'm interactive" ripple on the slider thumb. The outer ring
+   expands + fades every 2.4s so a first-time user immediately reads it as
+   draggable. Stops on hover/focus/active so it doesn't fight with the
+   user once they're actually using it. */
+@keyframes qc-slider-pulse {
+  0%   { box-shadow: 0 0 0 3px rgba(191,250,70,0.30), 0 0 0 0   rgba(191,250,70,0.55); }
+  70%  { box-shadow: 0 0 0 3px rgba(191,250,70,0.30), 0 0 0 16px rgba(191,250,70,0); }
+  100% { box-shadow: 0 0 0 3px rgba(191,250,70,0.30), 0 0 0 0   rgba(191,250,70,0); }
+}
+
+input[type="range"].qc-dv-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: var(--acid);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 0 3px rgba(191,250,70,0.25);
+  animation: qc-slider-pulse 2.4s ease-out infinite;
+}
+input[type="range"].qc-dv-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: var(--acid);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 0 3px rgba(191,250,70,0.25);
+  animation: qc-slider-pulse 2.4s ease-out infinite;
+}
+/* Stop the pulse once the user engages — the ripple is a hint, not a
+   permanent decoration. */
+input[type="range"].qc-dv-slider:hover::-webkit-slider-thumb,
+input[type="range"].qc-dv-slider:active::-webkit-slider-thumb,
+input[type="range"].qc-dv-slider:focus::-webkit-slider-thumb {
+  animation: none;
+}
+input[type="range"].qc-dv-slider:hover::-moz-range-thumb,
+input[type="range"].qc-dv-slider:active::-moz-range-thumb,
+input[type="range"].qc-dv-slider:focus::-moz-range-thumb {
+  animation: none;
+}
+
+@media (max-width: 1100px) and (min-width: 901px) {
+  [style*="grid-template-columns: repeat(3, 1fr)"],
+  [style*="grid-template-columns:repeat(3, 1fr)"] {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 14px !important;
+  }
+  [style*="grid-template-columns: repeat(4, 1fr)"],
+  [style*="grid-template-columns:repeat(4, 1fr)"] {
+    grid-template-columns: 1fr 1fr 1fr !important;
+  }
+}
+
+/* Mobile pass — 900px breakpoint.
+   React/Next inline-style serialization removes the space after the colon
+   (`font-size:60px`), so every attribute selector below matches both forms. */
+@media (max-width: 900px) {
+  [style*="grid-template-columns: 1fr 1fr"],
+  [style*="grid-template-columns:1fr 1fr"],
+  [style*="grid-template-columns: repeat(2, 1fr)"],
+  [style*="grid-template-columns:repeat(2, 1fr)"],
+  [style*="grid-template-columns: 0.85fr 1.15fr"],
+  [style*="grid-template-columns:0.85fr 1.15fr"],
+  [style*="grid-template-columns: 1.15fr 0.85fr"],
+  [style*="grid-template-columns:1.15fr 0.85fr"],
+  [style*="grid-template-columns: 1.4fr 1fr"],
+  [style*="grid-template-columns:1.4fr 1fr"],
+  [style*="grid-template-columns: 1.5fr 1fr"],
+  [style*="grid-template-columns:1.5fr 1fr"],
+  [style*="grid-template-columns: 1.1fr 1fr"],
+  [style*="grid-template-columns:1.1fr 1fr"],
+  [style*="grid-template-columns: 1fr 1.5fr"],
+  [style*="grid-template-columns:1fr 1.5fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+  }
+  [style*="grid-template-columns: repeat(3, 1fr)"],
+  [style*="grid-template-columns:repeat(3, 1fr)"],
+  [style*="grid-template-columns: 1fr 1fr 1fr"],
+  [style*="grid-template-columns:1fr 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+  [style*="grid-template-columns: repeat(4, 1fr)"],
+  [style*="grid-template-columns:repeat(4, 1fr)"] {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 14px !important;
+  }
+  [style*="font-size: 132px"], [style*="font-size:132px"] { font-size: 56px !important; line-height: 0.96 !important; }
+  [style*="font-size: 120px"], [style*="font-size:120px"] { font-size: 52px !important; line-height: 0.96 !important; }
+  [style*="font-size: 108px"], [style*="font-size:108px"] { font-size: 48px !important; line-height: 0.96 !important; }
+  [style*="font-size: 104px"], [style*="font-size:104px"] { font-size: 46px !important; line-height: 0.96 !important; }
+  [style*="font-size: 96px"],  [style*="font-size:96px"]  { font-size: 44px !important; line-height: 0.98 !important; }
+  [style*="font-size: 88px"],  [style*="font-size:88px"]  { font-size: 40px !important; }
+  [style*="font-size: 84px"],  [style*="font-size:84px"]  { font-size: 38px !important; }
+  [style*="font-size: 80px"],  [style*="font-size:80px"]  { font-size: 37px !important; }
+  [style*="font-size: 76px"],  [style*="font-size:76px"]  { font-size: 36px !important; }
+  [style*="font-size: 72px"],  [style*="font-size:72px"]  { font-size: 34px !important; }
+  [style*="font-size: 68px"],  [style*="font-size:68px"]  { font-size: 32px !important; }
+  [style*="font-size: 64px"],  [style*="font-size:64px"]  { font-size: 30px !important; }
+  [style*="font-size: 60px"],  [style*="font-size:60px"]  { font-size: 28px !important; }
+  [style*="font-size: 56px"],  [style*="font-size:56px"]  { font-size: 26px !important; }
+  [style*="font-size: 52px"],  [style*="font-size:52px"]  { font-size: 26px !important; }
+  [style*="font-size: 48px"],  [style*="font-size:48px"]  { font-size: 24px !important; }
+  [style*="font-size: 44px"],  [style*="font-size:44px"]  { font-size: 22px !important; }
+  [style*="font-size: 40px"],  [style*="font-size:40px"]  { font-size: 22px !important; }
+  [style*="font-size: 36px"],  [style*="font-size:36px"]  { font-size: 22px !important; }
+  [style*="font-size: 32px"],  [style*="font-size:32px"]  { font-size: 22px !important; }
+  [style*="font-size: 30px"],  [style*="font-size:30px"]  { font-size: 19px !important; }
+  [style*="font-size: 28px"],  [style*="font-size:28px"]  { font-size: 18px !important; }
+  [style*="column-count: 3"], [style*="column-count:3"] { column-count: 1 !important; }
+  [style*="column-count: 2"], [style*="column-count:2"] { column-count: 1 !important; }
+  [style*="grid-template-columns: 1fr 64px 1fr"],
+  [style*="grid-template-columns:1fr 64px 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+  }
+  [style*="grid-template-columns: auto 1fr auto"],
+  [style*="grid-template-columns:auto 1fr auto"] {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+  }
+  [style*="grid-template-columns: 1.05fr 0.95fr"],
+  [style*="grid-template-columns:1.05fr 0.95fr"],
+  [style*="grid-template-columns: 1.1fr 0.9fr"],
+  [style*="grid-template-columns:1.1fr 0.9fr"],
+  [style*="grid-template-columns: 0.9fr 1.1fr"],
+  [style*="grid-template-columns:0.9fr 1.1fr"],
+  [style*="grid-template-columns: 1.2fr 0.8fr"],
+  [style*="grid-template-columns:1.2fr 0.8fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+  }
+  section[style*="padding: 140px"],
+  section[style*="padding:140px"],
+  section[style*="padding: 120px"],
+  section[style*="padding:120px"] {
+    padding-top: 64px !important;
+    padding-bottom: 64px !important;
+  }
+}
+@media (max-width: 560px) {
+  [style*="grid-template-columns: repeat(4, 1fr)"],
+  [style*="grid-template-columns:repeat(4, 1fr)"] {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+
+/* Utility: hide an element on narrow viewports.
+   Applied to non-essential top-bar meta text so the Logo never gets
+   crushed/wrapped on phones. */
+@media (max-width: 640px) {
+  .qc-hide-mobile { display: none !important; }
+  /* Header rows on Page 1 + legal pages use space-between flex layouts; allow them to wrap if a stray child can't be hidden. */
+  header[style*="justify-content: space-between"],
+  header[style*="justify-content:space-between"] {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+}
+
+/* ─── react-phone-number-input brand overrides ─── */
+.qc-phone-wrap .PhoneInput {
+  display: flex;
+  align-items: stretch;
+  background: var(--bg);
+  border: 1px solid var(--line-2);
+  border-radius: 0;
+  overflow: hidden;
+}
+.qc-phone-wrap .PhoneInputCountry {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border-right: 1px solid var(--line-2);
+  background: var(--bg-1);
+  cursor: pointer;
+}
+.qc-phone-wrap .PhoneInputCountryIcon {
+  width: 22px;
+  height: 16px;
+  box-shadow: none;
+  background: transparent;
+}
+.qc-phone-wrap .PhoneInputCountrySelectArrow {
+  border-color: var(--ash);
+  opacity: 1;
+}
+.qc-phone-wrap .PhoneInputCountrySelect {
+  /* Hidden native select — clicking the country chip opens it */
+  color: var(--bone);
+  background: var(--bg-1);
+}
+.qc-phone-wrap .PhoneInputInput {
+  flex: 1;
+  background: var(--bg);
+  border: 0;
+  color: var(--bone);
+  padding: 16px 18px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  outline: none;
+}
+.qc-phone-wrap .PhoneInputInput::placeholder {
+  color: var(--ash);
+  opacity: 0.55;
+}
+.qc-phone-wrap .PhoneInput--focus {
+  border-color: var(--acid);
+  box-shadow: 0 0 0 1px var(--acid);
+}
