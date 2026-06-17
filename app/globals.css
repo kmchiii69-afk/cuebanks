@@ -1,21 +1,25 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #06070A;
-  --bg-1: #0B0C10;
-  --bg-2: #11131A;
-  --bg-3: #181B24;
-  --line: #1F2330;
-  --line-2: #2A2F3D;
-  --muted: #5B6075;
-  --ash: #8C92A6;
-  --bone: #F2F0E6;
-  --acid: #BFFA46;
-  --acid-d: #9FDA20;
-  --pink: #FF2DAB;
-  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
-  --font-body: "Geist", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  /* Wall Street Academy theme — remapped at the token level so every page that
+     consumes these vars (call path, wolfpack, legal, shared components) adopts
+     the WSA palette/type without code changes. /analytics keeps its own JARVIS
+     palette via the route-scoped jarvis.css :root. */
+  --bg: #000000;
+  --bg-1: #0c1018;
+  --bg-2: #111827;
+  --bg-3: #181f2b;
+  --line: #1a2230;
+  --line-2: #2b333f;
+  --muted: #707070;
+  --ash: #9aa3b2;
+  --bone: #ffffff;
+  --acid: #f9ff3c;
+  --acid-d: #d8de1f;
+  --pink: #e93d3d;
+  --font-display: "Montserrat", system-ui, sans-serif;
+  --font-body: "Open Sans", system-ui, sans-serif;
+  --font-mono: "Montserrat", ui-monospace, monospace;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -33,8 +37,8 @@ button { font-family: inherit; cursor: pointer; }
 .pulse { animation: pulse 1.8s ease-in-out infinite; }
 
 @keyframes glow-acid {
-  0%, 100% { text-shadow: 0 0 36px rgba(191,250,70,0.35); }
-  50%       { text-shadow: 0 0 64px rgba(191,250,70,0.55); }
+  0%, 100% { text-shadow: 0 0 36px rgba(249,255,60,0.35); }
+  50%       { text-shadow: 0 0 64px rgba(249,255,60,0.55); }
 }
 .glow-acid { animation: glow-acid 4s ease-in-out infinite; }
 
@@ -72,16 +76,16 @@ button { font-family: inherit; cursor: pointer; }
   text-transform: uppercase;
   white-space: nowrap;
   background: var(--acid);
-  color: var(--bg);
+  color: #000;
   border: 0;
-  border-radius: 2px;
-  box-shadow: 0 0 0 1px var(--acid), 0 0 32px rgba(191,250,70,0.20);
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px var(--acid), 0 8px 24px rgba(249,255,60,0.18);
   transition: transform 160ms ease, box-shadow 160ms ease;
   cursor: pointer;
 }
 .btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 0 0 1px var(--acid), 0 0 48px rgba(191,250,70,0.36);
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 1px var(--acid), 0 12px 34px rgba(249,255,60,0.30);
 }
 .btn-lg { padding: 22px 36px; font-size: 14px; letter-spacing: 0.16em; }
 .btn-ghost {
@@ -106,9 +110,9 @@ input[type="range"].qc-dv-slider {
    draggable. Stops on hover/focus/active so it doesn't fight with the
    user once they're actually using it. */
 @keyframes qc-slider-pulse {
-  0%   { box-shadow: 0 0 0 3px rgba(191,250,70,0.30), 0 0 0 0   rgba(191,250,70,0.55); }
-  70%  { box-shadow: 0 0 0 3px rgba(191,250,70,0.30), 0 0 0 16px rgba(191,250,70,0); }
-  100% { box-shadow: 0 0 0 3px rgba(191,250,70,0.30), 0 0 0 0   rgba(191,250,70,0); }
+  0%   { box-shadow: 0 0 0 3px rgba(249,255,60,0.30), 0 0 0 0   rgba(249,255,60,0.55); }
+  70%  { box-shadow: 0 0 0 3px rgba(249,255,60,0.30), 0 0 0 16px rgba(249,255,60,0); }
+  100% { box-shadow: 0 0 0 3px rgba(249,255,60,0.30), 0 0 0 0   rgba(249,255,60,0); }
 }
 
 input[type="range"].qc-dv-slider::-webkit-slider-thumb {
@@ -119,7 +123,7 @@ input[type="range"].qc-dv-slider::-webkit-slider-thumb {
   background: var(--acid);
   border-radius: 50%;
   cursor: pointer;
-  box-shadow: 0 0 0 3px rgba(191,250,70,0.25);
+  box-shadow: 0 0 0 3px rgba(249,255,60,0.25);
   animation: qc-slider-pulse 2.4s ease-out infinite;
 }
 input[type="range"].qc-dv-slider::-moz-range-thumb {
@@ -129,7 +133,7 @@ input[type="range"].qc-dv-slider::-moz-range-thumb {
   border-radius: 50%;
   cursor: pointer;
   border: none;
-  box-shadow: 0 0 0 3px rgba(191,250,70,0.25);
+  box-shadow: 0 0 0 3px rgba(249,255,60,0.25);
   animation: qc-slider-pulse 2.4s ease-out infinite;
 }
 /* Stop the pulse once the user engages — the ripple is a hint, not a

@@ -24,12 +24,14 @@ export function useCountUp(target: number, dur = 1100, start = true) {
 
 export function QCLMark({ size = 26 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 100 100" aria-hidden="true">
-      <path d="M30 38 C45 38 50 44 64 46 L64 52 C50 52 45 56 30 60 Z" fill="#BFFA46" opacity="0.55" />
-      <rect x="27" y="34" width="4" height="30" fill="#BFFA46" />
-      <rect x="63" y="42" width="4" height="13" fill="#8FD0FF" />
-      <circle cx="74" cy="48" r="3" fill="#BFFA46" />
-    </svg>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src="/wsa/home/1.png"
+      alt="Wall Street Academy"
+      width={size}
+      height={size}
+      style={{ borderRadius: "50%", objectFit: "cover", display: "block" }}
+    />
   );
 }
 

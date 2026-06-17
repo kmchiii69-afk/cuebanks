@@ -134,7 +134,7 @@ export default function LeadModal({
           maxWidth: 560,
           background: "var(--bg-1)",
           border: "1px solid var(--acid)",
-          boxShadow: "0 30px 80px rgba(0,0,0,0.6), 0 0 80px rgba(191,250,70,0.15)",
+          boxShadow: "0 30px 80px rgba(0,0,0,0.6), 0 0 80px rgba(249,255,60,0.15)",
           padding: "48px 44px 40px",
           position: "relative",
           maxHeight: "calc(100vh - 48px)",
@@ -270,10 +270,10 @@ export default function LeadModal({
               borderRadius: 2,
               cursor: submitting ? "wait" : "pointer",
               opacity: submitting ? 0.6 : 1,
-              boxShadow: "0 0 0 1px var(--acid), 0 0 32px rgba(191,250,70,0.25)",
+              boxShadow: "0 0 0 1px var(--acid), 0 0 32px rgba(249,255,60,0.25)",
             }}
           >
-            {submitting ? "Securing your seat..." : "Join Quantum Cipher →"}
+            {submitting ? "Securing your seat..." : "Join Wall Street Academy →"}
           </button>
         </form>
 

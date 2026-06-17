@@ -62,7 +62,7 @@ export default function CycleSection() {
             position: "absolute",
             inset: 0,
             pointerEvents: "none",
-            background: "radial-gradient(900px 400px at 50% 50%, rgba(191,250,70,0.06), transparent 60%)",
+            background: "radial-gradient(900px 400px at 50% 50%, rgba(249,255,60,0.06), transparent 60%)",
           }}
         />
         <div style={{ position: "relative" }}>
@@ -196,7 +196,7 @@ export default function CycleSection() {
           lineHeight: 1.4,
         }}
       >
-        Cameron walks through every phase live inside Quantum Cipher — with real, current examples from the crypto market.
+        Cue Banks walks through every phase live inside Wall Street Academy — with real, current examples from the crypto market.
       </p>
     </Section>
   );

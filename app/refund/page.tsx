@@ -1,7 +1,7 @@
 import LegalShell, { H2, P, UL, LI, Callout } from "@/components/legal/LegalShell";
 
 export const metadata = {
-  title: "Refund Policy · Quantum Cipher Lab",
+  title: "Refund Policy · Wall Street Academy",
   description: "Refund eligibility, conditions, and how to request a refund.",
 };
 
@@ -9,7 +9,7 @@ export default function RefundPage() {
   return (
     <LegalShell kicker="Legal" title="Refund Policy" effectiveDate="May 18, 2026">
       <P>
-        This Refund Policy explains when and how you may request a refund for products and services purchased from <strong style={{ color: "var(--bone)" }}>iknkfx inc</strong>, operating under the brand <strong style={{ color: "var(--bone)" }}>Quantum Cipher Lab</strong>. By purchasing any product or service from us, you agree to this policy.
+        This Refund Policy explains when and how you may request a refund for products and services purchased from <strong style={{ color: "var(--bone)" }}>iknkfx inc</strong>, operating under the brand <strong style={{ color: "var(--bone)" }}>Wall Street Academy</strong>. By purchasing any product or service from us, you agree to this policy.
       </P>
 
       <Callout>

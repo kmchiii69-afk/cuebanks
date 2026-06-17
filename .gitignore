@@ -1,2 +1,20 @@
-.vercel
+# dependencies
 node_modules
+
+# next.js build output
+/.next/
+/out/
+/build
+
+# typescript
+*.tsbuildinfo
+
+# vercel
+.vercel
+
+# local env (secrets)
+.env
+.env*.local
+
+# os
+.DS_Store

@@ -4,7 +4,7 @@ import PostHogProvider from "@/components/PostHogProvider";
 import SegMetricsPixel from "@/components/SegMetricsPixel";
 
 export const metadata: Metadata = {
-  title: "Quantum Cipher — Swing Trade One Day A Week",
+  title: "Wall Street Academy — Swing Trade One Day A Week",
   description: "The nine-phase market cycle system used by 7-figure crypto swing traders.",
 };
 
@@ -30,6 +30,12 @@ export default function RootLayout({
         <link rel="preconnect" href="https://vimeo.com" />
         <link
           href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..600&display=swap"
+          rel="stylesheet"
+        />
+        {/* Wall Street Academy brand fonts — used by the WSA funnels and the
+            re-skinned funnel pages (H1/body = Open Sans, H2/headings = Montserrat). */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Open+Sans:wght@400;600;700&display=swap"
           rel="stylesheet"
         />
       </head>

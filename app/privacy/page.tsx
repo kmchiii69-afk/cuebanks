@@ -1,7 +1,7 @@
 import LegalShell, { H2, H3, P, UL, LI, Callout } from "@/components/legal/LegalShell";
 
 export const metadata = {
-  title: "Privacy Policy · Quantum Cipher Lab",
+  title: "Privacy Policy · Wall Street Academy",
   description: "How iknkfx inc collects, uses, and protects your personal information.",
 };
 
@@ -9,7 +9,7 @@ export default function PrivacyPage() {
   return (
     <LegalShell kicker="Legal" title="Privacy Policy" effectiveDate="May 18, 2026">
       <P>
-        This Privacy Policy explains how <strong style={{ color: "var(--bone)" }}>iknkfx inc</strong> (&ldquo;Company,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;), operating under the brand <strong style={{ color: "var(--bone)" }}>Quantum Cipher Lab</strong>, collects, uses, shares, and protects personal information you provide through quantumcipherlab.com and any related domains, applications, or services (collectively, the &ldquo;Services&rdquo;).
+        This Privacy Policy explains how <strong style={{ color: "var(--bone)" }}>iknkfx inc</strong> (&ldquo;Company,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;), operating under the brand <strong style={{ color: "var(--bone)" }}>Wall Street Academy</strong>, collects, uses, shares, and protects personal information you provide through quantumcipherlab.com and any related domains, applications, or services (collectively, the &ldquo;Services&rdquo;).
       </P>
       <P>
         By using the Services, you agree to the practices described here. If you do not agree, do not use the Services.

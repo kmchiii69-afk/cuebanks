@@ -1,8 +1,8 @@
 import LegalShell, { H2, P, UL, LI, Callout } from "@/components/legal/LegalShell";
 
 export const metadata = {
-  title: "Disclaimer · Quantum Cipher Lab",
-  description: "Risk disclosure for trading education and Quantum Cipher Lab content.",
+  title: "Disclaimer · Wall Street Academy",
+  description: "Risk disclosure for trading education and Wall Street Academy content.",
 };
 
 export default function DisclaimerPage() {
@@ -14,7 +14,7 @@ export default function DisclaimerPage() {
 
       <H2>1. Educational Content Only</H2>
       <P>
-        All content published by <strong style={{ color: "var(--bone)" }}>iknkfx inc</strong>, operating under the brand <strong style={{ color: "var(--bone)" }}>Quantum Cipher Lab</strong> — including but not limited to websites, courses, videos, livestreams, podcasts, written materials, software, indicators, scripts, frameworks, social media posts, and one-on-one coaching — is provided strictly for <strong style={{ color: "var(--bone)" }}>educational and informational purposes</strong>.
+        All content published by <strong style={{ color: "var(--bone)" }}>iknkfx inc</strong>, operating under the brand <strong style={{ color: "var(--bone)" }}>Wall Street Academy</strong> — including but not limited to websites, courses, videos, livestreams, podcasts, written materials, software, indicators, scripts, frameworks, social media posts, and one-on-one coaching — is provided strictly for <strong style={{ color: "var(--bone)" }}>educational and informational purposes</strong>.
       </P>
       <P>
         Nothing we publish should be construed as personalized investment advice or a recommendation to buy, sell, or hold any financial instrument.

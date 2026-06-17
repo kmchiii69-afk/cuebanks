@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Section } from "@/components/shared/H";
 
 const RR_SLIDES = [
-  { src: "uploads/proof/rr-07.jpg", date: "Jul 11, 2025", amount: "+$1.59M", note: "One month into studying with Cameron" },
+  { src: "uploads/proof/rr-07.jpg", date: "Jul 11, 2025", amount: "+$1.59M", note: "One month into studying with Cue Banks" },
   { src: "uploads/proof/rr-05.jpg", date: "Aug 03, 2025", amount: "+$201K",  note: "UNI short · single trade" },
   { src: "uploads/proof/rr-06.jpg", date: "Aug 03, 2025", amount: "Mindset", note: "\"Losing money in the markets is a choice.\"" },
   { src: "uploads/proof/rr-04.jpg", date: "Aug 09, 2025", amount: "+$61K",   note: "INJ long · 4-day swing" },
@@ -90,7 +90,7 @@ export default function RickRossSpotlight() {
             right: 0,
             width: 700,
             height: "100%",
-            background: "radial-gradient(circle at 80% 50%, rgba(191,250,70,0.12), transparent 60%)",
+            background: "radial-gradient(circle at 80% 50%, rgba(249,255,60,0.12), transparent 60%)",
             pointerEvents: "none",
           }}
         />
@@ -259,7 +259,7 @@ export default function RickRossSpotlight() {
               color: "var(--acid)",
               letterSpacing: "-0.05em",
               lineHeight: 0.88,
-              textShadow: "0 0 48px rgba(191,250,70,0.4)",
+              textShadow: "0 0 48px rgba(249,255,60,0.4)",
               marginBottom: 14,
             }}
           >
@@ -280,7 +280,7 @@ export default function RickRossSpotlight() {
               letterSpacing: "-0.01em",
             }}
           >
-            &ldquo;$3,160,296.84 profit from $50K. This isn&rsquo;t just a number — it&rsquo;s the result of discipline, execution, and following the Quantum Cipher strategy to the letter. Every setup, every trade, every lesson — it all added up. All hail @cameron.fous. Let the results speak for themselves.&rdquo;
+            &ldquo;$3,160,296.84 profit from $50K. This isn&rsquo;t just a number — it&rsquo;s the result of discipline, execution, and following the Wall Street Academy strategy to the letter. Every setup, every trade, every lesson — it all added up. All hail @cameron.fous. Let the results speak for themselves.&rdquo;
           </p>
         </div>
       </div>

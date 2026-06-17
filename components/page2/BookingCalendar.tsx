@@ -8,9 +8,9 @@ type SlotsMap = Record<string, Slot[]>;
 
 // Calendly iframe theme — matches QC brand, hides all branding + avatar
 const CALENDLY_THEME = {
-  background_color: "06070A",
-  text_color: "F2F0E6",
-  primary_color: "BFFA46",
+  background_color: "000000",
+  text_color: "ffffff",
+  primary_color: "f9ff3c",
   hide_event_type_details: "1",
   hide_landing_page_details: "1",
 };
@@ -20,6 +20,12 @@ function buildConfirmUrl(schedulingUrl: string, name: string, email: string): st
   if (name) url.searchParams.set("name", name);
   if (email) url.searchParams.set("email", email);
   Object.entries(CALENDLY_THEME).forEach(([k, v]) => url.searchParams.set(k, v));
+  // embed_domain + embed_type make Calendly emit postMessage events (incl.
+  // calendly.event_scheduled) to the parent window so we can redirect on booking.
+  if (typeof window !== "undefined") {
+    url.searchParams.set("embed_domain", window.location.hostname);
+    url.searchParams.set("embed_type", "Inline");
+  }
   return url.toString().replace(/\+/g, "%20");
 }
 
@@ -107,6 +113,21 @@ export default function BookingCalendar({
 
   useEffect(() => { fetchSlots(timezone); }, [timezone, fetchSlots]);
 
+  // When Calendly confirms the booking inside the iframe, land the visitor on
+  // the WSA confirmation page. (Backend booking handling is unchanged — Calendly
+  // still fires its webhook → /api/booked independently.)
+  useEffect(() => {
+    function onMsg(e: MessageEvent) {
+      const data = e.data as { event?: string } | null;
+      if (data && typeof data === "object" && data.event === "calendly.event_scheduled") {
+        posthog.capture("book_scheduled");
+        window.location.href = "/book/confirm";
+      }
+    }
+    window.addEventListener("message", onMsg);
+    return () => window.removeEventListener("message", onMsg);
+  }, []);
+
   const todaySlots = selectedDate ? (slotsMap[selectedDate] || []) : [];
 
   // ── Confirmation iframe view ──────────────────────────────────────
@@ -189,14 +210,14 @@ export default function BookingCalendar({
                   disabled={!hasSlots}
                   style={{
                     padding: "14px 4px",
-                    background: sel ? "rgba(191,250,70,0.08)" : "var(--bg-1)",
+                    background: sel ? "rgba(249,255,60,0.08)" : "var(--bg-1)",
                     border: `1px solid ${sel ? "var(--acid)" : "var(--line)"}`,
                     color: hasSlots ? (sel ? "var(--acid)" : "var(--bone)") : "var(--muted)",
                     cursor: hasSlots ? "pointer" : "default",
                     borderRadius: 6,
                     textAlign: "center",
                     transition: "all 150ms ease",
-                    boxShadow: sel ? "0 0 0 1px var(--acid), 0 0 18px rgba(191,250,70,0.10)" : "none",
+                    boxShadow: sel ? "0 0 0 1px var(--acid), 0 0 18px rgba(249,255,60,0.10)" : "none",
                     opacity: hasSlots ? 1 : 0.35,
                   }}
                 >
@@ -292,7 +313,7 @@ export default function BookingCalendar({
                       const b = e.currentTarget as HTMLButtonElement;
                       b.style.borderColor = "var(--acid)";
                       b.style.color = "var(--acid)";
-                      b.style.background = "rgba(191,250,70,0.06)";
+                      b.style.background = "rgba(249,255,60,0.06)";
                     }}
                     onMouseLeave={(e) => {
                       const b = e.currentTarget as HTMLButtonElement;

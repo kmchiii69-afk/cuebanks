@@ -4,7 +4,7 @@ import PasswordGate from "./PasswordGate";
 import Dashboard from "./Dashboard";
 import "./jarvis.css";
 
-export const metadata = { title: "Analytics · Quantum Cipher" };
+export const metadata = { title: "Analytics · Wall Street Academy" };
 
 function isAuthed(token: string | undefined): boolean {
   const password = (process.env.ANALYTICS_PASSWORD || "").trim();

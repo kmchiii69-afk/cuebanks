@@ -77,8 +77,8 @@ export default function VideoThumbnail({ onClick }: { onClick: () => void }) {
             alignItems: "center",
             justifyContent: "center",
             boxShadow: hovered
-              ? "0 0 0 1px var(--acid), 0 0 96px rgba(191,250,70,0.55)"
-              : "0 0 0 1px var(--acid), 0 0 48px rgba(191,250,70,0.30)",
+              ? "0 0 0 1px var(--acid), 0 0 96px rgba(249,255,60,0.55)"
+              : "0 0 0 1px var(--acid), 0 0 48px rgba(249,255,60,0.30)",
             transform: hovered ? "scale(1.04)" : "scale(1)",
             transition: "transform 200ms ease, box-shadow 200ms ease",
           }}

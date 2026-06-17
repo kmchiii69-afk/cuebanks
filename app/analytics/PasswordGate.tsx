@@ -30,46 +30,43 @@ export default function PasswordGate() {
     <div
       style={{
         minHeight: "100vh",
-        background: "#06070A",
+        background: "#000000",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         padding: 24,
-        fontFamily: "'JetBrains Mono', monospace",
+        fontFamily: "'Open Sans', sans-serif",
       }}
     >
       <div style={{ width: "100%", maxWidth: 400, textAlign: "center" }}>
-        {/* Logo mark */}
-        <svg
-          width="36"
-          height="36"
-          viewBox="0 0 28 28"
-          fill="none"
-          style={{ marginBottom: 32 }}
-        >
-          <rect x="0.5" y="0.5" width="27" height="27" stroke="#BFFA46" strokeWidth="1" />
-          <rect x="7" y="7" width="14" height="14" fill="#BFFA46" />
-          <rect x="11" y="11" width="6" height="6" fill="#06070A" />
-        </svg>
+        {/* WSA badge */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/wsa/home/1.png"
+          alt="Wall Street Academy"
+          style={{ height: 72, width: 72, borderRadius: "50%", objectFit: "cover", display: "block", margin: "0 auto 28px" }}
+        />
 
         <div
           style={{
-            fontSize: 10,
-            fontWeight: 700,
+            fontFamily: "'Montserrat', sans-serif",
+            fontSize: 11,
+            fontWeight: 800,
             letterSpacing: "0.28em",
-            color: "#BFFA46",
+            color: "#f9ff3c",
             textTransform: "uppercase",
             marginBottom: 12,
           }}
         >
-          · Quantum Cipher ·
+          · Wall Street Academy ·
         </div>
         <div
           style={{
+            fontFamily: "'Montserrat', sans-serif",
             fontSize: 10,
-            fontWeight: 600,
+            fontWeight: 700,
             letterSpacing: "0.22em",
-            color: "#6B7280",
+            color: "#707070",
             textTransform: "uppercase",
             marginBottom: 40,
           }}
@@ -87,33 +84,23 @@ export default function PasswordGate() {
             required
             style={{
               width: "100%",
-              background: "#0D0E12",
-              border: "1px solid #1E2028",
-              borderRadius: 0,
-              color: "#F2F0E6",
+              background: "#0c1018",
+              border: "1px solid #2b333f",
+              borderRadius: 8,
+              color: "#ffffff",
               padding: "16px 20px",
-              fontFamily: "'JetBrains Mono', monospace",
+              fontFamily: "'Open Sans', sans-serif",
               fontSize: 14,
-              letterSpacing: "0.08em",
+              letterSpacing: "0.04em",
               outline: "none",
               boxSizing: "border-box",
             }}
-            onFocus={(e) =>
-              (e.currentTarget.style.borderColor = "#BFFA46")
-            }
-            onBlur={(e) =>
-              (e.currentTarget.style.borderColor = "#1E2028")
-            }
+            onFocus={(e) => (e.currentTarget.style.borderColor = "#f9ff3c")}
+            onBlur={(e) => (e.currentTarget.style.borderColor = "#2b333f")}
           />
 
           {error && (
-            <div
-              style={{
-                fontSize: 11,
-                color: "#FF6B6B",
-                letterSpacing: "0.1em",
-              }}
-            >
+            <div style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 12, color: "#e93d3d", letterSpacing: "0.04em" }}>
               {error}
             </div>
           )}
@@ -123,12 +110,13 @@ export default function PasswordGate() {
             disabled={loading || !password}
             style={{
               padding: "16px",
-              background: loading || !password ? "#1E2028" : "#BFFA46",
+              background: loading || !password ? "#1a2230" : "#f9ff3c",
               border: 0,
-              color: loading || !password ? "#6B7280" : "#06070A",
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 11,
-              fontWeight: 700,
+              borderRadius: 8,
+              color: loading || !password ? "#707070" : "#000000",
+              fontFamily: "'Montserrat', sans-serif",
+              fontSize: 12,
+              fontWeight: 800,
               letterSpacing: "0.22em",
               textTransform: "uppercase",
               cursor: loading || !password ? "default" : "pointer",

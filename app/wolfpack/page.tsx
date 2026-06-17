@@ -48,7 +48,7 @@ function WolfLogo({ size = 26 }: { size?: number }) {
     <a href="/" style={{ display: "flex", alignItems: "center", gap: 12 }}>
       <WolfMark size={size} color="var(--acid)" />
       <span style={{ fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 600, color: "var(--bone)", letterSpacing: "-0.02em", whiteSpace: "nowrap" }}>
-        The Wolfpack <span style={{ color: "var(--ash)", fontWeight: 400 }}>· QCL</span>
+        The Wolfpack <span style={{ color: "var(--ash)", fontWeight: 400 }}>· WSA</span>
       </span>
     </a>
   );
@@ -178,7 +178,7 @@ function WolfVSL({ vimeoId }: { vimeoId: string }) {
         position: "relative",
         aspectRatio: "16/9",
         border: "1px solid var(--acid)",
-        boxShadow: "0 0 0 1px var(--acid), 0 8px 64px rgba(191,250,70,0.12)",
+        boxShadow: "0 0 0 1px var(--acid), 0 8px 64px rgba(249,255,60,0.12)",
         background: "var(--bg-2)",
         cursor: playing ? "default" : "pointer",
         overflow: "hidden",
@@ -242,7 +242,7 @@ function WolfVSL({ vimeoId }: { vimeoId: string }) {
 const RECEIPT_STATS = [
   { v: "7,000+", k: "Traders in the pack", color: "var(--acid)" },
   { v: "63", k: "Countries represented", color: "var(--bone)" },
-  { v: "21 yrs", k: "Live on the screens", color: "var(--acid)" },
+  { v: "10 yrs", k: "Live on the screens", color: "var(--acid)" },
   { v: "4.95★", k: "Across 135 Whop reviews", color: "var(--acid)" },
 ];
 
@@ -379,7 +379,7 @@ function FuruRow({ furu, wolf }: FuruRowProps) {
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", borderLeft: "1px solid var(--line)", borderRight: "1px solid var(--line)" }}>
         <ML color="var(--muted)">VS</ML>
       </div>
-      <div style={{ padding: "24px 28px", display: "flex", gap: 14, background: "rgba(191,250,70,0.04)" }}>
+      <div style={{ padding: "24px 28px", display: "flex", gap: 14, background: "rgba(249,255,60,0.04)" }}>
         <span style={{ color: "var(--acid)", fontFamily: "var(--font-mono)", fontSize: 14, flexShrink: 0, marginTop: 2 }}>✓</span>
         <p style={{ fontFamily: "var(--font-body)", fontSize: 14, lineHeight: 1.6, color: "var(--bone)", margin: 0 }}>{wolf}</p>
       </div>
@@ -737,25 +737,25 @@ function RatingHeader() {
 
 const REVIEWS = [
   { name: "Nikolay Stoev", date: "Oct 2024 · 1 month after purchase", quote: "As a member of his groups since 2021, I'm giving him a rate 10 out of 10! He's dominating every market — Crypto, Forex, Futures, CFDs, you name it. The only LEGIT trader I've stumbled across in this world of scammers." },
-  { name: "Ronny Roehrig", date: "Dec 2024 · 2 months after purchase", quote: "Cameron is a fin genius. If you don't make money here, you will not make it anywhere. His trading strategies and his results are unique. If you want to make 'wife-changing money,' this is definitively the fastest way." },
+  { name: "Ronny Roehrig", date: "Dec 2024 · 2 months after purchase", quote: "Cue Banks is a fin genius. If you don't make money here, you will not make it anywhere. His trading strategies and his results are unique. If you want to make 'wife-changing money,' this is definitively the fastest way." },
   { name: "Renars Bzezinskis", date: "Nov 2024 · 4 days after purchase", quote: "This is the only person you need to follow or learn from to learn trading and not make mistakes like the rest of the 99% of the market." },
-  { name: "Mario Fanto", date: "Oct 2024 · 21 days after purchase", quote: "The best decision I've ever made. You'll learn the best trading strategies and earn a lot of money at the same time. And with the Quantum Cipher Report you are prepared for the whole week and know what to do. Simply brilliant." },
+  { name: "Mario Fanto", date: "Oct 2024 · 21 days after purchase", quote: "The best decision I've ever made. You'll learn the best trading strategies and earn a lot of money at the same time. And with the Wall Street Academy Report you are prepared for the whole week and know what to do. Simply brilliant." },
   { name: "ShaunNZ", date: "Oct 2024 · 1 month after purchase", quote: "Look no further! This guy is the OG. Have been part of the Discord and now here for a while — best decision I've made in this space. Super engaging, unbeatable alpha, and top customer service. Money to be made $$$" },
   { name: "George G.", date: "Dec 2024 · 1 month after purchase", quote: "Number one pack, imo. 10 out of 10. Lots of the most useful info you may find. Sometimes I think he has some kind of inside info, but nope — it's just an undeniable skill. Keep running, man." },
-  { name: "supremeshot00", date: "Feb 2025 · 2 days after purchase", quote: "I have been following Cameron for 5 years. Great leader, good principles, and he respects the art of trading. Everything you've said has checked out — and I've changed my life because of this." },
+  { name: "supremeshot00", date: "Feb 2025 · 2 days after purchase", quote: "I have been following Cue Banks for 5 years. Great leader, good principles, and he respects the art of trading. Everything you've said has checked out — and I've changed my life because of this." },
   { name: "Filip Rodeš", date: "Dec 2024 · 8 days after purchase", quote: "It seems like he has a magic ball to predict the future, haha. I swear he gets at least 7 out of 10 trades right. Highly recommend." },
-  { name: "NvrPullOut", date: "Nov 2024 · 4 days after purchase", quote: "Cameron Fous is the best at teaching technical analysis and keeping you informed every step of the way. I've followed him for years on YouTube — I wish I had joined his course sooner. He is the real deal. Hands down 10 out of 10." },
+  { name: "NvrPullOut", date: "Nov 2024 · 4 days after purchase", quote: "Cue Banks is the best at teaching technical analysis and keeping you informed every step of the way. I've followed him for years on YouTube — I wish I had joined his course sooner. He is the real deal. Hands down 10 out of 10." },
   { name: "Shay McCusker", date: "Jan 2025 · 14 days after purchase", quote: "THE place to go for trading education. All the info you need and nothing you don't. Doesn't hold back with info other traders would never share. 10 stars out of 5." },
-  { name: "Kalaveti Mekemeke", date: "Nov 2024 · 16 days after purchase", quote: "Just joined last week. Subscribed to his strategy and the Quantum Cipher Report, plus the learning videos — it's been a game-changer. 10/10 compared to other sites I've tried before." },
+  { name: "Kalaveti Mekemeke", date: "Nov 2024 · 16 days after purchase", quote: "Just joined last week. Subscribed to his strategy and the Wall Street Academy Report, plus the learning videos — it's been a game-changer. 10/10 compared to other sites I've tried before." },
   { name: "Andre Freire", date: "Dec 2024 · 1 month after purchase", quote: "Best trading program. Clean analysis, simplistic, and straightforward. Fantastic insights, great community. If you are considering entering crypto or trading in general, I highly recommend signing up." },
-  { name: "djordje radulovic", date: "Dec 2024 · 12 days after purchase", quote: "Cameron's approach to trading and his approach to teaching is second to none. Such a straightforward dude — tells it how it is, always. Transparent about everything. Not some bullshit influencer posting Lambo bullshit and multi-zillion trades." },
-  { name: "Jack Deth", date: "Dec 2024 · 3 months after purchase", quote: "Excellent course, well worth the price — and a lot more if you're willing to put in the time and effort. The QCR and the glimpse into Cameron's process alone makes this an easy investment. NOTE: this is not a trade-alert group. It's a professional sharing his system." },
-  { name: "Simeon Rückert", date: "Dec 2024 · 1 month after purchase", quote: "The best overall package in the industry. For everyone who wants to start trading or further internalize the fundamentals. Fous has a simple but very effective trading style. The QCR is the real gold." },
-  { name: "Mauricio Bento", date: "Dec 2024 · 13 days after purchase", quote: "I've been following his YouTube channel for a long time, and finally decided to join the Wolfpack. I love the courses and the analysis. Cameron rocks. I really enjoy how he's straightforward and far from a used-car salesman." },
-  { name: "gary mills", date: "Nov 2024 · 17 days after purchase", quote: "Fantastic course and very informative. Best decision I've made since buying crypto. Should have joined years ago. Great community with loads of advice. Cameron has a no-BS approach — tells you how it is. Best guy in my opinion on YouTube." },
-  { name: "HF", date: "Oct 2024 · 15 days after purchase", quote: "Quantum Cipher Report + video gives you clear buy and sell points for crypto, forex, and futures — so you don't have to guess. Super easy to follow. The Krypton Legacy Course is a huge bonus. 30+ hours of trading education." },
-  { name: "Assadour Zomjian", date: "Dec 2024 · 24 days after purchase", quote: "Fous doesn't fool you around. One of the best crypto and forex channels ever. Great community, strong signals, even trading courses — all in one subscription." },
-  { name: "Mykola Hnatyuk", date: "Dec 2024 · 2 months after purchase", quote: "Best one out there. Cameron's Krypton course is great — boosted my knowledge and confidence. The community is great as well, affordable price. Would definitely recommend." },
+  { name: "djordje radulovic", date: "Dec 2024 · 12 days after purchase", quote: "Cue Banks's approach to trading and his approach to teaching is second to none. Such a straightforward dude — tells it how it is, always. Transparent about everything. Not some bullshit influencer posting Lambo bullshit and multi-zillion trades." },
+  { name: "Jack Deth", date: "Dec 2024 · 3 months after purchase", quote: "Excellent course, well worth the price — and a lot more if you're willing to put in the time and effort. The WSA Report and the glimpse into Cue Banks's process alone makes this an easy investment. NOTE: this is not a trade-alert group. It's a professional sharing his system." },
+  { name: "Simeon Rückert", date: "Dec 2024 · 1 month after purchase", quote: "The best overall package in the industry. For everyone who wants to start trading or further internalize the fundamentals. Cue has a simple but very effective trading style. The WSA Report is the real gold." },
+  { name: "Mauricio Bento", date: "Dec 2024 · 13 days after purchase", quote: "I've been following his YouTube channel for a long time, and finally decided to join the Wolfpack. I love the courses and the analysis. Cue Banks rocks. I really enjoy how he's straightforward and far from a used-car salesman." },
+  { name: "gary mills", date: "Nov 2024 · 17 days after purchase", quote: "Fantastic course and very informative. Best decision I've made since buying crypto. Should have joined years ago. Great community with loads of advice. Cue Banks has a no-BS approach — tells you how it is. Best guy in my opinion on YouTube." },
+  { name: "HF", date: "Oct 2024 · 15 days after purchase", quote: "Wall Street Academy Report + video gives you clear buy and sell points for crypto, forex, and futures — so you don't have to guess. Super easy to follow. The Krypton Legacy Course is a huge bonus. 30+ hours of trading education." },
+  { name: "Assadour Zomjian", date: "Dec 2024 · 24 days after purchase", quote: "Cue doesn't fool you around. One of the best crypto and forex channels ever. Great community, strong signals, even trading courses — all in one subscription." },
+  { name: "Mykola Hnatyuk", date: "Dec 2024 · 2 months after purchase", quote: "Best one out there. Cue Banks's Krypton course is great — boosted my knowledge and confidence. The community is great as well, affordable price. Would definitely recommend." },
   { name: "J Mitch TX", date: "Dec 2025 · 6 days after purchase", quote: "If you take all classes and do not double your investment, I will pay you myself for your entrance. No one is perfect — however the weekly win ratio is outstanding. It's better to try and succeed than not try." },
   { name: "Branwill Storm", date: "Feb 2026 · 1 year after purchase", quote: "Crazy knowledge and value. This guy can flip your whole life around in all areas." },
   { name: "Gábor Földesi", date: "Oct 2024 · 1 month after purchase", quote: "This guy is LEGIT. You can learn a lot from his Krypton Legacy Course. You can also check, copy, and study his trades. All the things I searched for." },
@@ -765,26 +765,26 @@ const REVIEWS = [
 // ─── Video Testimonials Data ──────────────────────────────────────────────────
 
 const VIDEO_TESTIMONIALS = [
-  { videoId: "dUIipa1vxAs", headline: "I'm Up $3 Million Following Cam Since 2013", body: "Federal government insider reveals over a decade of profits trading Cam's methods." },
+  { videoId: "dUIipa1vxAs", headline: "I'm Up $3 Million Following Cue Since 2013", body: "Federal government insider reveals over a decade of profits trading Cue's methods." },
   { videoId: "kLxd_D9J7so", headline: "I Almost Tripled My Money In 7 Days", body: "Joined the Wolfpack one week ago. Walked out with nearly 3x his bag." },
-  { videoId: "BLWlP9AjnEU", headline: "Wolfpack Gains Paid For My Trip To Tokyo", body: "Was losing before finding Cam — now funding international trips from Wolfpack profits." },
-  { videoId: "EGzswQffvVE", headline: "Paid For Itself 10x Over — Just Bought A New Boat", body: "Long-time crypto holder who switched to active trading with Cam and never looked back." },
+  { videoId: "BLWlP9AjnEU", headline: "Wolfpack Gains Paid For My Trip To Tokyo", body: "Was losing before finding Cue — now funding international trips from Wolfpack profits." },
+  { videoId: "EGzswQffvVE", headline: "Paid For Itself 10x Over — Just Bought A New Boat", body: "Long-time crypto holder who switched to active trading with Cue and never looked back." },
   { videoId: "PsFXUIHN1d0", headline: "Doubled My Trading Bag In The First 30 Days", body: "Signed up, doubled his account in a month, done." },
   { videoId: "7n3fCXL8Mjc", headline: "67% Win Rate After Just 2 Months", body: "Two months later: 67% win rate. No BS, no hand-holding." },
   { videoId: "wyj2ZsyWh8k", headline: "19 Years Old — Made $500 In My First Week", body: "Young trader, $500 profit in 7 days. By far the best crypto community." },
-  { videoId: "EhY-AlMdbjk", headline: "13 Months Ago, Cam Changed My Life", body: "4-year Cam follower who finally joined the Wolfpack 13 months ago." },
+  { videoId: "EhY-AlMdbjk", headline: "13 Months Ago, Cue Changed My Life", body: "4-year Cue follower who finally joined the Wolfpack 13 months ago." },
   { videoId: "97eZEmI8qGY", headline: "Busy Dad, 2 Kids — Still Crushing Trades", body: "Full-time entrepreneur with two kids and zero free time." },
-  { videoId: "V6C8JFw7ORw", headline: "All The Way From Africa — Growing My Capital With Cam", body: "Global member crushing it from Africa." },
-  { videoId: "Xa56tineH0A", headline: "Owned Cam's Courses For Years — Just Rejoined", body: "Multi-year Krypton student who just rejoined the Wolfpack." },
+  { videoId: "V6C8JFw7ORw", headline: "All The Way From Africa — Growing My Capital With Cue", body: "Global member crushing it from Africa." },
+  { videoId: "Xa56tineH0A", headline: "Owned Cue's Courses For Years — Just Rejoined", body: "Multi-year Krypton student who just rejoined the Wolfpack." },
   { videoId: "WYI-CU3PZfs", headline: "+10% On My Account In My First Month As A Beginner", body: "Started trading one month ago. Grew her account 10% as a complete beginner." },
   { videoId: "OD5uCL96EsQ", headline: "7 Months In And I'll Stay Forever", body: "Plans to renew year after year — the community is that good." },
-  { videoId: "J1KuhYlTzy0", headline: "Multiple Discords — Cam Is The Only Real One", body: "Veteran crypto trader who's been burned by every fake guru." },
+  { videoId: "J1KuhYlTzy0", headline: "Multiple Discords — Cue Is The Only Real One", body: "Veteran crypto trader who's been burned by every fake guru." },
   { videoId: "OqhncwmHVhc", headline: "One Alert Paid For Months Of My Subscription", body: "Just one Wolfpack alert covered multiple months of membership." },
-  { videoId: "KdqrqQb5VHg", headline: "Cam Will Double, Triple, Or More Your Portfolio", body: "Nobody else in crypto is this honest about wins AND losses." },
+  { videoId: "KdqrqQb5VHg", headline: "Cue Will Double, Triple, Or More Your Portfolio", body: "Nobody else in crypto is this honest about wins AND losses." },
   { videoId: "NxdqQCEO2rc", headline: "Best Investment I've Ever Made In My Life", body: "Three-point breakdown: crypto signals, 30+ hours of training, brilliant community." },
-  { videoId: "WDqtoIOIx8M", headline: "3 Years Trading Crypto — Should've Joined Cam Sooner", body: "Brazilian trader, 3 years in markets." },
-  { videoId: "fL1F49uN6Jc", headline: "Following Cam Since 2019 — He Teaches You To Fish", body: "Used to follow YouTube shills and lose money. Found Cam in 2019." },
-  { videoId: "iQOEVY3iEUQ", headline: "Blew Up My Bag Multiple Times — Then I Found Cam", body: "Multiple blowups. Cam's training turned everything around." },
+  { videoId: "WDqtoIOIx8M", headline: "3 Years Trading Crypto — Should've Joined Cue Sooner", body: "Brazilian trader, 3 years in markets." },
+  { videoId: "fL1F49uN6Jc", headline: "Following Cue Since 2019 — He Teaches You To Fish", body: "Used to follow YouTube shills and lose money. Found Cue in 2019." },
+  { videoId: "iQOEVY3iEUQ", headline: "Blew Up My Bag Multiple Times — Then I Found Cue", body: "Multiple blowups. Cue's training turned everything around." },
 ];
 
 // ─── Page Sections ────────────────────────────────────────────────────────────
@@ -804,7 +804,7 @@ function Hero() {
       <div style={{
         position: "absolute",
         inset: 0,
-        background: "radial-gradient(ellipse 60% 50% at 50% -10%, rgba(191,250,70,0.10) 0%, transparent 70%)",
+        background: "radial-gradient(ellipse 60% 50% at 50% -10%, rgba(249,255,60,0.10) 0%, transparent 70%)",
         pointerEvents: "none",
       }} />
       {/* Watermark */}
@@ -846,7 +846,7 @@ function Hero() {
           }}>
             Finally, see into the market<br />
             <em style={{ color: "var(--acid)" }}>like the matrix</em><br />
-            <em>with Fous at the helm.</em>
+            <em>with Cue at the helm.</em>
           </h1>
         </div>
 
@@ -872,7 +872,7 @@ function Hero() {
           margin: "0 auto 48px",
           fontWeight: 400,
         }}>
-          I&apos;ll tell you exactly where the market is going — the entries, the exits, the level at which I stop out — and you can copy it, study it, or just let it run. No guessing. No noise. One system, repeated every week, for 21 years.
+          I&apos;ll tell you exactly where the market is going — the entries, the exits, the level at which I stop out — and you can copy it, study it, or just let it run. No guessing. No noise. One system, repeated every week, for 10 years.
         </p>
 
         {/* 4-col mini badges */}
@@ -887,7 +887,7 @@ function Hero() {
         }}>
           {[
             { k: "ONE PAYMENT", v: "$997" },
-            { k: "INCLUDED", v: "Krypton + QCR" },
+            { k: "INCLUDED", v: "Krypton + WSA Report" },
             { k: "DELIVERY", v: "Instant · Whop" },
             { k: "GUARANTEE", v: "Receipts on file" },
           ].map((b, i) => (
@@ -1009,8 +1009,8 @@ function Results() {
           flipped
         />
         <ResultBanner
-          kicker="Quantum Cipher Report · Monday Drop"
-          big="QCR"
+          kicker="Wall Street Academy Report · Monday Drop"
+          big="WSA Report"
           sub="The framework that helps you enter the week with a complete plan — majors, alts, forex pairs, all bracketed before Sunday is out."
           period="Every Monday morning"
           image="/uploads/cam/qcreport.jpg"
@@ -1190,7 +1190,7 @@ function Lifestyle() {
 // ─── RickRossSpotlight ────────────────────────────────────────────────────────
 
 const RR_SLIDES = [
-  { src: "/uploads/proof/rr-07.jpg", date: "Jul 11, 2025", amount: "+$1.59M", note: "One month into studying with Cameron" },
+  { src: "/uploads/proof/rr-07.jpg", date: "Jul 11, 2025", amount: "+$1.59M", note: "One month into studying with Cue Banks" },
   { src: "/uploads/proof/rr-05.jpg", date: "Aug 03, 2025", amount: "+$201K", note: "UNI short · single trade" },
   { src: "/uploads/proof/rr-06.jpg", date: "Aug 03, 2025", amount: "Mindset", note: "\"Losing money in the markets is a choice.\"" },
   { src: "/uploads/proof/rr-04.jpg", date: "Aug 09, 2025", amount: "+$61K", note: "INJ long · 4-day swing" },
@@ -1311,7 +1311,7 @@ function RickRossSpotlight() {
 
 function ProofGrid() {
   const WINS = [
-    { src: "/uploads/proof/win-01.jpg", handle: "@aulzon", dollars: "+147%", platform: "Gate.io", caption: "Two Gate.io shares in 24 hours. Followed the QCR plan exactly." },
+    { src: "/uploads/proof/win-01.jpg", handle: "@aulzon", dollars: "+147%", platform: "Gate.io", caption: "Two Gate.io shares in 24 hours. Followed the WSA Report plan exactly." },
     { src: "/uploads/proof/win-02.jpg", handle: "@rick_ross", dollars: "+$2.02M", platform: "Bybit", caption: "Hit the $2M goal in 2 months after starting with $50K." },
     { src: "/uploads/proof/win-03.jpg", handle: "@nate_smith", dollars: "+$21,257", platform: "Apex", caption: "10k → 100k individual challenge funded and running." },
     { src: "/uploads/proof/win-04.jpg", handle: "@yevrah1989", dollars: "+111%", platform: "Gate.io", caption: "XRPUSDT long — clean cycle play. In and out." },
@@ -1319,7 +1319,7 @@ function ProofGrid() {
     { src: "/uploads/proof/win-06.jpg", handle: "@aljaz_qc", dollars: "+44.9%", platform: "Bybit", caption: "DEEPUSDT 3x long — clean swing, clean exit." },
     { src: "/uploads/proof/win-07.jpg", handle: "@nate_smith", dollars: "+52.7%", platform: "Bitget VIP", caption: "FOLKSUSDT short at 10x. Followed the plan." },
     { src: "/uploads/proof/win-08.jpg", handle: "@ametis_qc", dollars: "+330%", platform: "Bybit", caption: "AIOZUSDT long at 10x. Held through the expansion." },
-    { src: "/uploads/proof/win-09.jpg", handle: "@shaunnz", dollars: "+131%", platform: "MEXC", caption: "AIOZUSDT close-long at 5x. QCR entry." },
+    { src: "/uploads/proof/win-09.jpg", handle: "@shaunnz", dollars: "+131%", platform: "MEXC", caption: "AIOZUSDT close-long at 5x. WSA Report entry." },
     { src: "/uploads/proof/win-10.jpg", handle: "@servio_qc", dollars: "+$14,398", platform: "Bybit", caption: "SUPERUSDT long — held 11 days." },
     { src: "/uploads/proof/win-11.jpg", handle: "@nick_qc", dollars: "+199%", platform: "Bitget VIP", caption: "ORCAUSDT short at 10x. Textbook Krypton short setup." },
     { src: "/uploads/proof/win-12.jpg", handle: "@tm_qc", dollars: "+351%", platform: "Blofin", caption: "AIOZUSDT long at 10x. Held the position." },
@@ -1356,16 +1356,16 @@ function FuruVs() {
             <ML color="var(--pink)">· Typical furu ·</ML>
           </div>
           <div style={{ borderLeft: "1px solid var(--line)", borderRight: "1px solid var(--line)" }} />
-          <div style={{ padding: "20px 28px", background: "rgba(191,250,70,0.04)" }}>
+          <div style={{ padding: "20px 28px", background: "rgba(249,255,60,0.04)" }}>
             <div style={{ fontFamily: "var(--font-display)", fontSize: 20, fontWeight: 600, color: "var(--bone)", marginBottom: 6, display: "flex", alignItems: "center", gap: 10 }}>
-              Fous + the pack <WolfMark size={20} />
+              Cue + the pack <WolfMark size={20} />
             </div>
             <ML color="var(--acid)">· The Wolfpack ·</ML>
           </div>
         </div>
         <FuruRow
           furu="Started in 2021 with meme coins, after watching TikTok."
-          wolf="21 years live on the screens — every crash, every melt-up, since 2005."
+          wolf="10 years live on the screens — every crash, every melt-up, since 2019."
         />
         <FuruRow
           furu="Screenshot testimonials 'borrowed' from Google Images."
@@ -1435,7 +1435,7 @@ function Package() {
       idx: 1,
       kicker: "· Weekly Plan · The Backbone ·",
       accent: "var(--acid)",
-      title: "Quantum Cipher Report",
+      title: "Wall Street Academy Report",
       body: "Copy trading plans in Crypto & Forex sent every Monday with all the setups.",
       items: ["Crypto & Forex setups", "Sent every Monday", "All the setups included", "Copy and execute"],
       wide: true,
@@ -1510,7 +1510,7 @@ function PriceBlock() {
         border: "1px solid var(--acid)",
         position: "relative",
         overflow: "hidden",
-        background: "radial-gradient(ellipse 80% 60% at 50% -20%, rgba(191,250,70,0.08) 0%, transparent 70%)",
+        background: "radial-gradient(ellipse 80% 60% at 50% -20%, rgba(249,255,60,0.08) 0%, transparent 70%)",
       }}>
         <WolfMark
           size={500}
@@ -1531,7 +1531,7 @@ function PriceBlock() {
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {[
                 "All six deliverables · unlocked instantly",
-                "Quantum Cipher Report · every Monday morning",
+                "Wall Street Academy Report · every Monday morning",
                 "Live chat with 7,000+ traders · 63 countries",
                 "Direct line to the operator team",
                 "No upsells inside · everything included",
@@ -1576,7 +1576,7 @@ function FAQ() {
   const QS = [
     {
       q: "What exactly do I get for $997?",
-      a: "Everything listed in the package section — Krypton course (30+ hours), weekly QCR, Pro Level curriculum, DEGENR8 suite, live chat, Millionaire Framework. One payment, instant access.",
+      a: "Everything listed in the package section — Krypton course (30+ hours), weekly WSA Report, Pro Level curriculum, DEGENR8 suite, live chat, Millionaire Framework. One payment, instant access.",
     },
     {
       q: "Is this the same as the Mentorship application?",
@@ -1588,7 +1588,7 @@ function FAQ() {
     },
     {
       q: "Can I do this while working a full-time job?",
-      a: "Yes — by design. QCR drops Monday morning. Read it once, place orders, walk away. One weekly planning session sets up the next five days.",
+      a: "Yes — by design. WSA Report drops Monday morning. Read it once, place orders, walk away. One weekly planning session sets up the next five days.",
     },
     {
       q: "How is this different from ICT, SMC, or signal services?",
@@ -1670,7 +1670,7 @@ function FinalCTA() {
         border: "1px solid var(--acid)",
         position: "relative",
         overflow: "hidden",
-        background: "radial-gradient(ellipse 80% 60% at 50% -20%, rgba(191,250,70,0.08) 0%, transparent 70%)",
+        background: "radial-gradient(ellipse 80% 60% at 50% -20%, rgba(249,255,60,0.08) 0%, transparent 70%)",
         padding: "80px 48px",
       }}>
         <WolfMark
@@ -1742,7 +1742,7 @@ function Footer() {
           </div>
         </div>
         <div style={{ borderTop: "1px solid var(--line)", padding: "24px 0 36px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <ML color="var(--muted)">© 2026 Cameron Fous · All rights reserved · Not financial advice ·</ML>
+          <ML color="var(--muted)">© 2026 Cue Banks · All rights reserved · Not financial advice ·</ML>
           <div style={{ display: "flex", gap: 24 }}>
             <a href="/privacy" style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: "var(--muted)", letterSpacing: "0.18em", textTransform: "uppercase" }}>Privacy</a>
             <a href="/terms" style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: "var(--muted)", letterSpacing: "0.18em", textTransform: "uppercase" }}>Terms</a>

@@ -8,13 +8,10 @@ import QualifyForm from "@/components/page2/QualifyForm";
 function Logo() {
   return (
     <Link href="/" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none", flexShrink: 0, whiteSpace: "nowrap" }}>
-      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-        <rect x="0.5" y="0.5" width="27" height="27" stroke="var(--acid)" strokeWidth="1" />
-        <rect x="7" y="7" width="14" height="14" fill="var(--acid)" />
-        <rect x="11" y="11" width="6" height="6" fill="var(--bg)" />
-      </svg>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/wsa/home/1.png" alt="Wall Street Academy" style={{ height: 44, width: 44, borderRadius: "50%", objectFit: "cover", display: "block" }} />
       <span style={{ fontFamily: "var(--font-mono)", fontSize: 13, fontWeight: 700, color: "var(--bone)", letterSpacing: "0.18em", textTransform: "uppercase" }}>
-        Quantum Cipher
+        Wall Street Academy
       </span>
     </Link>
   );
@@ -47,10 +44,10 @@ export default function QualifyPage() {
 
       {/* HERO */}
       <section style={{ maxWidth: 1180, margin: "0 auto", padding: "64px 48px 24px", textAlign: "center", position: "relative" }}>
-        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(800px 360px at 50% 0%, rgba(191,250,70,0.10), transparent 60%)" }} />
+        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(800px 360px at 50% 0%, rgba(249,255,60,0.10), transparent 60%)" }} />
         <div style={{ position: "relative" }}>
           <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 700, color: "var(--acid)", letterSpacing: "0.22em", textTransform: "uppercase", marginBottom: 18 }}>
-            · Quantum Cipher · Operator Application ·
+            · Wall Street Academy · Operator Application ·
           </div>
           <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 60, lineHeight: 0.98, letterSpacing: "-0.045em", color: "var(--bone)", margin: "0 0 18px" }}>
             Let&rsquo;s see if you&rsquo;re a fit<Suspense fallback={null}><Greeting /></Suspense>.

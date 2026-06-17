@@ -150,7 +150,7 @@ export default function Dashboard() {
         <div className="topbar">
           <div className="brand">
             <QCLMark size={26} />
-            <div className="title"><b>Funnelmaxxing Pro // JARVIS</b><span>Quantum Cipher Lab · Operator HUD</span></div>
+            <div className="title"><b>Funnelmaxxing Pro // JARVIS</b><span>Wall Street Academy · Operator HUD</span></div>
           </div>
           <span className="spacer" />
           <div className="rangepills">{[7, 30, 90].map((r) => <button key={r} className={r === days ? "on" : ""} onClick={() => setDays(r)}>{r}d</button>)}</div>

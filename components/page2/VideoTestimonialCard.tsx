@@ -84,7 +84,7 @@ export default function VideoTestimonialCard({
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  boxShadow: "0 0 40px rgba(191,250,70,0.45), 0 0 100px rgba(191,250,70,0.18)",
+                  boxShadow: "0 0 40px rgba(249,255,60,0.45), 0 0 100px rgba(249,255,60,0.18)",
                 }}
               >
                 <svg width="24" height="24" viewBox="0 0 24 24">

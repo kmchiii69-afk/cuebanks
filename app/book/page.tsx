@@ -11,9 +11,9 @@ const BASE_CALENDLY = process.env.NEXT_PUBLIC_CALENDLY_URL || "https://calendly.
 
 // Legacy Calendly theme — kept for the callback fallback iframe only
 const CALENDLY_THEME = {
-  background_color: "06070A",
-  text_color: "F2F0E6",
-  primary_color: "BFFA46",
+  background_color: "000000",
+  text_color: "ffffff",
+  primary_color: "f9ff3c",
   hide_event_type_details: "1",
   hide_landing_page_details: "1",
 };
@@ -29,21 +29,18 @@ function buildCalendlyUrl(name: string, email: string, _phone: string) {
   // question as the FIRST custom question on the Calendly event, then
   // restore `params.set("a1", _phone)`.
   // URLSearchParams encodes spaces as "+"; Calendly's prefill parser
-  // interprets "+" literally, so swap to %20 to render "Cameron Fous"
-  // correctly instead of "Cameron+Fous".
+  // interprets "+" literally, so swap to %20 to render "Cue Banks"
+  // correctly instead of "Cue Banks+Cue".
   return `${BASE_CALENDLY}?${params.toString().replace(/\+/g, "%20")}`;
 }
 
 function Logo() {
   return (
     <Link href="/" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none", flexShrink: 0, whiteSpace: "nowrap" }}>
-      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-        <rect x="0.5" y="0.5" width="27" height="27" stroke="var(--acid)" strokeWidth="1" />
-        <rect x="7" y="7" width="14" height="14" fill="var(--acid)" />
-        <rect x="11" y="11" width="6" height="6" fill="var(--bg)" />
-      </svg>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/wsa/home/1.png" alt="Wall Street Academy" style={{ height: 44, width: 44, borderRadius: "50%", objectFit: "cover", display: "block" }} />
       <span style={{ fontFamily: "var(--font-mono)", fontSize: 13, fontWeight: 700, color: "var(--bone)", letterSpacing: "0.18em", textTransform: "uppercase" }}>
-        Quantum Cipher
+        Wall Street Academy
       </span>
     </Link>
   );
@@ -130,7 +127,7 @@ function CallbackFallback() {
 
   if (status === "done") {
     return (
-      <div style={{ marginTop: 14, padding: "18px 22px", border: "1px solid var(--acid)", background: "rgba(191,250,70,0.06)", display: "flex", alignItems: "center", gap: 14 }}>
+      <div style={{ marginTop: 14, padding: "18px 22px", border: "1px solid var(--acid)", background: "rgba(249,255,60,0.06)", display: "flex", alignItems: "center", gap: 14 }}>
         <span style={{ fontFamily: "var(--font-display)", fontSize: 18, fontWeight: 700, color: "var(--acid)", lineHeight: 1 }}>✓</span>
         <span style={{ fontFamily: "var(--font-body)", fontSize: 15, color: "var(--bone)" }}>
           Got it — the team will reach out to you shortly{phone ? ` at ${phone}` : ""}.
@@ -178,7 +175,7 @@ export default function BookPage() {
       {/* HERO — compact on purpose: the calendar is the conversion surface,
           keep it as close to the fold as possible */}
       <section style={{ maxWidth: 1180, margin: "0 auto", padding: "40px 48px 24px", textAlign: "center", position: "relative" }}>
-        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(800px 360px at 50% 0%, rgba(191,250,70,0.10), transparent 60%)" }} />
+        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(800px 360px at 50% 0%, rgba(249,255,60,0.10), transparent 60%)" }} />
         <div style={{ position: "relative" }}>
           <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 700, color: "var(--acid)", letterSpacing: "0.22em", textTransform: "uppercase", marginBottom: 14 }}>
             · You&rsquo;re in · Final step ·
@@ -215,7 +212,7 @@ export default function BookPage() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
           {[
             { n: "01", t: "Tell us your situation", d: "5 minutes on where you are, what you've tried, and what you actually want." },
-            { n: "02", t: "We walk the system", d: "How the Quantum Cipher framework actually works — phases, swing setups, weekly plan." },
+            { n: "02", t: "We walk the system", d: "How the Wall Street Academy framework actually works — phases, swing setups, weekly plan." },
             { n: "03", t: "Decide together", d: "If we're a fit you'll know on the call. If we're not, we'll point you somewhere useful." },
           ].map((s, i) => (
             <div key={i} style={{ background: "var(--bg-1)", border: "1px solid var(--line)", borderTop: "1px solid var(--acid)", padding: "20px 22px" }}>

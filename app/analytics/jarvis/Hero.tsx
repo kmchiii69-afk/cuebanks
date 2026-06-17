@@ -45,7 +45,7 @@ export function FunnelHero({ data, engineRef, intensity, feed, period = 30, now 
     <div className="hero2" ref={wrapRef}>
       <canvas ref={canvasRef} className="hero2-canvas" />
       <div className="hero2-tl">
-        <div className="hero2-kicker">QCL // FUNNEL COMMAND · {period}D WINDOW</div>
+        <div className="hero2-kicker">WSA // FUNNEL COMMAND · {period}D WINDOW</div>
         <h2 className="hero2-title">The <em>Living</em> Funnel</h2>
       </div>
       <div className="hero2-tr">

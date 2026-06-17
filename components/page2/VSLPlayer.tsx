@@ -25,7 +25,7 @@ export default function VSLPlayer() {
       {playing ? (
         <iframe
           src={`https://www.youtube.com/embed/${YT_ID}?autoplay=1&rel=0&modestbranding=1&playsinline=1`}
-          title="Quantum Cipher · Free Training"
+          title="Wall Street Academy · Free Training"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
           referrerPolicy="strict-origin-when-cross-origin"
@@ -56,7 +56,7 @@ export default function VSLPlayer() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={imgSrc}
-            alt="Cameron Fous · Free Training"
+            alt="Cue Banks · Free Training"
             onError={() => setImgSrc(`https://i.ytimg.com/vi/${YT_ID}/hqdefault.jpg`)}
             style={{
               position: "absolute",
@@ -102,8 +102,8 @@ export default function VSLPlayer() {
                 alignItems: "center",
                 justifyContent: "center",
                 boxShadow: hovered
-                  ? "0 0 0 1px var(--acid), 0 0 96px rgba(191,250,70,0.55)"
-                  : "0 0 0 1px var(--acid), 0 0 64px rgba(191,250,70,0.35)",
+                  ? "0 0 0 1px var(--acid), 0 0 96px rgba(249,255,60,0.55)"
+                  : "0 0 0 1px var(--acid), 0 0 64px rgba(249,255,60,0.35)",
                 transform: hovered ? "scale(1.04)" : "scale(1)",
                 transition: "transform 200ms ease, box-shadow 200ms ease",
               }}

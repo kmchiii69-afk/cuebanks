@@ -367,7 +367,7 @@ export default function QualifyForm() {
           </div>
         </div>
         <div style={{ width: "100%", height: 3, background: "var(--line)", overflow: "hidden" }}>
-          <div style={{ width: `${progress}%`, height: "100%", background: "var(--acid)", transition: "width 280ms cubic-bezier(0.2,0.8,0.2,1)", boxShadow: "0 0 18px rgba(191,250,70,0.5)" }} />
+          <div style={{ width: `${progress}%`, height: "100%", background: "var(--acid)", transition: "width 280ms cubic-bezier(0.2,0.8,0.2,1)", boxShadow: "0 0 18px rgba(249,255,60,0.5)" }} />
         </div>
       </div>
 
@@ -441,7 +441,7 @@ export default function QualifyForm() {
             letterSpacing: "0.18em",
             textTransform: "uppercase",
             cursor: filled && !submitting ? "pointer" : "default",
-            boxShadow: filled ? "0 0 0 1px var(--acid), 0 0 32px rgba(191,250,70,0.25)" : "none",
+            boxShadow: filled ? "0 0 0 1px var(--acid), 0 0 32px rgba(249,255,60,0.25)" : "none",
             transition: "all 200ms ease",
           }}
         >
@@ -460,7 +460,7 @@ export default function QualifyForm() {
           through a dedicated consent screen. */}
       {isFinal && (
         <p style={{ marginTop: 4, fontFamily: "var(--font-body)", fontSize: 11, lineHeight: 1.55, color: "var(--muted)", textAlign: "center", maxWidth: 580, marginLeft: "auto", marginRight: "auto" }}>
-          By submitting, you agree to be contacted by Quantum Cipher Lab via
+          By submitting, you agree to be contacted by Wall Street Academy via
           email, SMS, or phone about our services. Message + data rates may
           apply. See our{" "}
           <a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "var(--ash)", textDecoration: "underline" }}>Privacy Policy</a>.
@@ -488,7 +488,7 @@ function ChoiceView({ question, value, onSelect }: { question: ChoiceQuestion; v
               alignItems: "center",
               gap: 16,
               padding: "16px 20px",
-              background: selected ? "rgba(191,250,70,0.08)" : "var(--bg-1)",
+              background: selected ? "rgba(249,255,60,0.08)" : "var(--bg-1)",
               border: `1px solid ${selected ? "var(--acid)" : "var(--line-2)"}`,
               color: "var(--bone)",
               textAlign: "left",
@@ -497,7 +497,7 @@ function ChoiceView({ question, value, onSelect }: { question: ChoiceQuestion; v
               lineHeight: 1.4,
               cursor: "pointer",
               transition: "all 160ms ease",
-              boxShadow: selected ? "0 0 0 1px var(--acid), 0 0 32px rgba(191,250,70,0.15)" : "none",
+              boxShadow: selected ? "0 0 0 1px var(--acid), 0 0 32px rgba(249,255,60,0.15)" : "none",
             }}
             onMouseEnter={(e) => {
               if (!selected) (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--acid)";
@@ -559,7 +559,7 @@ function MultiChoiceView({ question, value, onToggle }: { question: MultiQuestio
               alignItems: "center",
               gap: 16,
               padding: "16px 20px",
-              background: selected ? "rgba(191,250,70,0.08)" : "var(--bg-1)",
+              background: selected ? "rgba(249,255,60,0.08)" : "var(--bg-1)",
               border: `1px solid ${selected ? "var(--acid)" : "var(--line-2)"}`,
               color: "var(--bone)",
               textAlign: "left",
@@ -568,7 +568,7 @@ function MultiChoiceView({ question, value, onToggle }: { question: MultiQuestio
               lineHeight: 1.4,
               cursor: "pointer",
               transition: "all 160ms ease",
-              boxShadow: selected ? "0 0 0 1px var(--acid), 0 0 32px rgba(191,250,70,0.15)" : "none",
+              boxShadow: selected ? "0 0 0 1px var(--acid), 0 0 32px rgba(249,255,60,0.15)" : "none",
             }}
             onMouseEnter={(e) => {
               if (!selected) (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--acid)";
@@ -635,7 +635,7 @@ function ScaleView({ question, value, onSelect }: { question: ScaleQuestion; val
                 letterSpacing: "-0.01em",
                 cursor: "pointer",
                 transition: "all 160ms ease",
-                boxShadow: selected ? "0 0 0 1px var(--acid), 0 0 32px rgba(191,250,70,0.25)" : "none",
+                boxShadow: selected ? "0 0 0 1px var(--acid), 0 0 32px rgba(249,255,60,0.25)" : "none",
               }}
             >
               {n}
@@ -710,7 +710,7 @@ function ConsentView({ question, value, onToggle }: { question: ConsentQuestion;
         <a href="/refund" target="_blank" rel="noopener noreferrer" style={{ color: "var(--acid)" }}>Refund Policy</a>,{" "}
         and{" "}
         <a href="/disclaimer" target="_blank" rel="noopener noreferrer" style={{ color: "var(--acid)" }}>Disclaimer</a>{" "}
-        — and I give consent to be contacted by Quantum Cipher Lab via email, SMS, or phone regarding its services.{" "}
+        — and I give consent to be contacted by Wall Street Academy via email, SMS, or phone regarding its services.{" "}
         <span style={{ color: "var(--bone)" }}>I understand this consent is not a condition of purchase.</span>
       </div>
 
@@ -723,7 +723,7 @@ function ConsentView({ question, value, onToggle }: { question: ConsentQuestion;
           gap: 14,
           width: "100%",
           padding: "16px 20px",
-          background: value ? "rgba(191,250,70,0.10)" : "var(--bg-1)",
+          background: value ? "rgba(249,255,60,0.10)" : "var(--bg-1)",
           border: `1px solid ${value ? "var(--acid)" : "var(--line-2)"}`,
           color: "var(--bone)",
           fontFamily: "var(--font-body)",
@@ -732,7 +732,7 @@ function ConsentView({ question, value, onToggle }: { question: ConsentQuestion;
           cursor: "pointer",
           textAlign: "left",
           transition: "all 160ms ease",
-          boxShadow: value ? "0 0 0 1px var(--acid), 0 0 32px rgba(191,250,70,0.15)" : "none",
+          boxShadow: value ? "0 0 0 1px var(--acid), 0 0 32px rgba(249,255,60,0.15)" : "none",
         }}
       >
         <span

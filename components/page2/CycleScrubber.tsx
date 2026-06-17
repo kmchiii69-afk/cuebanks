@@ -106,7 +106,7 @@ export default function CycleScrubber({
           </g>
         ))}
         <path d={CYCLE_PHASE_PATH} fill="none" stroke="var(--acid)" strokeWidth="2.2"
-          style={{ filter: "drop-shadow(0 0 12px rgba(191,250,70,0.25))" }} />
+          style={{ filter: "drop-shadow(0 0 12px rgba(249,255,60,0.25))" }} />
         <line x1={active.x} x2={active.x} y1={Math.max(0, active.y - 24)} y2="360"
           stroke={activeColor} strokeWidth="1" strokeDasharray="3 5"
           style={{ transition: "all 220ms ease" }} />

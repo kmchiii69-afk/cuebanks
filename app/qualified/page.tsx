@@ -48,13 +48,10 @@ export default function QualifiedPage() {
   return (
     <div className="grid-bg" style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--bone)", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <div style={{ textAlign: "center", maxWidth: 480, padding: "0 48px", position: "relative" }}>
-        <div style={{ position: "absolute", inset: -100, pointerEvents: "none", background: "radial-gradient(600px 360px at 50% 50%, rgba(191,250,70,0.10), transparent 60%)" }} />
+        <div style={{ position: "absolute", inset: -100, pointerEvents: "none", background: "radial-gradient(600px 360px at 50% 50%, rgba(249,255,60,0.10), transparent 60%)" }} />
         <div style={{ position: "relative" }}>
-          <svg width="44" height="44" viewBox="0 0 28 28" fill="none" style={{ marginBottom: 28 }}>
-            <rect x="0.5" y="0.5" width="27" height="27" stroke="var(--acid)" strokeWidth="1" />
-            <rect x="7" y="7" width="14" height="14" fill="var(--acid)" />
-            <rect x="11" y="11" width="6" height="6" fill="var(--bg)" />
-          </svg>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/wsa/home/1.png" alt="Wall Street Academy" style={{ height: 64, width: 64, borderRadius: "50%", objectFit: "cover", display: "block", margin: "0 auto 28px" }} />
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, marginBottom: 20 }}>
             <span className="pulse" style={{ width: 8, height: 8, background: "var(--acid)", display: "inline-block" }} />
             <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 700, color: "var(--acid)", letterSpacing: "0.22em", textTransform: "uppercase" }}>

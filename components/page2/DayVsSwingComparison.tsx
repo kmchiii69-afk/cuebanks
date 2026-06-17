@@ -53,7 +53,7 @@ function DvCard({ kicker, handle, accent, pnl, balance, totalDeposited, metrics,
         <div style={{ fontFamily: "var(--font-mono)", fontSize: 8.5, fontWeight: 700, color: "var(--ash)", letterSpacing: "0.22em", textTransform: "uppercase", marginTop: 8 }}>{handle}</div>
       </div>
       <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginBottom: 18, flexWrap: "wrap" }}>
-        <div style={{ fontFamily: "var(--font-display)", fontSize: 48, fontWeight: 700, color: accent, letterSpacing: "-0.035em", lineHeight: 0.9, textShadow: positive ? "0 0 24px rgba(191,250,70,0.3)" : "none" }}>
+        <div style={{ fontFamily: "var(--font-display)", fontSize: 48, fontWeight: 700, color: accent, letterSpacing: "-0.035em", lineHeight: 0.9, textShadow: positive ? "0 0 24px rgba(249,255,60,0.3)" : "none" }}>
           {fmtMoney(pnl)}
         </div>
         <div>
@@ -94,7 +94,7 @@ export default function DayVsSwingComparison() {
 
   return (
     <div style={{ background: "var(--bg-1)", border: "1px solid var(--line)", padding: "44px 44px 32px", marginBottom: 56, position: "relative", overflow: "hidden" }}>
-      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(900px 400px at 50% 50%, rgba(191,250,70,0.04), transparent 60%)" }} />
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(900px 400px at 50% 50%, rgba(249,255,60,0.04), transparent 60%)" }} />
       <div style={{ position: "relative" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 24, flexWrap: "wrap", gap: 16 }}>
           <div>
@@ -128,7 +128,7 @@ export default function DayVsSwingComparison() {
               </clipPath>
             </defs>
             <path d={dayPath} fill="none" stroke="var(--pink)" strokeWidth="2.2" opacity="0.8" clipPath="url(#dv-clip)" style={{ filter: "drop-shadow(0 0 8px rgba(255,45,171,0.35))" }} />
-            <path d={swgPath} fill="none" stroke="var(--acid)" strokeWidth="2.2" opacity="0.95" clipPath="url(#dv-clip)" style={{ filter: "drop-shadow(0 0 10px rgba(191,250,70,0.4))" }} />
+            <path d={swgPath} fill="none" stroke="var(--acid)" strokeWidth="2.2" opacity="0.95" clipPath="url(#dv-clip)" style={{ filter: "drop-shadow(0 0 10px rgba(249,255,60,0.4))" }} />
             <line x1={monthX(month)} x2={monthX(month)} y1="20" y2="260" stroke="var(--bone)" strokeWidth="1" strokeDasharray="3 5" opacity="0.5" />
             <circle cx={monthX(month)} cy={balanceY(dayBalances[idx])} r="6" fill="var(--bg-1)" stroke="var(--pink)" strokeWidth="2.5" style={{ filter: "drop-shadow(0 0 8px var(--pink))" }} />
             <circle cx={monthX(month)} cy={balanceY(swgBalances[idx])} r="6" fill="var(--bg-1)" stroke="var(--acid)" strokeWidth="2.5" style={{ filter: "drop-shadow(0 0 8px var(--acid))" }} />
@@ -212,7 +212,7 @@ export default function DayVsSwingComparison() {
             </div>
             <div style={{ textAlign: "right" }}>
               <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "var(--acid)", letterSpacing: "0.22em", textTransform: "uppercase" }}>· Swing trader · year end</div>
-              <div style={{ fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 700, color: "var(--acid)", letterSpacing: "-0.025em", lineHeight: 1, marginTop: 4, textShadow: "0 0 24px rgba(191,250,70,0.4)" }}>{fmtMoney(cur.swg.pnl)}</div>
+              <div style={{ fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 700, color: "var(--acid)", letterSpacing: "-0.025em", lineHeight: 1, marginTop: 4, textShadow: "0 0 24px rgba(249,255,60,0.4)" }}>{fmtMoney(cur.swg.pnl)}</div>
             </div>
           </div>
         )}
