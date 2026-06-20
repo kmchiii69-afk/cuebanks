@@ -244,6 +244,7 @@ export default function OfferPage() {
   return (
     <div ref={scroller} style={{ height: "100svh", overflowY: "auto", scrollSnapType: "y proximity", scrollBehavior: "smooth", background: "var(--bg)", color: "var(--bone)", fontFamily: "var(--font-body)" }}>
       <style>{`
+        @keyframes ofrBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
         .ofr-title { font-size: clamp(34px, 6vw, 72px); }
         .ofr-carousel::-webkit-scrollbar { height: 6px; }
         .ofr-carousel::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 3px; }
@@ -268,15 +269,17 @@ export default function OfferPage() {
         <div style={{ position: "relative", textAlign: "center", maxWidth: 940, margin: "0 auto" }}>
           <Reveal><Eyebrow style={{ marginBottom: 26, justifyContent: "center", display: "flex" }}>The WSA Transformation · 4-Month Program</Eyebrow></Reveal>
           <Reveal delay={120}>
-            <Title size={84} style={{ textAlign: "center" }}>Stop trading alone.<br /><span style={{ color: "var(--acid)" }}>Start trading with a system.</span></Title>
+            <Title style={{ fontSize: "clamp(38px, 6.4vw, 76px)", textAlign: "center" }}>Stop trading alone.<br /><span style={{ color: "var(--acid)" }}>Start trading with a system.</span></Title>
           </Reveal>
-          <Reveal delay={240}><Lead style={{ margin: "26px auto 0", textAlign: "center" }}>A proven roadmap, real coaching, and the WSA Protocol Cue refined over 13+ years.</Lead></Reveal>
-          <Reveal delay={360} style={{ marginTop: 34 }}>
+          <Reveal delay={240}><Lead style={{ margin: "22px auto 0", textAlign: "center" }}>A proven roadmap, real coaching, and the WSA Protocol Cue refined over 13+ years.</Lead></Reveal>
+          <Reveal delay={360} style={{ marginTop: 30 }}>
             <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}><CTA /><CTA variant="ghost">Book A Call</CTA></div>
           </Reveal>
-        </div>
-        <div style={{ position: "absolute", bottom: 26, left: 0, right: 0, textAlign: "center" }}>
-          <Eyebrow color="var(--muted)" style={{ fontSize: 9 }}>Scroll ↓</Eyebrow>
+          <Reveal delay={520} style={{ marginTop: 30 }}>
+            <Eyebrow color="var(--muted)" style={{ fontSize: 9, justifyContent: "center", display: "flex", gap: 8 }}>
+              Scroll <span style={{ display: "inline-block", animation: "ofrBob 1.8s ease-in-out infinite" }}>↓</span>
+            </Eyebrow>
+          </Reveal>
         </div>
       </Slide>
 
