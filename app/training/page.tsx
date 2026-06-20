@@ -36,7 +36,8 @@ import ProofTile from "@/components/page2/ProofTile";
 import PhotoFrame from "@/components/page2/PhotoFrame";
 import InlineYouTube from "@/components/page2/InlineYouTube";
 import ReviewCard from "@/components/page2/ReviewCard";
-import VideoTestimonialCard from "@/components/page2/VideoTestimonialCard";
+import CueVideoTestimonial from "@/components/page2/CueVideoTestimonial";
+import { CUE_TESTIMONIALS } from "@/components/wsa/testimonials";
 
 /* ─── Data ─────────────────────────────────────────────── */
 
@@ -67,28 +68,6 @@ const REVIEWS = [
   { name: "Crypto85",          date: "Mar 2025 · 5 months after purchase",  quote: "Great trader, great content. He is very active and helps his community. Very happy to be part of it. His trades are very accurate and easy to follow. Highly recommend." },
 ];
 
-const VIDEOS = [
-  { id: "dUIipa1vxAs", h: "I'm Up $3 Million Following Cue Since 2013",     b: "Federal government insider (hiding face for job security) reveals over a decade of profits trading Cue's methods — from Cue stocks to crypto. Refuses to show his face. The receipts speak louder." },
-  { id: "kLxd_D9J7so", h: "I Almost Tripled My Money In 7 Days",            b: "Joined the Wolfpack one week ago. Walked out with nearly 3x his bag. No fluff. A guy who pulled the trigger and watched his account explode in a single week." },
-  { id: "BLWlP9AjnEU", h: "Wolfpack Gains Paid For My Trip To Tokyo",       b: "Filmed from the streets of Tokyo. Was losing before finding Cue — now funding international trips from Wolfpack profits. The realest breakdown of why most traders lose this cycle." },
-  { id: "EGzswQffvVE", h: "Paid For Itself 10x Over — Just Bought A New Boat", b: "Filmed from his custom lake house with a brand new boat parked behind him. Long-time crypto holder who switched to active trading with Cue and never looked back." },
-  { id: "PsFXUIHN1d0", h: "Doubled My Trading Bag In The First 30 Days",   b: "Cuts straight to the point: signed up, doubled his account in a month, done. Calls out every phony guru in crypto and explains why Cue is the only one he trusts with real money." },
-  { id: "7n3fCXL8Mjc", h: "67% Win Rate After Just 2 Months",               b: "Followed Cue since 2020, finally pulled the trigger. Two months later: 67% win rate. 'No BS, no hand-holding — when the chart talks, it pays to listen.'" },
-  { id: "wyj2ZsyWh8k", h: "19 Years Old — Made $500 In My First Week",      b: "Young trader, fresh to the game, $500 profit in 7 days. 'By far the best crypto community I've ever been part of.' Proof the system works at any age, any account size." },
-  { id: "EhY-AlMdbjk", h: "13 Months Ago, Cue Changed My Life",             b: "4-year Cue follower who finally joined the Wolfpack 13 months ago and says it flat-out changed his life. The Wall Street Academy Report is the 'best decision you can make.'" },
-  { id: "97eZEmI8qGY", h: "Busy Dad, 2 Kids — Still Crushing Trades",       b: "Full-time entrepreneur with two kids and zero free time. The Wolfpack lets him walk in, see the setups, take the trade, get on with his day. Built for real life." },
-  { id: "V6C8JFw7ORw", h: "All The Way From Africa — Growing My Capital With Cue", b: "Global member crushing it from Africa. Praises Cue's 10+ years of multi-asset experience and the edge it gives him across markets. The move of the cycle." },
-  { id: "Xa56tineH0A", h: "Owned Cue's Courses For Years — Just Rejoined",  b: "Multi-year Krypton student who sees patterns clearly now thanks to Cue's training. Just rejoined the Wolfpack and is blown away by the Notion trade-plan setups." },
-  { id: "WYI-CU3PZfs", h: "+10% On My Account In My First Month As A Beginner", b: "Started trading one month ago. Joined the Wolfpack, read Cue's book, followed the system. Grew her account 10% as a complete beginner. No gatekeeping." },
-  { id: "OD5uCL96EsQ", h: "7 Months In And I'll Stay Forever",               b: "Says it's worth every cent, every minute, every second. Plans to renew year after year — even when he no longer needs the signals — because the community is that good." },
-  { id: "J1KuhYlTzy0", h: "Multiple Discords — Cue Is The Only Real One",   b: "Veteran crypto trader who's been burned by every fake guru on the internet. Cue is 'top tier' — real trader, real calls, real results. Recommended to multiple people." },
-  { id: "OqhncwmHVhc", h: "One Alert Paid For Months Of My Subscription",   b: "Just one Wolfpack alert covered multiple months of membership. 'Stay a sheep and get eaten by the wolves — or become a wolf.' Cue teaches you to be self-sufficient." },
-  { id: "KdqrqQb5VHg", h: "Cue Will Double, Triple, Or More Your Portfolio", b: "Multi-year trader vouching for Cue as the most transparent operator in the game. Nobody else in crypto is this honest about wins AND losses — that's why his calls work." },
-  { id: "NxdqQCEO2rc", h: "Best Investment I've Ever Made In My Life",       b: "Three-point breakdown: crypto signals, 30+ hours of training, brilliant community. Plus how to profit in bear markets — most communities don't even mention that part." },
-  { id: "WDqtoIOIx8M", h: "3 Years Trading Crypto — Should've Joined Cue Sooner", b: "Brazilian trader, 3 years in markets, followed Cue's YouTube for a year before pulling the trigger. The alerts solved his biggest scanner problem instantly." },
-  { id: "fL1F49uN6Jc", h: "Following Cue Since 2019 — He Teaches You To Fish", b: "Used to follow YouTube shills and lose money. Found Cue in 2019, took the courses, profitable ever since. Cue doesn't feed you fish — he teaches you to catch them." },
-  { id: "iQOEVY3iEUQ", h: "Blew Up My Bag Multiple Times — Then I Found Cue", b: "The brutal truth: easy money in spring, then summer hit and he gave it all back. Multiple blowups. Cue's training + indicators + no-BS mentorship turned everything around." },
-];
 
 const WIN_TILES = [
   { src: "uploads/proof/win-01.jpg", handle: "@aulzon",     caption: "Two Gate.io shares in 24 hours — IMXUSDT +147.70% and TAOUSDT +115.29%. 'You either Cue, or you lose.'", dollars: "+147%",    platform: "Gate.io" },
@@ -787,9 +766,9 @@ function TrainingPageInner() {
 
       {/* Video Testimonials */}
       <Section id="videos" py={140} style={{ borderBottom: "1px solid var(--line)" }}>
-        <H num="07" label="Video Testimonials" title={<>20 real faces. <em style={{ color: "var(--acid)" }}>Zero scripts.</em></>} sub="Unedited video testimonials from real Wolfpack members. Different countries, different starting capital, different ages. Same system. Click any one to play." />
+        <H num="07" label="Video Testimonials" title={<>Real faces. <em style={{ color: "var(--acid)" }}>Zero scripts.</em></>} sub="Unedited video testimonials from real Wall Street Academy members. Same system, real results. Tap any one to play." />
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14 }}>
-          {VIDEOS.map((v, i) => <VideoTestimonialCard key={i} videoId={v.id} headline={v.h} body={v.b} />)}
+          {CUE_TESTIMONIALS.map((t, i) => <CueVideoTestimonial key={i} {...t} />)}
         </div>
       </Section>
 
