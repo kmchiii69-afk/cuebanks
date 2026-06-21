@@ -4,7 +4,10 @@ import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import posthog from "posthog-js";
-import BookingCalendar from "@/components/page2/BookingCalendar";
+// TEMP: dummy booking form for A2P / SMS-consent approval. Swap back to
+// `BookingCalendar` (commented import below) once CALENDLY_PAT is configured.
+// import BookingCalendar from "@/components/page2/BookingCalendar";
+import DummyBookingForm from "@/components/page2/DummyBookingForm";
 
 // Used only by the callback fallback flow (not the main calendar)
 const BASE_CALENDLY = process.env.NEXT_PUBLIC_CALENDLY_URL || "https://calendly.com/benitezsalescontact/30min";
@@ -60,7 +63,7 @@ function BookInner() {
   }, []);
 
   return (
-    <BookingCalendar
+    <DummyBookingForm
       firstName={firstName}
       lastName={lastName}
       email={email}
