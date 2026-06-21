@@ -9,7 +9,7 @@ export default function TermsPage() {
   return (
     <LegalShell kicker="Legal" title="Terms of Service" effectiveDate="May 18, 2026">
       <P>
-        These Terms of Service (&ldquo;Terms&rdquo;) form a binding agreement between you and <strong style={{ color: "var(--bone)" }}>iknkfx inc</strong> (&ldquo;Company,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;), operating under the brand <strong style={{ color: "var(--bone)" }}>Wall Street Academy</strong>. They govern your access to and use of our website, applications, courses, communities, coaching, mentorship, and any other products or services we offer (collectively, the &ldquo;Services&rdquo;).
+        These Terms of Service (&ldquo;Terms&rdquo;) form a binding agreement between you and <strong style={{ color: "var(--bone)" }}>Wall Street Academy</strong> (&ldquo;Company,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;), operating under the brand <strong style={{ color: "var(--bone)" }}>Wall Street Academy</strong>. They govern your access to and use of our website, applications, courses, communities, coaching, mentorship, and any other products or services we offer (collectively, the &ldquo;Services&rdquo;).
       </P>
       <P>
         By accessing or using the Services, you agree to these Terms. If you do not agree, do not use the Services.
@@ -47,7 +47,7 @@ export default function TermsPage() {
 
       <H2>5. Intellectual Property</H2>
       <P>
-        All content within the Services — including but not limited to videos, written lessons, charts, indicators, scripts, frameworks, templates, recordings, software, branding, and the Wall Street Academy methodology — is owned by iknkfx inc or its licensors and is protected by copyright, trademark, and other intellectual property laws.
+        All content within the Services — including but not limited to videos, written lessons, charts, indicators, scripts, frameworks, templates, recordings, software, branding, and the Wall Street Academy methodology — is owned by Wall Street Academy or its licensors and is protected by copyright, trademark, and other intellectual property laws.
       </P>
       <P>
         You are granted a limited, non-exclusive, non-transferable, revocable license to access the content for your personal, non-commercial use only. You may not:
@@ -68,7 +68,7 @@ export default function TermsPage() {
         <LI>Upload viruses, malware, or other harmful code</LI>
         <LI>Attempt to gain unauthorized access to any portion of the Services</LI>
         <LI>Scrape, mirror, or systematically extract data from the Services</LI>
-        <LI>Misrepresent affiliation with iknkfx inc or any of its members</LI>
+        <LI>Misrepresent affiliation with Wall Street Academy or any of its members</LI>
       </UL>
       <P>
         We may suspend or terminate your access at any time, with or without notice, for any violation of these Terms.
@@ -94,7 +94,7 @@ export default function TermsPage() {
 
       <H2>10. Limitation of Liability</H2>
       <P>
-        TO THE FULLEST EXTENT PERMITTED BY LAW, IN NO EVENT WILL IKNKFX INC, ITS OFFICERS, EMPLOYEES, CONTRACTORS, OR AFFILIATES BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING LOST PROFITS, LOST DATA, OR TRADING LOSSES, ARISING OUT OF OR RELATED TO YOUR USE OF THE SERVICES, EVEN IF WE HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+        TO THE FULLEST EXTENT PERMITTED BY LAW, IN NO EVENT WILL WALL STREET ACADEMY, ITS OFFICERS, EMPLOYEES, CONTRACTORS, OR AFFILIATES BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING LOST PROFITS, LOST DATA, OR TRADING LOSSES, ARISING OUT OF OR RELATED TO YOUR USE OF THE SERVICES, EVEN IF WE HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
       </P>
       <P>
         OUR TOTAL LIABILITY FOR ANY CLAIM RELATED TO THE SERVICES WILL NOT EXCEED THE AMOUNT YOU PAID US IN THE TWELVE (12) MONTHS PRECEDING THE EVENT GIVING RISE TO THE CLAIM, OR ONE HUNDRED U.S. DOLLARS ($100), WHICHEVER IS GREATER.
@@ -102,7 +102,7 @@ export default function TermsPage() {
 
       <H2>11. Indemnification</H2>
       <P>
-        You agree to indemnify, defend, and hold harmless iknkfx inc and its officers, directors, employees, and agents from and against any claims, liabilities, damages, losses, and expenses (including reasonable attorneys&rsquo; fees) arising out of or in any way connected with your access to or use of the Services, your violation of these Terms, or your infringement of any rights of a third party.
+        You agree to indemnify, defend, and hold harmless Wall Street Academy and its officers, directors, employees, and agents from and against any claims, liabilities, damages, losses, and expenses (including reasonable attorneys&rsquo; fees) arising out of or in any way connected with your access to or use of the Services, your violation of these Terms, or your infringement of any rights of a third party.
       </P>
 
       <H2>12. Termination</H2>
@@ -115,7 +115,7 @@ export default function TermsPage() {
         These Terms are governed by the laws of the State of Wyoming, USA, without regard to its conflict of laws provisions. Any dispute arising under these Terms will be resolved exclusively in the state or federal courts located in the State of Wyoming, and you consent to personal jurisdiction in those courts.
       </P>
       <P>
-        Where permitted by law, you and iknkfx inc agree to resolve disputes through individual binding arbitration rather than class action.
+        Where permitted by law, you and Wall Street Academy agree to resolve disputes through individual binding arbitration rather than class action.
       </P>
 
       <H2>14. Changes to These Terms</H2>
@@ -126,8 +126,8 @@ export default function TermsPage() {
       <H2>15. Contact</H2>
       <P>
         Questions about these Terms:<br />
-        <strong style={{ color: "var(--bone)" }}>iknkfx inc</strong><br />
-        Submit a request through our contact form at <a href="https://quantumcipherlab.com/contact" style={{ color: "var(--acid)" }}>quantumcipherlab.com/contact</a>.
+        <strong style={{ color: "var(--bone)" }}>Wall Street Academy</strong><br />
+        Submit a request through our contact form at <a href="https://cuebanks.vercel.app/contact" style={{ color: "var(--acid)" }}>cuebanks.vercel.app/contact</a>.
       </P>
 
       <Callout>

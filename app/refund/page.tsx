@@ -9,7 +9,7 @@ export default function RefundPage() {
   return (
     <LegalShell kicker="Legal" title="Refund Policy" effectiveDate="May 18, 2026">
       <P>
-        This Refund Policy explains when and how you may request a refund for products and services purchased from <strong style={{ color: "var(--bone)" }}>iknkfx inc</strong>, operating under the brand <strong style={{ color: "var(--bone)" }}>Wall Street Academy</strong>. By purchasing any product or service from us, you agree to this policy.
+        This Refund Policy explains when and how you may request a refund for products and services purchased from <strong style={{ color: "var(--bone)" }}>Wall Street Academy</strong>, operating under the brand <strong style={{ color: "var(--bone)" }}>Wall Street Academy</strong>. By purchasing any product or service from us, you agree to this policy.
       </P>
 
       <Callout>
@@ -26,7 +26,7 @@ export default function RefundPage() {
         For certain flagship paid programs, we offer a <strong style={{ color: "var(--bone)" }}>7-day refund window</strong> from the date of purchase, subject to <strong style={{ color: "var(--bone)" }}>all</strong> of the following conditions:
       </P>
       <UL>
-        <LI>The refund request is submitted through our contact form at <a href="https://quantumcipherlab.com/contact" style={{ color: "var(--acid)" }}>quantumcipherlab.com/contact</a> within seven (7) calendar days of the original purchase date.</LI>
+        <LI>The refund request is submitted through our contact form at <a href="https://cuebanks.vercel.app/contact" style={{ color: "var(--acid)" }}>cuebanks.vercel.app/contact</a> within seven (7) calendar days of the original purchase date.</LI>
         <LI>You have consumed less than 20% of the program&rsquo;s content (measured by lessons viewed, modules accessed, or sessions attended).</LI>
         <LI>You have not downloaded, screen-captured, or redistributed any proprietary materials.</LI>
         <LI>You have not violated the <a href="/terms" style={{ color: "var(--acid)" }}>Terms of Service</a>.</LI>
@@ -63,7 +63,7 @@ export default function RefundPage() {
       </UL>
 
       <H2>6. How to Request a Refund</H2>
-      <P>To request a refund, submit a ticket through our contact form at <a href="https://quantumcipherlab.com/contact" style={{ color: "var(--acid)" }}>quantumcipherlab.com/contact</a> with:</P>
+      <P>To request a refund, submit a ticket through our contact form at <a href="https://cuebanks.vercel.app/contact" style={{ color: "var(--acid)" }}>cuebanks.vercel.app/contact</a> with:</P>
       <UL>
         <LI>The full name on the order</LI>
         <LI>The email address used at purchase</LI>
@@ -83,8 +83,8 @@ export default function RefundPage() {
       <H2>8. Contact</H2>
       <P>
         Refund-related questions:<br />
-        <strong style={{ color: "var(--bone)" }}>iknkfx inc</strong><br />
-        Submit a ticket through our contact form at <a href="https://quantumcipherlab.com/contact" style={{ color: "var(--acid)" }}>quantumcipherlab.com/contact</a>.
+        <strong style={{ color: "var(--bone)" }}>Wall Street Academy</strong><br />
+        Submit a ticket through our contact form at <a href="https://cuebanks.vercel.app/contact" style={{ color: "var(--acid)" }}>cuebanks.vercel.app/contact</a>.
       </P>
 
       <Callout>

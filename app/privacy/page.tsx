@@ -2,14 +2,14 @@ import LegalShell, { H2, H3, P, UL, LI, Callout } from "@/components/legal/Legal
 
 export const metadata = {
   title: "Privacy Policy · Wall Street Academy",
-  description: "How iknkfx inc collects, uses, and protects your personal information.",
+  description: "How Wall Street Academy collects, uses, and protects your personal information.",
 };
 
 export default function PrivacyPage() {
   return (
     <LegalShell kicker="Legal" title="Privacy Policy" effectiveDate="May 18, 2026">
       <P>
-        This Privacy Policy explains how <strong style={{ color: "var(--bone)" }}>iknkfx inc</strong> (&ldquo;Company,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;), operating under the brand <strong style={{ color: "var(--bone)" }}>Wall Street Academy</strong>, collects, uses, shares, and protects personal information you provide through quantumcipherlab.com and any related domains, applications, or services (collectively, the &ldquo;Services&rdquo;).
+        This Privacy Policy explains how <strong style={{ color: "var(--bone)" }}>Wall Street Academy</strong> (&ldquo;Company,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;), collects, uses, shares, and protects personal information you provide through cuebanks.vercel.app and any related domains, applications, or services (collectively, the &ldquo;Services&rdquo;).
       </P>
       <P>
         By using the Services, you agree to the practices described here. If you do not agree, do not use the Services.
@@ -64,7 +64,7 @@ export default function PrivacyPage() {
 
       <H2>4. SMS and Phone Communication (TCPA)</H2>
       <P>
-        By providing your phone number and consenting at the relevant opt-in points, you agree to receive marketing and service-related calls and text messages from iknkfx inc, including those made via automated dialing systems and prerecorded messages. Consent is not a condition of purchase. Message and data rates may apply. You may opt out at any time by replying STOP to any text message or by contacting us at the address below.
+        By providing your phone number and consenting at the relevant opt-in points, you agree to receive marketing and service-related calls and text messages from Wall Street Academy, including those made via automated dialing systems and prerecorded messages. Consent is not a condition of purchase. Message and data rates may apply. You may opt out at any time by replying STOP to any text message or by contacting us at the address below.
       </P>
 
       <H2>5. Cookies and Tracking</H2>
@@ -93,7 +93,7 @@ export default function PrivacyPage() {
         <LI>Lodge a complaint with a data protection authority</LI>
       </UL>
       <P>
-        To exercise these rights, submit a request through our contact form at <a href="https://quantumcipherlab.com/contact" style={{ color: "var(--acid)" }}>quantumcipherlab.com/contact</a>.
+        To exercise these rights, submit a request through our contact form at <a href="https://cuebanks.vercel.app/contact" style={{ color: "var(--acid)" }}>cuebanks.vercel.app/contact</a>.
       </P>
 
       <H2>9. Children</H2>
@@ -114,8 +114,8 @@ export default function PrivacyPage() {
       <H2>12. Contact</H2>
       <P>
         Questions about this Privacy Policy:<br />
-        <strong style={{ color: "var(--bone)" }}>iknkfx inc</strong><br />
-        Submit a request through our contact form at <a href="https://quantumcipherlab.com/contact" style={{ color: "var(--acid)" }}>quantumcipherlab.com/contact</a>.
+        <strong style={{ color: "var(--bone)" }}>Wall Street Academy</strong><br />
+        Submit a request through our contact form at <a href="https://cuebanks.vercel.app/contact" style={{ color: "var(--acid)" }}>cuebanks.vercel.app/contact</a>.
       </P>
 
       <Callout>

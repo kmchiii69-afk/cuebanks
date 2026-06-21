@@ -14,7 +14,7 @@ export default function DisclaimerPage() {
 
       <H2>1. Educational Content Only</H2>
       <P>
-        All content published by <strong style={{ color: "var(--bone)" }}>iknkfx inc</strong>, operating under the brand <strong style={{ color: "var(--bone)" }}>Wall Street Academy</strong> — including but not limited to websites, courses, videos, livestreams, podcasts, written materials, software, indicators, scripts, frameworks, social media posts, and one-on-one coaching — is provided strictly for <strong style={{ color: "var(--bone)" }}>educational and informational purposes</strong>.
+        All content published by <strong style={{ color: "var(--bone)" }}>Wall Street Academy</strong>, operating under the brand <strong style={{ color: "var(--bone)" }}>Wall Street Academy</strong> — including but not limited to websites, courses, videos, livestreams, podcasts, written materials, software, indicators, scripts, frameworks, social media posts, and one-on-one coaching — is provided strictly for <strong style={{ color: "var(--bone)" }}>educational and informational purposes</strong>.
       </P>
       <P>
         Nothing we publish should be construed as personalized investment advice or a recommendation to buy, sell, or hold any financial instrument.
@@ -88,15 +88,15 @@ export default function DisclaimerPage() {
       <UL>
         <LI>You are solely responsible for your trading and investment decisions.</LI>
         <LI>You have read and understood this Disclaimer in its entirety.</LI>
-        <LI>You will not hold iknkfx inc or any of its officers, employees, contractors, or affiliates liable for any losses, damages, or costs arising from your use of our content or your trading activity.</LI>
+        <LI>You will not hold Wall Street Academy or any of its officers, employees, contractors, or affiliates liable for any losses, damages, or costs arising from your use of our content or your trading activity.</LI>
         <LI>You understand that any decisions you make are yours alone.</LI>
       </UL>
 
       <H2>11. Contact</H2>
       <P>
         Questions about this Disclaimer:<br />
-        <strong style={{ color: "var(--bone)" }}>iknkfx inc</strong><br />
-        Submit a request through our contact form at <a href="https://quantumcipherlab.com/contact" style={{ color: "var(--acid)" }}>quantumcipherlab.com/contact</a>.
+        <strong style={{ color: "var(--bone)" }}>Wall Street Academy</strong><br />
+        Submit a request through our contact form at <a href="https://cuebanks.vercel.app/contact" style={{ color: "var(--acid)" }}>cuebanks.vercel.app/contact</a>.
       </P>
 
       <Callout>

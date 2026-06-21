@@ -6,6 +6,7 @@ const LEGAL_LINKS = [
   { href: "/terms", label: "Terms" },
   { href: "/refund", label: "Refund" },
   { href: "/disclaimer", label: "Disclaimer" },
+  { href: "/contact", label: "Contact" },
 ];
 
 function Logo() {
@@ -55,7 +56,7 @@ export default function LegalShell({
           {title}
         </h1>
         <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 700, color: "var(--ash)", letterSpacing: "0.22em", textTransform: "uppercase", borderTop: "1px solid var(--line)", borderBottom: "1px solid var(--line)", padding: "16px 0" }}>
-          · Effective {effectiveDate} · iknkfx inc · DBA Wall Street Academy ·
+          · Effective {effectiveDate} · Wall Street Academy ·
         </div>
       </div>
 
@@ -66,7 +67,7 @@ export default function LegalShell({
 
       {/* FOOTER */}
       <footer style={{ borderTop: "1px solid var(--line)", padding: "32px 48px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16, fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: "var(--muted)", letterSpacing: "0.22em", textTransform: "uppercase" }}>
-        <span>© 2026 · iknkfx inc · All Rights Reserved</span>
+        <span>© 2026 · Wall Street Academy · All Rights Reserved</span>
         <span>· Not financial advice · Trading involves real risk of loss ·</span>
       </footer>
     </div>
