@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode, type CSSProperties } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode, type CSSProperties } from "react";
 import Logo from "@/components/shared/Logo";
 import CueVideoTestimonial from "@/components/page2/CueVideoTestimonial";
 import { CUE_TESTIMONIALS } from "@/components/wsa/testimonials";
@@ -72,23 +72,26 @@ function Slide({ id, n, kicker, children, alt, align = "center", style, classNam
     <section
       id={id}
       data-slide={n}
-      className={className}
+      className={`ofr-slide ${className ?? ""}`}
       style={{
-        scrollSnapAlign: "start", position: "relative", minHeight: "100svh",
-        display: "flex", flexDirection: "column", justifyContent: align === "center" ? "center" : "flex-start",
-        padding: "104px 0 88px", borderBottom: "1px solid var(--line)",
+        flex: "0 0 100%", width: "100vw", height: "100svh", overflowY: "auto", overflowX: "hidden",
+        scrollSnapAlign: "start", position: "relative",
         background: alt ? "var(--bg-1)" : "var(--bg)", ...style,
       }}
     >
-      <div style={{ maxWidth: 1160, width: "100%", margin: "0 auto", padding: "0 32px", position: "relative" }}>
-        {kicker && (
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 28 }}>
-            <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: 700, color: "var(--acid)", letterSpacing: "0.1em" }}>{String(n).padStart(2, "0")}</span>
-            <span style={{ width: 28, height: 1, background: "var(--acid)" }} />
-            <Eyebrow style={{ fontSize: 11 }}>{kicker}</Eyebrow>
-          </div>
-        )}
-        {children}
+      {/* min-height:100% + centered flex keeps slides centered, yet scrollable
+          (top reachable) when content is taller than the viewport. */}
+      <div style={{ minHeight: "100%", display: "flex", flexDirection: "column", justifyContent: align === "center" ? "center" : "flex-start", padding: "104px 0 96px" }}>
+        <div className="ofr-pad" style={{ maxWidth: 1160, width: "100%", margin: "0 auto", padding: "0 64px", position: "relative" }}>
+          {kicker && (
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 28 }}>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: 700, color: "var(--acid)", letterSpacing: "0.1em" }}>{String(n).padStart(2, "0")}</span>
+              <span style={{ width: 28, height: 1, background: "var(--acid)" }} />
+              <Eyebrow style={{ fontSize: 11 }}>{kicker}</Eyebrow>
+            </div>
+          )}
+          {children}
+        </div>
       </div>
     </section>
   );
@@ -106,17 +109,31 @@ function CTA({ children = "Apply For Your Seat →", variant = "solid", style }:
   return <a href={APPLY} className={variant === "ghost" ? "btn btn-ghost btn-lg" : "btn btn-lg"} style={style}>{children}</a>;
 }
 
-/* fixed deck navigation — progress + clickable dots */
-function DeckNav({ active }: { active: number }) {
+/* fixed deck navigation — top progress + bottom dot rail + slide counter */
+function DeckNav({ active, goTo }: { active: number; goTo: (i: number) => void }) {
   return (
     <>
-      <div style={{ position: "fixed", top: 0, left: 0, height: 3, background: "var(--acid)", width: `${((active + 1) / SLIDES.length) * 100}%`, zIndex: 95, transition: "width 300ms ease", boxShadow: "0 0 12px rgba(249,255,60,0.6)" }} />
-      <div className="ofr-dots" style={{ position: "fixed", right: 18, top: "50%", transform: "translateY(-50%)", zIndex: 95, display: "flex", flexDirection: "column", gap: 10 }}>
+      <div style={{ position: "fixed", top: 0, left: 0, height: 3, background: "var(--acid)", width: `${((active + 1) / SLIDES.length) * 100}%`, zIndex: 95, transition: "width 320ms ease", boxShadow: "0 0 12px rgba(249,255,60,0.6)" }} />
+      <div className="ofr-dots" style={{ position: "fixed", left: "50%", bottom: 18, transform: "translateX(-50%)", zIndex: 95, display: "flex", gap: 9, padding: "9px 14px", borderRadius: 999, background: "rgba(0,0,0,0.55)", backdropFilter: "blur(8px)", border: "1px solid var(--line)" }}>
         {SLIDES.map((label, i) => (
-          <a key={i} href={`#slide-${i + 1}`} title={label} aria-label={label} style={{ width: 8, height: 8, borderRadius: "50%", background: i === active ? "var(--acid)" : "var(--line-2)", boxShadow: i === active ? "0 0 10px rgba(249,255,60,0.7)" : "none", transition: "all 240ms ease", transform: i === active ? "scale(1.3)" : "scale(1)" }} />
+          <button key={i} onClick={() => goTo(i)} title={label} aria-label={label} style={{ width: 8, height: 8, padding: 0, border: 0, cursor: "pointer", borderRadius: "50%", background: i === active ? "var(--acid)" : "var(--line-2)", boxShadow: i === active ? "0 0 10px rgba(249,255,60,0.7)" : "none", transition: "all 240ms ease", transform: i === active ? "scale(1.35)" : "scale(1)" }} />
         ))}
       </div>
+      <div className="ofr-counter" style={{ position: "fixed", right: 24, bottom: 16, zIndex: 95, fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 700, letterSpacing: "0.16em", color: "var(--muted)" }}>
+        {String(active + 1).padStart(2, "0")} / {SLIDES.length}
+      </div>
     </>
+  );
+}
+
+/* fixed left/right deck arrows (desktop) */
+function Arrows({ active, goTo }: { active: number; goTo: (i: number) => void }) {
+  const base: CSSProperties = { position: "fixed", top: "50%", transform: "translateY(-50%)", zIndex: 95, width: 46, height: 46, borderRadius: "50%", border: "1px solid var(--line-2)", background: "rgba(0,0,0,0.5)", backdropFilter: "blur(8px)", color: "var(--bone)", fontSize: 24, lineHeight: 1, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" };
+  return (
+    <div className="ofr-arrows">
+      <button aria-label="Previous slide" onClick={() => goTo(active - 1)} disabled={active === 0} style={{ ...base, left: 18, opacity: active === 0 ? 0.25 : 1 }}>‹</button>
+      <button aria-label="Next slide" onClick={() => goTo(active + 1)} disabled={active === SLIDES.length - 1} style={{ ...base, right: 18, opacity: active === SLIDES.length - 1 ? 0.25 : 1 }}>›</button>
+    </div>
   );
 }
 
@@ -227,25 +244,98 @@ function PricingCard({ featured, name, price, term, lead, features }: { featured
 export default function OfferPage() {
   const scroller = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
+  const activeRef = useRef(0);
+  const animatingRef = useRef(false);
+  useEffect(() => { activeRef.current = active; }, [active]);
 
+  // JS-animated horizontal scroll (direct scrollLeft + easing) — reliable across
+  // engines where CSS smooth-scroll/scroll-snap fight programmatic scrollTo.
+  const goTo = useCallback((i: number) => {
+    const root = scroller.current; if (!root) return;
+    const idx = Math.max(0, Math.min(SLIDES.length - 1, i));
+    const slide = root.children[idx] as HTMLElement | undefined;
+    const target = slide ? slide.offsetLeft : idx * root.clientWidth;
+    const start = root.scrollLeft;
+    const dist = target - start;
+    setActive(idx);
+    if (Math.abs(dist) < 1) return;
+    animatingRef.current = true;
+    let t0 = 0; const dur = 480;
+    const step = (ts: number) => {
+      if (!t0) t0 = ts;
+      const p = Math.min(1, (ts - t0) / dur);
+      root.scrollLeft = start + dist * (1 - Math.pow(1 - p, 3));
+      if (p < 1) requestAnimationFrame(step);
+      else animatingRef.current = false;
+    };
+    requestAnimationFrame(step);
+  }, []);
+
+  // Track the active slide from scroll position, and JS-snap to the nearest
+  // panel ~160ms after a free swipe stops (suppressed during goTo animation).
   useEffect(() => {
     const root = scroller.current; if (!root) return;
-    const slides = Array.from(root.querySelectorAll<HTMLElement>("[data-slide]"));
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => { if (e.isIntersecting) setActive(Number(e.target.getAttribute("data-slide")) - 1); });
-      },
-      { root, threshold: 0.5 },
-    );
-    slides.forEach((s) => io.observe(s));
-    return () => io.disconnect();
+    let raf = 0; let snapT: ReturnType<typeof setTimeout>;
+    const update = () => {
+      const i = Math.round(root.scrollLeft / Math.max(1, root.clientWidth));
+      setActive(Math.max(0, Math.min(SLIDES.length - 1, i)));
+    };
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(update);
+      if (animatingRef.current) return;
+      clearTimeout(snapT);
+      snapT = setTimeout(() => {
+        if (animatingRef.current) return;
+        const w = Math.max(1, root.clientWidth);
+        const i = Math.round(root.scrollLeft / w);
+        if (Math.abs(root.scrollLeft - i * w) > 2) goTo(i);
+      }, 160);
+    };
+    root.addEventListener("scroll", onScroll, { passive: true });
+    update();
+    return () => { root.removeEventListener("scroll", onScroll); cancelAnimationFrame(raf); clearTimeout(snapT); };
+  }, [goTo]);
+
+  // keyboard arrows advance the deck
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight" || e.key === "PageDown") { e.preventDefault(); goTo(activeRef.current + 1); }
+      else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); goTo(activeRef.current - 1); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [goTo]);
+
+  // translate a vertical mouse wheel into horizontal deck movement, but let a
+  // taller-than-viewport slide finish scrolling vertically first.
+  useEffect(() => {
+    const root = scroller.current; if (!root) return;
+    const onWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+      const slide = root.querySelectorAll<HTMLElement>("[data-slide]")[activeRef.current];
+      if (slide) {
+        const down = e.deltaY > 0;
+        const atBottom = slide.scrollTop + slide.clientHeight >= slide.scrollHeight - 2;
+        const atTop = slide.scrollTop <= 2;
+        if ((down && !atBottom) || (!down && !atTop)) return;
+      }
+      e.preventDefault();
+      root.scrollLeft += e.deltaY;
+    };
+    root.addEventListener("wheel", onWheel, { passive: false });
+    return () => root.removeEventListener("wheel", onWheel);
   }, []);
 
   return (
-    <div ref={scroller} style={{ height: "100svh", overflowY: "auto", scrollSnapType: "y proximity", scrollBehavior: "smooth", background: "var(--bg)", color: "var(--bone)", fontFamily: "var(--font-body)" }}>
+    <>
       <style>{`
         @keyframes ofrBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
         .ofr-title { font-size: clamp(34px, 6vw, 72px); }
+        .ofr-deck { scrollbar-width: none; }
+        .ofr-deck::-webkit-scrollbar { display: none; }
+        .ofr-slide { scrollbar-width: none; }
+        .ofr-slide::-webkit-scrollbar { display: none; }
         .ofr-carousel::-webkit-scrollbar { height: 6px; }
         .ofr-carousel::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 3px; }
         .ofr-shot img { transition: transform 400ms cubic-bezier(0.2,0.8,0.2,1); }
@@ -255,13 +345,16 @@ export default function OfferPage() {
           .ofr-2col { grid-template-columns: 1fr !important; }
           .ofr-3col { grid-template-columns: 1fr !important; }
           .ofr-4col { grid-template-columns: 1fr 1fr !important; }
-          .ofr-dots { display: none !important; }
+          .ofr-pad { padding-left: 22px !important; padding-right: 22px !important; }
+          .ofr-arrows { display: none !important; }
         }
         @media (max-width: 560px) { .ofr-4col { grid-template-columns: 1fr !important; } }
       `}</style>
 
       <TopBar />
-      <DeckNav active={active} />
+      <DeckNav active={active} goTo={goTo} />
+      <Arrows active={active} goTo={goTo} />
+      <div ref={scroller} className="ofr-deck" style={{ height: "100svh", display: "flex", flexDirection: "row", overflowX: "auto", overflowY: "hidden", background: "var(--bg)", color: "var(--bone)", fontFamily: "var(--font-body)" }}>
 
       {/* 01 — BIG PROMISE */}
       <Slide id="slide-1" n={1} className="grid-bg" style={{ overflow: "hidden" }}>
@@ -377,13 +470,13 @@ export default function OfferPage() {
       </Slide>
 
       {/* 08 — STUDENT RESULTS */}
-      <Slide id="slide-8" n={8} kicker="The proof" align="start" style={{ justifyContent: "center" }}>
+      <Slide id="slide-8" n={8} kicker="The proof">
         <Reveal><Title>Real students. <span style={{ color: "var(--acid)" }}>Real receipts.</span></Title></Reveal>
         <Reveal delay={120} style={{ marginTop: 40 }}><WinsCarousel /></Reveal>
       </Slide>
 
       {/* 09 — VIDEO TESTIMONIALS + mid CTA */}
-      <Slide id="slide-9" n={9} kicker="In their words" alt align="start" style={{ justifyContent: "center" }}>
+      <Slide id="slide-9" n={9} kicker="In their words" alt>
         <Reveal><Title>Unscripted. <span style={{ color: "var(--acid)" }}>Unedited.</span></Title></Reveal>
         <div className="ofr-4col" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, margin: "40px 0 36px" }}>
           {CUE_TESTIMONIALS.map((t, i) => <Reveal key={i} delay={i * 90}><CueVideoTestimonial {...t} /></Reveal>)}
@@ -483,6 +576,7 @@ export default function OfferPage() {
           </Reveal>
         </div>
       </Slide>
-    </div>
+      </div>
+    </>
   );
 }
