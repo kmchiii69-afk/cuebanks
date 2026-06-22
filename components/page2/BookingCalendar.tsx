@@ -168,7 +168,7 @@ export default function BookingCalendar({
         color: "var(--acid)", letterSpacing: "0.22em", textTransform: "uppercase",
         textAlign: "center", marginBottom: 24,
       }}>
-        · Select a time · 30 min ·
+        · Select a time · 45 min ·
       </div>
 
       {loading && (
@@ -245,7 +245,7 @@ export default function BookingCalendar({
                 <circle cx="12" cy="12" r="10" />
                 <polyline points="12 6 12 12 16 14" />
               </svg>
-              30 min call
+              45 min call
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--ash)" strokeWidth="2">

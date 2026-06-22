@@ -84,7 +84,7 @@ export default function DummyBookingForm({
   return (
     <div>
       <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: "var(--acid)", letterSpacing: "0.22em", textTransform: "uppercase", textAlign: "center", marginBottom: 24 }}>
-        · Select a time · 30 min ·
+        · Select a time · 45 min ·
       </div>
 
       {/* Day strip */}
@@ -162,7 +162,7 @@ export default function DummyBookingForm({
           {status === "submitting" ? "Confirming…" : "Confirm My Call →"}
         </button>
         <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--muted)", letterSpacing: "0.12em", textAlign: "center", textTransform: "uppercase" }}>
-          · No charge to book · 30-minute strategy call ·
+          · No charge to book · 45-minute strategy call ·
         </p>
       </div>
     </div>

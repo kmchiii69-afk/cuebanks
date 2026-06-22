@@ -188,7 +188,7 @@ export default function BookPage() {
             <Suspense fallback={null}><FirstNameGreeting /></Suspense>.
           </h1>
           <p style={{ fontFamily: "var(--font-body)", fontSize: 17, lineHeight: 1.55, color: "var(--ash)", margin: "0 auto", maxWidth: 640, fontWeight: 400 }}>
-            30 minutes with the team — we&rsquo;ll walk the system, see if it fits where you are, and answer anything on your mind. Grabbing a slot takes 30 seconds.
+            45 minutes with the team — we&rsquo;ll walk the system, see if it fits where you are, and answer anything on your mind. Grabbing a slot takes 30 seconds.
           </p>
         </div>
       </section>
