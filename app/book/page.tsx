@@ -4,38 +4,8 @@ import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import posthog from "posthog-js";
-// TEMP: dummy booking form for A2P / SMS-consent approval. Swap back to
-// `BookingCalendar` (commented import below) once CALENDLY_PAT is configured.
-// import BookingCalendar from "@/components/page2/BookingCalendar";
-import DummyBookingForm from "@/components/page2/DummyBookingForm";
+import CalendlyWidget from "@/components/page2/CalendlyWidget";
 
-// Used only by the callback fallback flow (not the main calendar)
-const BASE_CALENDLY = process.env.NEXT_PUBLIC_CALENDLY_URL || "https://calendly.com/benitezsalescontact/30min";
-
-// Legacy Calendly theme — kept for the callback fallback iframe only
-const CALENDLY_THEME = {
-  background_color: "000000",
-  text_color: "ffffff",
-  primary_color: "f9ff3c",
-  hide_event_type_details: "1",
-  hide_landing_page_details: "1",
-};
-
-function buildCalendlyUrl(name: string, email: string, _phone: string) {
-  const params = new URLSearchParams({ ...CALENDLY_THEME });
-  if (name) params.set("name", name);
-  if (email) params.set("email", email);
-  // Phone is intentionally NOT pre-filled here. The Calendly event currently
-  // has no Phone custom question — so `a1=` would land in "Please share
-  // anything for our meeting" which is confusing. Phone is already in Close
-  // and Discord; setters can dial from there. To re-enable: add a Phone
-  // question as the FIRST custom question on the Calendly event, then
-  // restore `params.set("a1", _phone)`.
-  // URLSearchParams encodes spaces as "+"; Calendly's prefill parser
-  // interprets "+" literally, so swap to %20 to render "Cue Banks"
-  // correctly instead of "Cue Banks+Cue".
-  return `${BASE_CALENDLY}?${params.toString().replace(/\+/g, "%20")}`;
-}
 
 function Logo() {
   return (
@@ -63,11 +33,10 @@ function BookInner() {
   }, []);
 
   return (
-    <DummyBookingForm
+    <CalendlyWidget
       firstName={firstName}
       lastName={lastName}
       email={email}
-      phone={phone}
     />
   );
 }
