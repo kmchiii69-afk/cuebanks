@@ -43,7 +43,7 @@ async function fetchCloseLeads(sinceDateStr: string) {
 // ─── Calendly ─────────────────────────────────────────────────────
 
 async function fetchCalendlyEvents(since: string) {
-  const pat = process.env.CALENDLY_PAT || "";
+  const pat = process.env.CALENDLY_ACCESS_TOKEN || "";
   if (!pat) return [];
 
   const meRes = await fetch("https://api.calendly.com/users/me", {

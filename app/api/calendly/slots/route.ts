@@ -17,7 +17,7 @@ let _eventType: { uri: string; uuid: string; t: number } | null = null;
 async function getEventType(): Promise<{ uri: string; uuid: string } | null> {
   if (_eventType && Date.now() - _eventType.t < 3_600_000) return _eventType;
 
-  const pat = process.env.CALENDLY_PAT;
+  const pat = process.env.CALENDLY_ACCESS_TOKEN;
   if (!pat) return null;
 
   const headers = { Authorization: `Bearer ${pat}`, "Content-Type": "application/json" };
@@ -65,7 +65,7 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const pat = process.env.CALENDLY_PAT!;
+  const pat = process.env.CALENDLY_ACCESS_TOKEN!;
   // Start from today (never in the past), end N days out
   const startTime = new Date(startDate + "T00:00:00.000Z").toISOString();
   const endTime = new Date(Date.now() + days * 86_400_000).toISOString();
