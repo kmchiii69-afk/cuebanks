@@ -264,6 +264,24 @@ export default function IGPage() {
         >
           · Takes 2 minutes · Spots are limited ·
         </p>
+        <p style={{ marginTop: 22 }}>
+          <Link
+            href="/roadmap"
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 10,
+              fontWeight: 700,
+              color: "var(--ash)",
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              textDecoration: "none",
+              borderBottom: "1px solid var(--line-2)",
+              paddingBottom: 2,
+            }}
+          >
+            See the full 16-week roadmap →
+          </Link>
+        </p>
       </section>
 
       {/* PROOF STRIP */}
