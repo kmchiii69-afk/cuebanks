@@ -8,33 +8,33 @@ const PHASES = [
     title: "Foundation & Mindset",
     duration: "Week 1 – 2",
     tagline:
-      "Before you touch a chart, you need to know why 90% of traders lose money — and build the habits that protect you from day one.",
+      "Your strategy isn't gonna be the basis of your trading success. Risk management will be. Before you touch a chart, you need to understand that.",
     checkpoint:
-      "You understand how risk management protects your account. You won't make the mistakes that kill most new traders before they ever get a chance.",
+      "You know the rules that keep your account alive. You understand why there is not one single successful trader who uses improper risk management. You're not starting phase two without this locked in.",
     items: [
       {
         label: "Introduction to Forex",
-        note: "What it actually is. What it isn't. No hype — just the structure of the market you're about to trade.",
+        note: "What the market actually is, how it moves, and what it isn't. The foundation is support and resistance — everything else is built on top of that.",
       },
       {
         label: "Platform Setup — MT4 + TradingView",
-        note: "Install Cue's exact indicators, templates, and settings before anything else. Start with the right tools.",
+        note: "Cue's exact indicators, moving averages, and chart templates before anything else. If the setup is wrong, the analysis is wrong from the start.",
       },
       {
         label: "Risk Management 101",
-        note: "The 2:1 minimum. Daily drawdown caps. Position sizing. This module alone saves accounts. Non-negotiable before Phase 2.",
+        note: "1% to 5% risk per trade — conservative to the absolute most you should go. Cue blew four $1,000 accounts before he understood this. You don't have to.",
       },
       {
         label: "Mental Health — The Trader's Environment",
-        note: "Your habits, your relationships, your outlook. Cue built this because the market will expose every weak link in your psychology — before you're ready.",
+        note: "Once you get greedy, that's what kills your success. This module covers the mindset before the market exposes every weak point in your psychology.",
       },
       {
         label: "The Four Fears + Greed, Revenge, FOMO",
-        note: "Know your patterns before the market exploits them. Fear of being wrong. Fear of missing out. Fear of losing money. Fear of leaving money on the table. All covered.",
+        note: "You are the problem at times. Not the broker. The market. You. Know your patterns before they cost you. Take accountability for your own actions.",
       },
       {
         label: "Demo vs Live — Understanding the Difference",
-        note: "Why demo doesn't prepare you for live, and exactly how to bridge the gap without blowing your first real account.",
+        note: "Demo doesn't replicate the emotional weight of real money. This module bridges that gap so your first live account doesn't become a tuition payment.",
       },
     ],
   },
@@ -43,29 +43,29 @@ const PHASES = [
     title: "Reading Price",
     duration: "Week 2 – 3",
     tagline:
-      "Learn to see what the market is actually saying. Trends, support, supply and demand — the language behind every single price move.",
+      "If the market is above the MAs, focus on buys. If it's under the MAs, focus on sells. Learn to see what the market is actually showing you — and flow with it.",
     checkpoint:
-      "You can look at any chart and tell the trend, identify key S&R levels, and spot supply/demand zones. Charts stop being noise.",
+      "You can look at any chart and tell the trend, mark your S&R levels, and identify supply and demand zones. You know what's noise and what's a real move. Charts don't lie to you anymore.",
     items: [
       {
         label: "Identifying The Trend (1.0 + 2.0)",
-        note: "Moving averages, trend direction, higher highs and lower lows. The single most important skill before confluence. You cannot trade what you can't read.",
+        note: "Higher high points, higher low points — that's a bullish market. Lower highs, lower lows — that's a bearish market. This is always first. Structure is always first.",
       },
       {
         label: "Support & Resistance (1.0 + 2.0)",
-        note: "Where price respects itself. Where institutions are watching. 11 + 15 minutes that change how you see charts permanently.",
+        note: "The base of every style of trading. Daily levels on the line chart, H4 on the line chart, H1 on candles — that's how Cue marks his S&R from the top down.",
       },
       {
         label: "Supply & Demand",
-        note: "The institutional reason behind every move. Not retail psychology — the actual orders that move markets.",
+        note: "The institutional orders behind every real move. Not retail psychology — the actual zones where price is going to react, repeatedly.",
       },
       {
         label: "Drawing Trendlines (1.0 + 2.0)",
-        note: "Most traders draw them wrong. 34 minutes of getting it right — where to anchor, when they break, what it means when they do.",
+        note: "If you can't walk in it, it's invalid. Most traders draw them wrong. Learn where to anchor, when they break, and exactly what that means for the next move.",
       },
       {
         label: "Chart Practice: 10 Drawn Charts",
-        note: "Draw 10 charts with trends, S&R, and supply/demand marked. Submit for review before moving to Phase 3. Not optional.",
+        note: "Draw 10 charts with trend direction, S&R, and supply/demand marked. This is how you build the eye. You can't skip the reps — submit before moving to Phase 3.",
       },
     ],
   },
@@ -74,29 +74,29 @@ const PHASES = [
     title: "Structure + Levels",
     duration: "Week 3 – 4",
     tagline:
-      "Market structure is how professional traders read intention. Fibonacci is how they find precision. Together, this is where your entries start to make sense.",
+      "Regardless of what the MAs are doing, always ask yourself — what is structure doing? This phase is where you learn to read the blueprint of every move before it happens.",
     checkpoint:
-      "You can draw accurate market structure and identify precise Fibonacci retracements on any chart. Your entries become purposeful — not guesses.",
+      "You can map market structure clean on any pair. You can draw a fib from point A to point B and identify where price is most likely to react — 38.2%, 23.6%, the green zone. Entries stop being guesses.",
     items: [
       {
         label: "Drawing Market Structure (1.0 + 2.0)",
-        note: "The blueprint of every move before it happens. Break of structure, change of character, continuation vs reversal. The roadmap within the chart.",
+        note: "Break of structure. Change of character. Continuation versus reversal. You need to know what the market is doing before you can know where it's going.",
       },
       {
         label: "Using Fibonacci (1.0 + 2.0)",
-        note: "Not voodoo. The math the market respects. 8 + 34 minutes — the exact tool settings, how to draw it, where price reacts.",
+        note: "Point A to point B — 38.2% is your first higher-low opportunity, 23.6% is where it gets sloppy. Know which levels to trust and which ones to wait through.",
       },
       {
         label: "Fibonacci Drill: 20 Historical Moves",
-        note: "Apply fibs to 20 historical moves and identify where price reacted. This repetition is what builds the eye. You can't skip the reps.",
+        note: "Pull 20 historical moves and map the fib on each one. Find where price reacted. This repetition is what builds the eye — you cannot shortcut this.",
       },
       {
         label: "Top Down Analysis — Cue's Exact Flow",
-        note: "HTF to LTF. The framework Cue uses every single session to bias a pair before touching a lower timeframe.",
+        note: "H4 for 30% of your time, M5 for 60%, H1 or M30 for the last 10%. Top down every single session before you touch a lower timeframe entry.",
       },
       {
         label: "Chart Pattern Anatomy",
-        note: "The shapes that repeat. Learn them before the market prints them. Head & shoulders, double tops/bottoms, wedges, pennants, rectangles.",
+        note: "The patterns that repeat across every market. Double tops only work in a downtrend. Double bottoms confirm an uptrend. Know the shape before the market confirms it.",
       },
     ],
   },
@@ -105,33 +105,33 @@ const PHASES = [
     title: "The Confluence System",
     duration: "Week 4 – 7",
     tagline:
-      "This is Cue's edge. The reason his students quit jobs and buy cars. Everything you've learned stacks here into one repeatable, high-probability system.",
+      "When it shows up that smooth — structure clean, MAs below the market, 38.2% respected, everything aligned — you have to take advantage of it. This is the system.",
     checkpoint:
-      "You have a complete system. Multiple confluences stack = a high-probability setup. You stop trading setups. You start trading evidence.",
+      "You can identify a full confluence setup: structure first, MAs confirm direction, fib level respected, candle close confirms the entry. You stop entering on feeling. You enter on evidence.",
     items: [
       {
         label: "Confluence Trading 1.0 → 2.0 → 2.5",
-        note: "Watch in order. Don't skip. 23m → 34m → 45m. Each builds on the last. Confluence is the stack — trend, structure, key level, momentum aligned.",
+        note: "Watch in order. Don't skip. Each version builds on the last — this is Cue's full journey developing the system from its foundation. The stack starts here.",
       },
       {
         label: "Confluence Trading 2.9 → 3.0",
-        note: "49m + 48m. Advanced application. Cue's thinking out loud — how he filters, what disqualifies a setup, how he manages the trade.",
+        note: "Advanced application. Cue thinking out loud on live charts — what he filters, what disqualifies a setup, how the whole system runs when it's second nature.",
       },
       {
-        label: "Confluence XXX + Confluence 30.0 (NEW)",
-        note: "1h 51m + 1h 12m. The deep end. This is where it clicks — live charts, real setups, the full system in motion.",
+        label: "Confluence XXX + Confluence 30.0",
+        note: "The deep end. Live charts, real setups, the full system in motion. This is where it clicks — high MAs smooth below, 38.2% respected, price acting like butter.",
       },
       {
         label: "The Process — Maintaining a Live Trade",
-        note: "31 minutes on what happens AFTER you're in. Most traders skip this. This is where accounts blow — not the entry.",
+        note: "Never have urgency for the market to go in your favor — that's how you close prematurely. This is entry to exit: how Cue manages a trade in real time, tick by tick.",
       },
       {
         label: "Confluence Tick By Tick + Confluence RAW",
-        note: "1h 18m + 1h 14m. Real-time execution breakdown. Unfiltered. This is how the professional thinks in the moment.",
+        note: "Unfiltered real-time execution. Tick by tick — that means every candle, every close, every moment the market makes a new move. This is how the professional thinks.",
       },
       {
-        label: "50 Setup Practice",
-        note: "Identify confluence zones on 50 historical setups. Mark your entries, stops, targets. Submit your top 5 for group call review.",
+        label: "50 Setup Drill",
+        note: "Mark confluence zones on 50 historical setups — entry, stop, target. Then ask yourself: was structure first? Did the MAs confirm? Was the candle close there? That's the checklist.",
       },
     ],
   },
@@ -140,33 +140,33 @@ const PHASES = [
     title: "Advanced Execution",
     duration: "Week 7 – 10",
     tagline:
-      "Now you layer in tools. More precision. Cleaner entries. You stop guessing where price will react — and start knowing why.",
+      "Stop being afraid to up your lot size when the risk is tight and the setup is clean. This phase layers in the tools that sharpen your entries and filter the trash.",
     checkpoint:
-      "You have a full toolkit. You can filter trades by trend strength, catch breakouts, spot patterns before they complete. Fewer trades. Better trades.",
+      "You have additional confirmation tools in your stack. You can identify trend strength before entering, catch breakouts early, and recognize the technical mistakes that kill accounts before you make them.",
     items: [
       {
         label: "Ichimoku Kinko Hyo",
-        note: "12 minutes. A tool that filters trend, momentum, and support all at once. Adds a layer of confirmation most traders don't have.",
+        note: "If it says strong buy, try not to sell. This tool shows trend, momentum, and support in one read — an additional filter that confirms what your structure is already telling you.",
       },
       {
         label: "Pivot Points",
-        note: "10 minutes. Institutional levels calculated daily. Where banks are watching. High-confluence areas that print consistently.",
+        note: "Institutional levels that recalculate daily. High-confluence zones that print consistently — where banks are watching and price responds.",
       },
       {
         label: "Using Channels to Catch Breakouts",
-        note: "17 minutes. How momentum players stack with structure traders. How to position before the move — not after.",
+        note: "How to position before the move, not after. Float the trend — don't try to catch five-pip micro moves inside a channel. Wait for the real break.",
       },
       {
         label: "Average Directional Index (ADX)",
-        note: "10 minutes. Your trend strength filter. This stops you trading choppy, ranging markets — one of the most common and most expensive mistakes beginners make.",
+        note: "Your trend strength filter. Don't try to trade a ranging, choppy market — that's where most accounts bleed out. ADX tells you when the trend is real.",
       },
       {
         label: "Common Technical F**k Ups",
-        note: "33 minutes of what NOT to do. Cue's breakdown of the most common mistakes he sees — saves you months of learning the hard way.",
+        note: "Treat the charts like a piece of art. Precision, precision, precision. This is Cue's breakdown of the exact mistakes he sees most — the ones that are easily fixed once you see them.",
       },
       {
         label: "Major Market Patterns — All 13",
-        note: "Head & shoulders, double tops/bottoms, both wedges, both pennants, symmetrical triangles, descending triangles, rectangles. Know the shape before the market confirms it.",
+        note: "Head & shoulders, double tops/bottoms, wedges, pennants, triangles, rectangles — all of them. Know the shape before the market prints the confirmation candle.",
       },
     ],
   },
@@ -175,33 +175,33 @@ const PHASES = [
     title: "Live & Consistent",
     duration: "Week 10 – 16",
     tagline:
-      "Weekly calls. Real trades. Real feedback. This is where it compounds. You're not learning anymore — you're executing.",
+      "All I need is 20 or 30 pips a day. The real money is here. This phase is where you stop watching and start compounding.",
     checkpoint:
-      "You're consistently placing setups, tracking your performance, and improving with each week. By month four, you have a system, a journal, and proof of concept.",
+      "You're posting setups, getting reviewed, journaling every trade. After every loss you're writing down what you did wrong and what you could do better. The majority wins is all that matters — and you're building toward that.",
     items: [
       {
         label: "Monthly Group Q&A with Cue",
-        note: "Bring your charts. Bring your questions. Live feedback on real setups — not a lecture. Four calls across the four months. Show up prepared.",
+        note: "Bring your charts. Bring your questions. Four live calls across four months — real feedback on real setups, not a lecture. Show up prepared or show up ready to learn from someone who is.",
       },
       {
         label: "Chart N Chill Webinar Library",
-        note: "100+ sessions on demand — Cue breaking down live charts in real time. When you have a question, the answer is already recorded. Check the library first.",
+        note: "100+ sessions on demand. When you have a question, the answer is probably already recorded. Check the library first — the CSM will redirect you there if it is.",
       },
       {
         label: "NY + London Session Focus",
-        note: "Master the sessions. NY and London are where the volume is, where the setups form, where the money moves. Build your trading schedule around them.",
+        note: "NY and London are where the volume is, where the setups form, where the money moves. Build your schedule around these sessions and stop forcing trades in dead markets.",
       },
       {
         label: "Post Course Mindset",
-        note: "Growing a small account. Patience. When to ditch your job. How to maintain confidence. The thinking that comes after you know the system.",
+        note: "Patience is the biggest thing. It's a transfer of money from the impatient to the patient. This module covers growing a small account, when to scale lot size, when to withdraw — and when not to.",
       },
       {
         label: "3 Trade Ideas Per Week — Discord Review",
-        note: "Post, get reviewed, improve. The best traders in the group are posting regularly. Consistency in practice is the system.",
+        note: "Post your analysis. Get reviewed. Improve. The best traders in the group post consistently — not because they're forced to, because they understand that's how you grow.",
       },
       {
         label: "30-Day Live Trading Journal",
-        note: "Track every trade. Entry, stop, target, outcome, notes. Review weekly. This data is what makes you better — not more videos.",
+        note: "Track every trade: entry, stop, target, outcome, and notes. Review it weekly. This data is what makes you better — not more videos. The journal is the system.",
       },
     ],
   },
