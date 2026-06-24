@@ -28,7 +28,7 @@ export default function IGPage() {
         <img
           src="/wsa/home/1.png"
           alt="Wall Street Academy"
-          style={{ height: 40, width: 40, borderRadius: "50%", objectFit: "cover" }}
+          style={{ height: 64, width: 64, borderRadius: "50%", objectFit: "cover" }}
         />
         <div
           style={{
