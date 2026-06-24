@@ -17,9 +17,9 @@
   --acid: #f9ff3c;
   --acid-d: #d8de1f;
   --pink: #e93d3d;
-  --font-display: "Montserrat", system-ui, sans-serif;
-  --font-body: "Open Sans", system-ui, sans-serif;
-  --font-mono: "Montserrat", ui-monospace, monospace;
+  --font-display: "Sora", system-ui, sans-serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
