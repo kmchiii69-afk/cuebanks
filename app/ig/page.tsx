@@ -64,19 +64,6 @@ export default function IGPage() {
           }}
         />
         <div style={{ position: "relative" }}>
-          <div
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: 13,
-              fontWeight: 700,
-              color: "var(--acid)",
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-              marginBottom: 20,
-            }}
-          >
-            · Wall Street Academy · Quillan Black ·
-          </div>
           <h1
             style={{
               fontFamily: "var(--font-display)",
