@@ -67,10 +67,10 @@ export default function IGPage() {
           <div
             style={{
               fontFamily: "var(--font-mono)",
-              fontSize: 10,
+              fontSize: 13,
               fontWeight: 700,
               color: "var(--acid)",
-              letterSpacing: "0.22em",
+              letterSpacing: "0.18em",
               textTransform: "uppercase",
               marginBottom: 20,
             }}
