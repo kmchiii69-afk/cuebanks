@@ -85,15 +85,30 @@ export default function IGPage() {
               lineHeight: 1.05,
               letterSpacing: "-0.03em",
               color: "var(--bone)",
-              margin: "0 0 24px",
+              margin: "0 0 16px",
             }}
           >
-            I built a roadmap.
+            The Inner Circle
             <br />
+            is{" "}
             <em style={{ color: "var(--acid)", fontStyle: "normal" }}>
-              This is it.
+              open again.
             </em>
           </h1>
+          <p
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 600,
+              fontSize: "clamp(22px, 3.5vw, 34px)",
+              lineHeight: 1.15,
+              letterSpacing: "-0.02em",
+              color: "var(--ash)",
+              margin: "0 0 28px",
+            }}
+          >
+            I built a roadmap.{" "}
+            <em style={{ color: "var(--bone)", fontStyle: "normal" }}>This is it.</em>
+          </p>
           <p
             style={{
               fontFamily: "var(--font-body)",
