@@ -80,19 +80,18 @@ export default function IGPage() {
           <h1
             style={{
               fontFamily: "var(--font-display)",
-              fontWeight: 600,
-              fontSize: "clamp(40px, 6vw, 64px)",
-              lineHeight: 0.98,
-              letterSpacing: "-0.045em",
+              fontWeight: 700,
+              fontSize: "clamp(38px, 6vw, 62px)",
+              lineHeight: 1.05,
+              letterSpacing: "-0.03em",
               color: "var(--bone)",
               margin: "0 0 24px",
             }}
           >
-            The Inner Circle
+            I built a roadmap.
             <br />
-            is{" "}
             <em style={{ color: "var(--acid)", fontStyle: "normal" }}>
-              open again.
+              This is it.
             </em>
           </h1>
           <p
@@ -102,12 +101,14 @@ export default function IGPage() {
               lineHeight: 1.5,
               color: "var(--ash)",
               margin: "0 auto 48px",
-              maxWidth: 560,
+              maxWidth: 520,
               fontWeight: 400,
             }}
           >
-            You said you&rsquo;re serious.{" "}
-            <strong style={{ color: "var(--bone)" }}>This is the door.</strong>
+            I read every reply this week. I know exactly what you&rsquo;re stuck on.{" "}
+            <strong style={{ color: "var(--bone)" }}>
+              This fixes it.
+            </strong>
           </p>
         </div>
       </section>
@@ -211,8 +212,8 @@ export default function IGPage() {
             margin: "0 0 14px",
           }}
         >
-          My system. My direct guidance.{" "}
-          <strong style={{ color: "var(--bone)" }}>Built to make you consistent.</strong>
+          <strong style={{ color: "var(--bone)" }}>Not a course. Not signals.</strong>{" "}
+          A structured system I built from scratch — and the direct access to me that makes it stick.
         </p>
         <p
           style={{
@@ -223,8 +224,8 @@ export default function IGPage() {
             margin: "0 0 48px",
           }}
         >
-          Serious applicants only —{" "}
-          <strong style={{ color: "var(--bone)" }}>two minutes to apply.</strong>
+          Students in this program are getting real results.{" "}
+          <strong style={{ color: "var(--bone)" }}>A few quick questions to see if you&rsquo;re a fit.</strong>
         </p>
 
         {/* CTA */}
@@ -281,18 +282,18 @@ export default function IGPage() {
           {[
             {
               n: "01",
-              t: "A real system",
-              d: "Step-by-step swing trading roadmap — no day trading, no 8-hour screen days.",
+              t: "Not another course",
+              d: "A step-by-step roadmap I built myself — from stuck and inconsistent to structured and profitable.",
             },
             {
               n: "02",
-              t: "My direct guidance",
-              d: "Live calls, community, and direct access — not a course you buy and forget.",
+              t: "My system. My students.",
+              d: "People inside this program are buying cars, quitting jobs, changing their lives. One year out.",
             },
             {
               n: "03",
-              t: "Built around your life",
-              d: "Designed for people with jobs, families, and real schedules. Not a second job.",
+              t: "You work with me directly",
+              d: "Not a pre-recorded library. Live calls, real feedback, direct access — I'm in it with you.",
             },
           ].map((s, i) => (
             <div
