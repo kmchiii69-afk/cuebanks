@@ -290,7 +290,7 @@ function FreeFunnelScreen({ firstName }: { firstName: string }) {
 
 // ─── Main Component ───────────────────────────────────────────────
 
-export default function QualifyForm() {
+export default function QualifyForm({ source = "direct" }: { source?: string }) {
   const router = useRouter();
   const sp = useSearchParams();
 
@@ -393,6 +393,7 @@ export default function QualifyForm() {
         access_level: answers["access_level"],
         investment_tier: answers["investment_tier"],
         routing: route,
+        source,
       });
 
       const params = new URLSearchParams();

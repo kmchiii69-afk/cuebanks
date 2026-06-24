@@ -230,7 +230,7 @@ export default function IGPage() {
 
         {/* CTA */}
         <Link
-          href="/qualify"
+          href="/ig/apply"
           style={{
             display: "inline-block",
             padding: "20px 40px",
