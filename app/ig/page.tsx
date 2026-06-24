@@ -98,19 +98,16 @@ export default function IGPage() {
           <p
             style={{
               fontFamily: "var(--font-body)",
-              fontSize: 18,
-              lineHeight: 1.65,
+              fontSize: 20,
+              lineHeight: 1.5,
               color: "var(--ash)",
               margin: "0 auto 48px",
-              maxWidth: 600,
+              maxWidth: 560,
               fontWeight: 400,
             }}
           >
-            All week I&rsquo;ve been letting you back into where I&rsquo;ve been
-            and what I&rsquo;ve been building. The poll a few days back — where
-            you told me you&rsquo;re actually{" "}
-            <em style={{ color: "var(--bone)", fontStyle: "italic" }}>in this</em>{" "}
-            — that&rsquo;s exactly who this is for.
+            You said you&rsquo;re serious.{" "}
+            <strong style={{ color: "var(--bone)" }}>This is the door.</strong>
           </p>
         </div>
       </section>
@@ -208,30 +205,26 @@ export default function IGPage() {
         <p
           style={{
             fontFamily: "var(--font-body)",
-            fontSize: 18,
-            lineHeight: 1.7,
+            fontSize: 20,
+            lineHeight: 1.5,
             color: "var(--ash)",
-            margin: "0 0 18px",
+            margin: "0 0 14px",
           }}
         >
-          I&rsquo;m reopening the Inner Circle, rebuilt as a step-by-step
-          roadmap that takes you from where you are now to consistent,
-          structured trading — with my direct guidance along the way.
+          My system. My direct guidance.{" "}
+          <strong style={{ color: "var(--bone)" }}>Built to make you consistent.</strong>
         </p>
         <p
           style={{
             fontFamily: "var(--font-body)",
-            fontSize: 18,
-            lineHeight: 1.7,
+            fontSize: 20,
+            lineHeight: 1.5,
             color: "var(--ash)",
             margin: "0 0 48px",
           }}
         >
-          I&rsquo;m only opening it to people who are serious, so there are a
-          few quick questions to see if it&rsquo;s a fit.{" "}
-          <strong style={{ color: "var(--bone)" }}>
-            Takes about 2 minutes.
-          </strong>
+          Serious applicants only —{" "}
+          <strong style={{ color: "var(--bone)" }}>two minutes to apply.</strong>
         </p>
 
         {/* CTA */}
