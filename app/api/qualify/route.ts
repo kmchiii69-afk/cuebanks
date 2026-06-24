@@ -15,10 +15,9 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { updateLeadFieldsByEmail } from "@/lib/close";
-import { pingQuantumQualified, pingWolfpackQualified, type QualifiedLead } from "@/lib/discord";
+import { pingQuantumQualified, type QualifiedLead } from "@/lib/discord";
 import { tagSubscriber as kitTag } from "@/lib/kit";
 import { isLowPPP } from "@/lib/geo";
-import { capturePostHog } from "@/lib/posthog";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -60,10 +59,19 @@ function isTally(p: unknown): p is TallyPayload {
   return o.eventType === "FORM_RESPONSE" || (typeof o.data === "object" && o.data !== null && "fields" in (o.data as object));
 }
 
-// ─── Wolfpack vs Quantum routing ──────────────────────────────────
+// ─── ICP routing ──────────────────────────────────────────────────
 
-function isWolfpackTier(tier: string): boolean {
-  return tier.trim().startsWith("$500");
+type RouteDecision = "call_group" | "call_1on1" | "call_group_stepdown" | "free_funnel" | "manual_review";
+
+function routeFromAnswers(answers: Answers): RouteDecision {
+  const { path_fork, b_stage, access_level, investment_tier } = answers;
+
+  if (path_fork === "learning" && (b_stage === "just_curious" || b_stage === "studying")) return "free_funnel";
+  if (access_level === "standard" && investment_tier === "under_5k") return "free_funnel";
+  if (access_level === "1on1" && investment_tier === "under_10k") return "call_group_stepdown";
+  if (path_fork === "learning" && access_level === "1on1" && investment_tier && investment_tier !== "under_10k") return "manual_review";
+  if (access_level === "standard") return "call_group";
+  return "call_1on1";
 }
 
 // ─── Answer extraction ────────────────────────────────────────────
@@ -163,42 +171,33 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: "Missing email" }, { status: 400 });
   }
 
-  // Geo informs PRICE, not access: the tier the visitor picked decides
-  // routing (a $7,500 click from Jakarta is exactly who setters want to
-  // talk to — the call filters real from fantasy). Budget-tier leads from
-  // low-PPP countries get flagged for the regional Wolfpack offer.
   const country = (req.headers.get("x-vercel-ip-country") || "").toUpperCase();
-  const isWolfpack = isWolfpackTier(parsed.tier);
-  const intlOffer = isLowPPP(country) && isWolfpack;
+  const route = routeFromAnswers(parsed.answers);
+  const isCallRoute = route === "call_group" || route === "call_1on1" || route === "call_group_stepdown" || route === "manual_review";
 
-  const newSource = isWolfpack ? "Wolfpack" : "VSL Funnel";
-  const newStatus = isWolfpack ? "Opt In" : "Applied But Did Not Book";
+  const newSource = "Inner Circle Application";
+  const newStatus = isCallRoute ? "Applied But Did Not Book" : "Opt In";
 
   // Note that gets attached to the Close lead — setters see this on the call
   const noteLines = Object.entries(parsed.answers)
     .filter(([k]) => !["first_name", "last_name", "email", "phone"].includes(k))
     .map(([k, v]) => `• ${prettyLabel(k)}: ${v}`);
-  const tierLabel = parsed.tier || "—";
+  const tierLabel = parsed.answers["investment_tier"] || "—";
+  const accessLabel = parsed.answers["access_level"] || "—";
   const note = [
-    `Qualification submitted (${isWolfpack ? "Wolfpack" : "Quantum"} tier · investment: ${tierLabel})`,
-    ...(intlOffer ? [`Low-PPP country (${country}) — routed to the regional Wolfpack offer`] : []),
-    ...(!isWolfpack && isLowPPP(country) ? [`Note: lead is in ${country} (low-PPP geo) but picked ${tierLabel} — verify budget on the call`] : []),
+    `Inner Circle Application — route: ${route} · access: ${accessLabel} · investment: ${tierLabel}`,
+    ...(route === "manual_review" ? ["⚠️ MANUAL REVIEW — Path B lead requesting 1-on-1 with real budget. Verify intent before routing to premium call."] : []),
+    ...(route === "call_group_stepdown" ? ["↓ Stepped down from 1-on-1 to group (under budget threshold)"] : []),
+    ...(isLowPPP(country) ? [`Geo: ${country} (low-PPP) — verify budget access on the call`] : []),
     "",
     ...noteLines,
   ].join("\n");
 
-  // Map our internal answer ids to the user's existing Close custom fields
-  // so setters/closers see structured data in the lead sidebar (not just
-  // a single note blob). Unknown fields are silently skipped by the lib —
-  // safe to add more mappings later without breaking anything.
   const a = parsed.answers;
   const customFields = {
     "Invest": a["investment_tier"] || "",
-    "Monthly Income": a["monthly_income_goal"] || "",
-    "Experience Level": a["trading_length"] || "",
-    "Commitment OK": a["commitment_score"] ? `${a["commitment_score"]}/10` : "",
-    "Long Term Goal": a["extra_income_dream"] || "",
-    "Capital On Hand": a["education_spend"] || "",
+    "Experience Level": a["a_length"] || "",
+    "Capital On Hand": a["access_level"] || "",
     "Application Questions": noteLines.join("\n"),
   };
 
@@ -243,20 +242,21 @@ export async function POST(req: NextRequest) {
     last_name: parsed.last_name,
     email: parsed.email,
     phone: parsed.phone,
-    tier: parsed.tier,
+    tier: `${route} · ${a["access_level"] || "?"} · ${a["investment_tier"] || "?"}`,
     answers: prettyAnswers,
     lead_id,
   };
 
-  // Fire Kit tags so existing automations trigger:
-  //   - "Application Submitted" — every qualification regardless of tier
-  //   - "QC qualified" or "Wolf Qualified" — tier-specific
-  const tierTagId = isWolfpack
-    ? process.env.KIT_TAG_WOLF_QUALIFIED
-    : process.env.KIT_TAG_QC_QUALIFIED;
+  // Kit tags: "Applied" on every submission + tier-specific tag
+  const tierTagId =
+    route === "call_1on1"
+      ? process.env.KIT_TAG_QC_QUALIFIED  // reuse existing "QC qualified" for 1-on-1
+      : isCallRoute
+      ? process.env.KIT_TAG_QC_QUALIFIED
+      : process.env.KIT_TAG_WOLF_QUALIFIED; // free funnel path → wolfpack tag
 
-  const [discordRes, appTagRes, tierTagRes, geoEventRes] = await Promise.allSettled([
-    isWolfpack ? pingWolfpackQualified(qualifiedLead) : pingQuantumQualified(qualifiedLead),
+  const [discordRes, appTagRes, tierTagRes] = await Promise.allSettled([
+    pingQuantumQualified(qualifiedLead),
     kitTag({
       email: parsed.email,
       first_name: parsed.first_name,
@@ -271,20 +271,15 @@ export async function POST(req: NextRequest) {
       phone: parsed.phone,
       tagId: tierTagId,
     }),
-    intlOffer
-      ? capturePostHog("qualify_intl_offer", parsed.email, { country, investment_tier: parsed.tier })
-      : Promise.resolve(),
   ]);
 
   if (discordRes.status === "rejected") console.error("[/api/qualify] Discord ping failed:", discordRes.reason);
   if (appTagRes.status === "rejected") console.error("[/api/qualify] Kit Applied tag failed:", appTagRes.reason);
   if (tierTagRes.status === "rejected") console.error("[/api/qualify] Kit tier tag failed:", tierTagRes.reason);
-  if (geoEventRes.status === "rejected") console.error("[/api/qualify] PostHog intl-offer event failed:", geoEventRes.reason);
 
   return NextResponse.json({
     ok: true,
-    tier_routed: isWolfpack ? "wolfpack" : "quantum",
-    intl_offer: intlOffer,
+    tier_routed: route,
     close: closeRes[0].status,
     discord: discordRes.status,
     kit_applied: appTagRes.status,
@@ -301,21 +296,21 @@ export async function GET() {
 // Map internal question ids → human-readable labels for the Close note + Discord embed.
 // Anything we don't recognize gets passed through unchanged.
 const LABELS: Record<string, string> = {
-  trading_length: "How long trading",
-  profitable_month: "Profitable month?",
-  markets: "Markets traded",
-  current_style: "Current style",
-  blocker: "Biggest blocker",
-  education_spend: "Education spend so far",
-  prior_courses: "Prior courses bought",
-  trading_plan: "Has written plan?",
-  hours_per_week: "Hours/week available",
-  monthly_income_goal: "Monthly income goal",
-  one_day_dream: "1 Sunday + zero screen?",
+  // Routing
+  path_fork: "Trading status",
+  access_level: "Access level",
   investment_tier: "Investment level",
-  commitment_score: "Commitment 1–10",
-  extra_income_dream: "What income would unlock",
-  consent: "Consent given?",
+  // Path A — Active Trader
+  a_length: "How long trading",
+  a_stuck: "Where stuck",
+  a_real_reason: "Real reason (open)",
+  a_change: "What would change (open)",
+  a_time: "Daily time available",
+  // Path B — Getting Into Forex
+  b_pull: "Why forex (open)",
+  b_stage: "How far along",
+  b_blocking: "What's blocking (open)",
+  b_time: "Daily time for learning",
 };
 
 function prettyLabel(key: string): string {

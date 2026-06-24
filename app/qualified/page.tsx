@@ -3,42 +3,45 @@
 import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-function isWolfpackTier(tier: string): boolean {
-  // Wolfpack route = lowest investment tier. Match on "$500" prefix
-  // so we're robust to formatting drift ($500-$2000, $500 – $2,500, etc.)
-  return tier.trim().startsWith("$500");
-}
-
 function QualifiedRouter() {
   const sp = useSearchParams();
   const router = useRouter();
 
   useEffect(() => {
-    const tier = sp.get("tier") || "";
     const route = sp.get("route") || "";
-    const intl = sp.get("intl") === "1";
     const firstName = sp.get("first_name") || "";
     const lastName = sp.get("last_name") || "";
     const email = sp.get("email") || "";
     const phone = sp.get("phone") || "";
 
-    // Explicit route param (from the server's routing decision) wins; tier
-    // prefix is the legacy fallback.
-    const toWolfpack = route ? route === "wolfpack" : isWolfpackTier(tier);
-    if (toWolfpack) {
-      // Low-PPP budget-tier leads get the regional ($297) edition. While
-      // its checkout link isn't configured yet, proxy.ts bounces them to
-      // the standard page tagged `offer=intl` so the cohort stays visible.
-      router.replace(intl ? "/wolfpack-global" : "/wolfpack");
-      return;
-    }
+    const contactParams = new URLSearchParams();
+    if (firstName) contactParams.set("first_name", firstName);
+    if (lastName) contactParams.set("last_name", lastName);
+    if (email) contactParams.set("email", email);
+    if (phone) contactParams.set("phone", phone);
+    const contact = contactParams.toString();
 
-    const params = new URLSearchParams();
-    if (firstName) params.set("first_name", firstName);
-    if (lastName) params.set("last_name", lastName);
-    if (email) params.set("email", email);
-    if (phone) params.set("phone", phone);
-    router.replace(`/book?${params.toString()}`);
+    switch (route) {
+      case "free_funnel":
+        router.replace("/free-course");
+        break;
+      case "call_1on1": {
+        const p = new URLSearchParams(contactParams);
+        p.set("tier", "1on1");
+        router.replace(`/book?${p.toString()}`);
+        break;
+      }
+      case "manual_review": {
+        const p = new URLSearchParams(contactParams);
+        p.set("review", "1");
+        router.replace(`/book?${p.toString()}`);
+        break;
+      }
+      // call_group, call_group_stepdown, and legacy "book" all go to /book
+      default:
+        router.replace(contact ? `/book?${contact}` : "/book");
+        break;
+    }
   }, [sp, router]);
 
   return null;
