@@ -271,44 +271,70 @@ function CueChat() {
     inputRef.current?.focus();
   }
 
+  const canSend = input.trim().length > 0 && !streaming;
+
   return (
     <>
       {/* Chat panel */}
       {open && (
-        <div style={{ position: "fixed", bottom: 88, right: 24, width: 360, height: 520, background: "var(--bg-1)", border: "1px solid var(--line)", borderTop: "2px solid var(--acid)", zIndex: 999, display: "flex", flexDirection: "column", boxShadow: "0 24px 80px rgba(0,0,0,0.8)" }}>
+        <div style={{
+          position: "fixed", bottom: 92, right: 24, width: 370, height: 530, zIndex: 999,
+          display: "flex", flexDirection: "column",
+          background: "rgba(10,14,22,0.92)", backdropFilter: "blur(24px)",
+          border: "1px solid rgba(255,255,255,0.08)",
+          borderRadius: 20,
+          boxShadow: "0 0 0 1px rgba(249,255,60,0.08), 0 32px 100px rgba(0,0,0,0.85)",
+          overflow: "hidden",
+        }}>
+          {/* Acid top rule */}
+          <div style={{ height: 2, background: "linear-gradient(90deg, var(--acid) 0%, rgba(249,255,60,0.3) 100%)", flexShrink: 0 }} />
+
           {/* Header */}
-          <div style={{ padding: "12px 16px", borderBottom: "1px solid var(--line)", display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
-            <div style={{ width: 28, height: 28, borderRadius: "50%", background: "var(--acid)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              <span style={{ fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: 12, color: "var(--bg)" }}>C</span>
+          <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
+            <div style={{ width: 32, height: 32, borderRadius: "50%", background: "var(--acid)", boxShadow: "0 0 16px rgba(249,255,60,0.25)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <span style={{ fontFamily: "var(--font-mono)", fontWeight: 800, fontSize: 13, color: "var(--bg)" }}>C</span>
             </div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 700, color: "var(--bone)", letterSpacing: "0.1em" }}>CUE AI</div>
-              <div style={{ fontFamily: "var(--font-body)", fontSize: 10, color: "var(--muted)", marginTop: 1 }}>Ask anything about the system</div>
+              <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 700, color: "var(--bone)", letterSpacing: "0.14em" }}>CUE AI</div>
+              <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 2 }}>
+                <span className="pulse" style={{ width: 4, height: 4, background: "#22c55e", borderRadius: "50%", display: "inline-block" }} />
+                <span style={{ fontFamily: "var(--font-body)", fontSize: 10, color: "#22c55e" }}>Online · 200+ Q&As</span>
+              </div>
             </div>
-            <button onClick={() => setOpen(false)} style={{ background: "none", border: "none", color: "var(--muted)", cursor: "pointer", fontSize: 18, lineHeight: 1, padding: 0 }}>✕</button>
+            <button onClick={() => setOpen(false)} style={{ background: "none", border: "none", color: "var(--muted)", cursor: "pointer", fontSize: 18, lineHeight: 1, padding: "0 2px", transition: "color 0.15s" }}
+              onMouseEnter={e => { e.currentTarget.style.color = "var(--bone)"; }}
+              onMouseLeave={e => { e.currentTarget.style.color = "var(--muted)"; }}>✕</button>
           </div>
 
           {/* Messages */}
-          <div style={{ flex: 1, overflowY: "auto", padding: "14px 16px", display: "flex", flexDirection: "column", gap: 14 }}>
+          <div style={{ flex: 1, overflowY: "auto", padding: "16px 18px", display: "flex", flexDirection: "column", gap: 18 }}>
             {messages.length === 0 ? (
               <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 10 }}>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--ash)", lineHeight: 1.6, margin: 0, textAlign: "center" }}>
-                  Trained on 200+ Q&As from WSA content. Ask Cue anything about confluence, risk, mindset, or the system.
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--ash)", lineHeight: 1.65, margin: "0 0 6px", textAlign: "center" }}>
+                  Ask Cue anything — confluence, risk, entries, mindset. Trained on every WSA session.
                 </p>
-                {["What is the stack?", "How do I manage risk?", "How do I draw a fib correctly?"].map(q => (
-                  <button key={q} onClick={() => send(q)} style={{ background: "var(--bg-2)", border: "1px solid var(--line)", padding: "8px 12px", color: "var(--ash)", fontFamily: "var(--font-body)", fontSize: 12, textAlign: "left", cursor: "pointer", lineHeight: 1.4 }}>
-                    {q}
+                {["What is the stack?", "How do I draw a fib?", "Walk me through H4 → M5"].map(q => (
+                  <button key={q} onClick={() => send(q)}
+                    style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 100, padding: "8px 14px", color: "var(--ash)", fontFamily: "var(--font-body)", fontSize: 12, textAlign: "left", cursor: "pointer", display: "flex", alignItems: "center", gap: 7, transition: "background 0.15s, border-color 0.15s, color 0.15s" }}
+                    onMouseEnter={e => { e.currentTarget.style.background = "rgba(249,255,60,0.07)"; e.currentTarget.style.borderColor = "rgba(249,255,60,0.3)"; e.currentTarget.style.color = "var(--bone)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.color = "var(--ash)"; }}>
+                    <span style={{ color: "var(--acid)", fontSize: 9 }}>▸</span>{q}
                   </button>
                 ))}
               </div>
             ) : (
               messages.map((m, i) => (
-                <div key={i} style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
-                  <div style={{ width: 20, height: 20, borderRadius: "50%", flexShrink: 0, marginTop: 1, background: m.role === "assistant" ? "var(--acid)" : "var(--bg-2)", border: m.role === "user" ? "1px solid var(--line)" : "none", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: m.role === "assistant" ? "var(--bg)" : "var(--muted)" }}>{m.role === "assistant" ? "C" : "Y"}</span>
+                <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                  <div style={{ width: 22, height: 22, borderRadius: "50%", flexShrink: 0, marginTop: 1, background: m.role === "assistant" ? "var(--acid)" : "rgba(255,255,255,0.06)", border: m.role === "user" ? "1px solid rgba(255,255,255,0.1)" : "none", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: m.role === "assistant" ? "0 0 10px rgba(249,255,60,0.2)" : "none" }}>
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 800, color: m.role === "assistant" ? "var(--bg)" : "var(--muted)" }}>{m.role === "assistant" ? "C" : "Y"}</span>
                   </div>
-                  <div style={{ flex: 1, fontFamily: "var(--font-body)", fontSize: 13, lineHeight: 1.6, color: m.role === "assistant" ? "var(--bone)" : "var(--ash)", whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+                  <div style={{ flex: 1, fontFamily: "var(--font-body)", fontSize: 13, lineHeight: 1.65, color: m.role === "assistant" ? "var(--bone)" : "var(--ash)", whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
                     {m.content}
+                    {m.role === "assistant" && streaming && i === messages.length - 1 && m.content === "" && (
+                      <span style={{ display: "inline-flex", gap: 3, verticalAlign: "middle", marginLeft: 2 }}>
+                        {[0, 1, 2].map(d => <span key={d} className="pulse" style={{ width: 4, height: 4, background: "var(--acid)", borderRadius: "50%", display: "inline-block", animationDelay: `${d * 0.18}s` }} />)}
+                      </span>
+                    )}
                     {m.role === "assistant" && streaming && i === messages.length - 1 && m.content.length > 0 && (
                       <span style={{ display: "inline-block", width: 2, height: "0.9em", background: "var(--acid)", marginLeft: 2, verticalAlign: "text-bottom", animation: "pulse 1s ease-in-out infinite" }} />
                     )}
@@ -320,35 +346,44 @@ function CueChat() {
           </div>
 
           {/* Input */}
-          <div style={{ borderTop: "1px solid var(--line)", padding: "10px 12px", flexShrink: 0 }}>
-            <form onSubmit={(e: FormEvent) => { e.preventDefault(); send(input); }} style={{ display: "flex", gap: 8 }}>
-              <input
-                ref={inputRef}
-                value={input}
-                onChange={e => setInput(e.target.value)}
-                disabled={streaming}
-                placeholder="Ask Cue..."
-                style={{ flex: 1, background: "var(--bg-2)", border: "1px solid var(--line)", padding: "8px 12px", color: "var(--bone)", fontFamily: "var(--font-body)", fontSize: 13, outline: "none" }}
-                onFocus={e => { e.currentTarget.style.borderColor = "rgba(249,255,60,0.4)"; }}
-                onBlur={e => { e.currentTarget.style.borderColor = "var(--line)"; }}
-              />
-              <button type="submit" disabled={!input.trim() || streaming} style={{ background: input.trim() && !streaming ? "var(--acid)" : "var(--bg-2)", border: "none", width: 36, height: 36, cursor: input.trim() && !streaming ? "pointer" : "not-allowed", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M1 7h12M7 1l6 6-6 6" stroke={input.trim() && !streaming ? "var(--bg)" : "var(--muted)"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
-            </form>
+          <div style={{ padding: "10px 14px 14px", flexShrink: 0 }}>
+            <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 12, overflow: "hidden" }}>
+              <form onSubmit={(e: FormEvent) => { e.preventDefault(); send(input); }} style={{ display: "flex", alignItems: "center" }}>
+                <input
+                  ref={inputRef}
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  disabled={streaming}
+                  placeholder="Ask Cue..."
+                  style={{ flex: 1, background: "transparent", border: "none", padding: "11px 14px", color: "var(--bone)", fontFamily: "var(--font-body)", fontSize: 13, outline: "none" }}
+                />
+                <button type="submit" disabled={!canSend}
+                  style={{ margin: "6px 8px 6px 0", background: canSend ? "var(--acid)" : "rgba(255,255,255,0.05)", border: "none", borderRadius: 8, width: 34, height: 34, cursor: canSend ? "pointer" : "not-allowed", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "background 0.15s" }}>
+                  <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+                    <path d="M1 7h12M7 1l6 6-6 6" stroke={canSend ? "var(--bg)" : "var(--muted)"} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Toggle button */}
+      {/* Toggle FAB */}
       <button
         onClick={() => setOpen(o => !o)}
-        style={{ position: "fixed", bottom: 24, right: 24, width: 56, height: 56, borderRadius: "50%", background: open ? "var(--bg-2)" : "var(--acid)", border: open ? "1px solid var(--line)" : "none", cursor: "pointer", zIndex: 999, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: open ? "none" : "0 0 0 1px var(--acid), 0 8px 32px rgba(249,255,60,0.35)", transition: "background 0.2s" }}
+        style={{
+          position: "fixed", bottom: 24, right: 24, width: 56, height: 56, borderRadius: "50%",
+          background: open ? "rgba(255,255,255,0.06)" : "var(--acid)",
+          border: open ? "1px solid rgba(255,255,255,0.12)" : "none",
+          cursor: "pointer", zIndex: 999,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          boxShadow: open ? "none" : "0 0 0 1px var(--acid), 0 8px 32px rgba(249,255,60,0.4)",
+          transition: "background 0.2s, box-shadow 0.2s",
+        }}
       >
         {open ? (
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
             <path d="M2 2L16 16M16 2L2 16" stroke="var(--muted)" strokeWidth="1.5" strokeLinecap="round"/>
           </svg>
         ) : (

@@ -1,27 +1,32 @@
 "use client";
 
 import { useState, useRef, useEffect, FormEvent } from "react";
+import Link from "next/link";
 
 type Message = { role: "user" | "assistant"; content: string };
 
-const SUGGESTED = [
-  "What is confluence and how do I use it?",
-  "How do you manage risk on a trade?",
-  "How do I know if a trendline is valid?",
-  "What timeframe should I spend the most time on?",
-  "How long did it take you to become consistently profitable?",
+const CHIPS = [
+  { label: "What is the stack?",        icon: "⬡" },
+  { label: "How do I draw a fib?",      icon: "⬡" },
+  { label: "Walk me through H4 → M5",   icon: "⬡" },
+  { label: "Why do I keep losing?",     icon: "⬡" },
+  { label: "When do I actually enter?", icon: "⬡" },
+  { label: "How do I manage a trade?",  icon: "⬡" },
 ];
 
 export default function CuePage() {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState("");
+  const [input, setInput]       = useState("");
   const [streaming, setStreaming] = useState(false);
+  const [focused, setFocused]   = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const hasMessages = messages.length > 0;
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, streaming]);
+  }, [messages]);
 
   async function send(text: string) {
     if (!text.trim() || streaming) return;
@@ -29,6 +34,9 @@ export default function CuePage() {
     const next = [...messages, userMsg];
     setMessages(next);
     setInput("");
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+    }
     setStreaming(true);
 
     const assistantMsg: Message = { role: "assistant", content: "" };
@@ -53,7 +61,6 @@ export default function CuePage() {
 
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
-
       while (true) {
         const { value, done } = await reader.read();
         if (done) break;
@@ -76,7 +83,7 @@ export default function CuePage() {
     }
 
     setStreaming(false);
-    inputRef.current?.focus();
+    textareaRef.current?.focus();
   }
 
   function handleSubmit(e: FormEvent) {
@@ -91,179 +98,528 @@ export default function CuePage() {
     }
   }
 
+  const canSend = input.trim().length > 0 && !streaming;
+
   return (
-    <div style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--bone)", display: "flex", flexDirection: "column" }}>
-      {/* HEADER */}
-      <header style={{ borderBottom: "1px solid var(--line)", padding: "16px 24px", display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
-        <div style={{ width: 36, height: 36, borderRadius: "50%", background: "var(--acid)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-          <span style={{ fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: 14, color: "var(--bg)" }}>C</span>
-        </div>
-        <div>
-          <div style={{ fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: 13, color: "var(--bone)", letterSpacing: "0.1em" }}>CUE AI</div>
-          <div style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "var(--muted)", marginTop: 1 }}>Powered by Wall Street Academy training data</div>
-        </div>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "var(--bg)",
+        color: "var(--bone)",
+        display: "flex",
+        flexDirection: "column",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      {/* ── Glow backdrop ─────────────────────────────────────────────────────── */}
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          pointerEvents: "none",
+          zIndex: 0,
+          background:
+            "radial-gradient(ellipse 900px 600px at 50% 42%, rgba(249,255,60,0.055) 0%, transparent 70%)",
+          transition: "opacity 0.6s ease",
+        }}
+      />
+
+      {/* Grid texture */}
+      <div
+        className="grid-bg"
+        style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0, opacity: 0.45 }}
+      />
+
+      {/* ── Header ────────────────────────────────────────────────────────────── */}
+      <header
+        style={{
+          position: "sticky",
+          top: 0,
+          zIndex: 50,
+          borderBottom: "1px solid var(--line)",
+          padding: hasMessages ? "14px 28px" : "14px 28px",
+          display: "flex",
+          alignItems: "center",
+          gap: 14,
+          background: "rgba(0,0,0,0.88)",
+          backdropFilter: "blur(16px)",
+        }}
+      >
+        <Link href="/roadmap" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+          <div
+            style={{
+              width: 34,
+              height: 34,
+              borderRadius: "50%",
+              background: "var(--acid)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}
+          >
+            <span style={{ fontFamily: "var(--font-mono)", fontWeight: 800, fontSize: 14, color: "var(--bg)" }}>C</span>
+          </div>
+          <div>
+            <div style={{ fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: 12, color: "var(--bone)", letterSpacing: "0.14em" }}>CUE AI</div>
+            <div style={{ fontFamily: "var(--font-body)", fontSize: 10, color: "var(--muted)", marginTop: 1 }}>Wall Street Academy</div>
+          </div>
+        </Link>
+
         <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8 }}>
-          <span className="pulse" style={{ width: 6, height: 6, background: "var(--acid)", borderRadius: "50%", display: "inline-block" }} />
-          <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--acid)", letterSpacing: "0.15em", textTransform: "uppercase" }}>Live</span>
+          <span
+            className="pulse"
+            style={{ width: 5, height: 5, background: "#22c55e", borderRadius: "50%", display: "inline-block" }}
+          />
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "#22c55e", letterSpacing: "0.18em", textTransform: "uppercase", fontWeight: 700 }}>
+            Online
+          </span>
         </div>
       </header>
 
-      {/* CHAT AREA */}
-      <div style={{ flex: 1, overflowY: "auto", padding: "24px 16px", display: "flex", flexDirection: "column", gap: 0 }}>
-        <div style={{ maxWidth: 720, width: "100%", margin: "0 auto", flex: 1, display: "flex", flexDirection: "column" }}>
-          {messages.length === 0 ? (
-            <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 32, textAlign: "center", padding: "40px 0" }}>
-              <div>
-                <div style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(249,255,60,0.1)", border: "1px solid rgba(249,255,60,0.2)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
-                  <span style={{ fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: 24, color: "var(--acid)" }}>C</span>
-                </div>
-                <h1 style={{ fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 600, letterSpacing: "-0.03em", margin: "0 0 8px", color: "var(--bone)" }}>Ask Cue anything</h1>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: 15, color: "var(--ash)", margin: 0, maxWidth: 440 }}>
-                  Confluence, risk management, mindset, technical analysis — trained on real WSA content.
-                </p>
+      {/* ── Main area ─────────────────────────────────────────────────────────── */}
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          position: "relative",
+          zIndex: 1,
+          overflowY: hasMessages ? "auto" : "hidden",
+        }}
+      >
+        {/* ── EMPTY STATE ─────────────────────────────────────────────────────── */}
+        {!hasMessages && (
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "40px 20px 32px",
+              gap: 0,
+            }}
+          >
+            {/* Avatar + heading */}
+            <div style={{ textAlign: "center", marginBottom: 40 }}>
+              <div
+                style={{
+                  width: 68,
+                  height: 68,
+                  borderRadius: "50%",
+                  background: "rgba(249,255,60,0.08)",
+                  border: "1px solid rgba(249,255,60,0.25)",
+                  boxShadow: "0 0 48px rgba(249,255,60,0.1)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  margin: "0 auto 28px",
+                }}
+              >
+                <span style={{ fontFamily: "var(--font-mono)", fontWeight: 800, fontSize: 26, color: "var(--acid)" }}>C</span>
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8, width: "100%", maxWidth: 480 }}>
-                {SUGGESTED.map((q) => (
-                  <button
-                    key={q}
-                    onClick={() => send(q)}
-                    disabled={streaming}
-                    style={{
-                      background: "var(--bg-1)",
-                      border: "1px solid var(--line)",
-                      borderRadius: 8,
-                      padding: "10px 16px",
-                      color: "var(--ash)",
-                      fontFamily: "var(--font-body)",
-                      fontSize: 13,
-                      textAlign: "left",
-                      cursor: "pointer",
-                      transition: "border-color 0.15s, color 0.15s",
-                    }}
-                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(249,255,60,0.4)"; e.currentTarget.style.color = "var(--bone)"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--line)"; e.currentTarget.style.color = "var(--ash)"; }}
-                  >
-                    {q}
-                  </button>
-                ))}
-              </div>
+
+              <h1
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 800,
+                  fontSize: "clamp(36px, 6vw, 64px)",
+                  letterSpacing: "-0.04em",
+                  lineHeight: 1.0,
+                  margin: "0 0 14px",
+                  color: "var(--bone)",
+                }}
+              >
+                Ask Cue{" "}
+                <em style={{ color: "var(--acid)", fontStyle: "normal" }}>anything.</em>
+              </h1>
+
+              <p
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: "clamp(14px, 2vw, 17px)",
+                  lineHeight: 1.55,
+                  color: "var(--ash)",
+                  margin: 0,
+                  maxWidth: 460,
+                }}
+              >
+                Trained on 200+ Q&As from every WSA session.{" "}
+                <span style={{ color: "var(--bone)", opacity: 0.7 }}>Structure first, everything else follows.</span>
+              </p>
             </div>
-          ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: 20, paddingBottom: 8 }}>
-              {messages.map((msg, i) => (
-                <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                  {/* Avatar */}
-                  <div style={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: "50%",
-                    flexShrink: 0,
+
+            {/* Input card */}
+            <div
+              style={{
+                width: "100%",
+                maxWidth: 760,
+                background: "rgba(12,16,24,0.85)",
+                border: `1px solid ${focused ? "rgba(249,255,60,0.35)" : "rgba(255,255,255,0.07)"}`,
+                borderRadius: 16,
+                boxShadow: focused
+                  ? "0 0 0 1px rgba(249,255,60,0.12), 0 24px 80px rgba(0,0,0,0.6), 0 0 60px rgba(249,255,60,0.06)"
+                  : "0 24px 80px rgba(0,0,0,0.6)",
+                overflow: "hidden",
+                transition: "border-color 0.2s, box-shadow 0.2s",
+                backdropFilter: "blur(20px)",
+              }}
+            >
+              <textarea
+                ref={textareaRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                onFocus={() => setFocused(true)}
+                onBlur={() => setFocused(false)}
+                placeholder="Ask Cue about confluence, risk, entries, mindset..."
+                disabled={streaming}
+                rows={3}
+                style={{
+                  width: "100%",
+                  background: "transparent",
+                  border: "none",
+                  outline: "none",
+                  padding: "22px 24px 16px",
+                  color: "var(--bone)",
+                  fontFamily: "var(--font-body)",
+                  fontSize: 16,
+                  lineHeight: 1.6,
+                  resize: "none",
+                  display: "block",
+                  boxSizing: "border-box",
+                  maxHeight: 200,
+                  overflow: "auto",
+                }}
+                onInput={(e) => {
+                  const el = e.currentTarget;
+                  el.style.height = "auto";
+                  el.style.height = Math.min(el.scrollHeight, 200) + "px";
+                }}
+              />
+
+              {/* Bottom bar */}
+              <div
+                style={{
+                  borderTop: "1px solid rgba(255,255,255,0.06)",
+                  padding: "12px 16px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <div
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 9,
+                      fontWeight: 700,
+                      color: "var(--muted)",
+                      letterSpacing: "0.16em",
+                      textTransform: "uppercase",
+                      padding: "4px 10px",
+                      border: "1px solid var(--line)",
+                      background: "var(--bg-2)",
+                    }}
+                  >
+                    WSA · 200+ Q&As
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => send(input)}
+                  disabled={!canSend}
+                  style={{
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
-                    marginTop: 2,
-                    background: msg.role === "assistant" ? "var(--acid)" : "var(--bg-2)",
-                    border: msg.role === "user" ? "1px solid var(--line)" : "none",
-                  }}>
-                    <span style={{ fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: 11, color: msg.role === "assistant" ? "var(--bg)" : "var(--ash)" }}>
+                    gap: 8,
+                    padding: "9px 20px",
+                    background: canSend ? "var(--acid)" : "rgba(255,255,255,0.05)",
+                    border: "none",
+                    borderRadius: 8,
+                    color: canSend ? "var(--bg)" : "var(--muted)",
+                    fontFamily: "var(--font-mono)",
+                    fontSize: 11,
+                    fontWeight: 700,
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase",
+                    cursor: canSend ? "pointer" : "not-allowed",
+                    transition: "background 0.15s, color 0.15s",
+                  }}
+                >
+                  <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+                    <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  Send
+                </button>
+              </div>
+            </div>
+
+            {/* Quick chips */}
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 8,
+                justifyContent: "center",
+                maxWidth: 760,
+                marginTop: 20,
+              }}
+            >
+              {CHIPS.map((chip) => (
+                <button
+                  key={chip.label}
+                  onClick={() => send(chip.label)}
+                  disabled={streaming}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 7,
+                    padding: "8px 16px",
+                    background: "rgba(255,255,255,0.03)",
+                    border: "1px solid rgba(255,255,255,0.09)",
+                    borderRadius: 100,
+                    color: "var(--ash)",
+                    fontFamily: "var(--font-body)",
+                    fontSize: 13,
+                    cursor: "pointer",
+                    transition: "background 0.15s, border-color 0.15s, color 0.15s",
+                    backdropFilter: "blur(8px)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "rgba(249,255,60,0.07)";
+                    e.currentTarget.style.borderColor = "rgba(249,255,60,0.3)";
+                    e.currentTarget.style.color = "var(--bone)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "rgba(255,255,255,0.03)";
+                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.09)";
+                    e.currentTarget.style.color = "var(--ash)";
+                  }}
+                >
+                  <span style={{ color: "var(--acid)", fontSize: 10 }}>▸</span>
+                  {chip.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── CHAT THREAD ─────────────────────────────────────────────────────── */}
+        {hasMessages && (
+          <div
+            style={{
+              flex: 1,
+              overflowY: "auto",
+              padding: "32px 20px 140px",
+            }}
+          >
+            <div
+              style={{
+                maxWidth: 760,
+                margin: "0 auto",
+                display: "flex",
+                flexDirection: "column",
+                gap: 28,
+              }}
+            >
+              {messages.map((msg, i) => (
+                <div key={i} style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
+                  {/* Avatar */}
+                  <div
+                    style={{
+                      width: 30,
+                      height: 30,
+                      borderRadius: "50%",
+                      flexShrink: 0,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginTop: 2,
+                      background: msg.role === "assistant" ? "var(--acid)" : "var(--bg-2)",
+                      border: msg.role === "user" ? "1px solid var(--line-2)" : "none",
+                      boxShadow: msg.role === "assistant" ? "0 0 16px rgba(249,255,60,0.2)" : "none",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: "var(--font-mono)",
+                        fontWeight: 800,
+                        fontSize: 11,
+                        color: msg.role === "assistant" ? "var(--bg)" : "var(--ash)",
+                      }}
+                    >
                       {msg.role === "assistant" ? "C" : "Y"}
                     </span>
                   </div>
+
                   {/* Content */}
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--muted)", marginBottom: 6, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+                    <div
+                      style={{
+                        fontFamily: "var(--font-mono)",
+                        fontSize: 9,
+                        fontWeight: 700,
+                        color: msg.role === "assistant" ? "var(--acid)" : "var(--muted)",
+                        marginBottom: 8,
+                        letterSpacing: "0.16em",
+                        textTransform: "uppercase",
+                      }}
+                    >
                       {msg.role === "assistant" ? "Cue" : "You"}
                     </div>
-                    <div style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: 15,
-                      lineHeight: 1.65,
-                      color: msg.role === "assistant" ? "var(--bone)" : "var(--ash)",
-                      whiteSpace: "pre-wrap",
-                      wordBreak: "break-word",
-                    }}>
+                    <div
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: 15,
+                        lineHeight: 1.7,
+                        color: msg.role === "assistant" ? "var(--bone)" : "var(--ash)",
+                        whiteSpace: "pre-wrap",
+                        wordBreak: "break-word",
+                      }}
+                    >
                       {msg.content}
+                      {/* Typing indicators */}
                       {msg.role === "assistant" && streaming && i === messages.length - 1 && msg.content === "" && (
-                        <span style={{ display: "inline-flex", gap: 4, verticalAlign: "middle", marginLeft: 4 }}>
+                        <span style={{ display: "inline-flex", gap: 4, verticalAlign: "middle", marginLeft: 2 }}>
                           {[0, 1, 2].map((d) => (
-                            <span key={d} className="pulse" style={{ width: 4, height: 4, background: "var(--acid)", borderRadius: "50%", display: "inline-block", animationDelay: `${d * 0.2}s` }} />
+                            <span
+                              key={d}
+                              className="pulse"
+                              style={{ width: 4, height: 4, background: "var(--acid)", borderRadius: "50%", display: "inline-block", animationDelay: `${d * 0.18}s` }}
+                            />
                           ))}
                         </span>
                       )}
                       {msg.role === "assistant" && streaming && i === messages.length - 1 && msg.content.length > 0 && (
-                        <span style={{ display: "inline-block", width: 2, height: "1em", background: "var(--acid)", marginLeft: 2, verticalAlign: "text-bottom", animation: "pulse 1s ease-in-out infinite" }} />
+                        <span
+                          style={{
+                            display: "inline-block",
+                            width: 2,
+                            height: "0.9em",
+                            background: "var(--acid)",
+                            marginLeft: 2,
+                            verticalAlign: "text-bottom",
+                            animation: "pulse 1s ease-in-out infinite",
+                          }}
+                        />
                       )}
                     </div>
                   </div>
                 </div>
               ))}
+              <div ref={bottomRef} />
             </div>
-          )}
-          <div ref={bottomRef} />
-        </div>
+          </div>
+        )}
       </div>
 
-      {/* INPUT */}
-      <div style={{ borderTop: "1px solid var(--line)", padding: "16px", background: "var(--bg)", flexShrink: 0 }}>
-        <form onSubmit={handleSubmit} style={{ maxWidth: 720, margin: "0 auto", display: "flex", gap: 8, alignItems: "flex-end" }}>
-          <textarea
-            ref={inputRef}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Ask Cue about confluence, risk, mindset..."
-            disabled={streaming}
-            rows={1}
+      {/* ── Pinned input (chat mode only) ───────────────────────────────────── */}
+      {hasMessages && (
+        <div
+          style={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: 40,
+            padding: "16px 20px 24px",
+            background: "linear-gradient(to top, rgba(0,0,0,0.98) 60%, transparent)",
+          }}
+        >
+          <div
             style={{
-              flex: 1,
-              background: "var(--bg-1)",
-              border: "1px solid var(--line)",
-              borderRadius: 8,
-              padding: "10px 14px",
-              color: "var(--bone)",
-              fontFamily: "var(--font-body)",
-              fontSize: 14,
-              resize: "none",
-              outline: "none",
-              lineHeight: 1.5,
-              maxHeight: 160,
-              overflow: "auto",
-              transition: "border-color 0.15s",
-            }}
-            onFocus={(e) => { e.currentTarget.style.borderColor = "rgba(249,255,60,0.4)"; }}
-            onBlur={(e) => { e.currentTarget.style.borderColor = "var(--line)"; }}
-            onInput={(e) => {
-              const el = e.currentTarget;
-              el.style.height = "auto";
-              el.style.height = Math.min(el.scrollHeight, 160) + "px";
-            }}
-          />
-          <button
-            type="submit"
-            disabled={!input.trim() || streaming}
-            style={{
-              background: input.trim() && !streaming ? "var(--acid)" : "var(--bg-2)",
-              border: "none",
-              borderRadius: 8,
-              width: 40,
-              height: 40,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: input.trim() && !streaming ? "pointer" : "not-allowed",
-              flexShrink: 0,
-              transition: "background 0.15s",
+              maxWidth: 760,
+              margin: "0 auto",
+              background: "rgba(12,16,24,0.9)",
+              border: `1px solid ${focused ? "rgba(249,255,60,0.35)" : "rgba(255,255,255,0.08)"}`,
+              borderRadius: 14,
+              boxShadow: focused
+                ? "0 0 0 1px rgba(249,255,60,0.1), 0 16px 60px rgba(0,0,0,0.7)"
+                : "0 16px 60px rgba(0,0,0,0.7)",
+              overflow: "hidden",
+              backdropFilter: "blur(20px)",
+              transition: "border-color 0.2s, box-shadow 0.2s",
             }}
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M2 8h12M8 2l6 6-6 6" stroke={input.trim() && !streaming ? "var(--bg)" : "var(--muted)"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
-        </form>
-        <div style={{ maxWidth: 720, margin: "6px auto 0", fontFamily: "var(--font-body)", fontSize: 11, color: "var(--muted)", textAlign: "center" }}>
-          Enter to send · Shift+Enter for new line
+            <textarea
+              ref={textareaRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              placeholder="Ask Cue..."
+              disabled={streaming}
+              rows={1}
+              style={{
+                width: "100%",
+                background: "transparent",
+                border: "none",
+                outline: "none",
+                padding: "16px 20px 10px",
+                color: "var(--bone)",
+                fontFamily: "var(--font-body)",
+                fontSize: 15,
+                lineHeight: 1.55,
+                resize: "none",
+                display: "block",
+                boxSizing: "border-box",
+                maxHeight: 160,
+                overflow: "auto",
+              }}
+              onInput={(e) => {
+                const el = e.currentTarget;
+                el.style.height = "auto";
+                el.style.height = Math.min(el.scrollHeight, 160) + "px";
+              }}
+            />
+            <div
+              style={{
+                borderTop: "1px solid rgba(255,255,255,0.05)",
+                padding: "10px 14px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "var(--muted)", letterSpacing: "0.16em", textTransform: "uppercase" }}>
+                Enter to send · Shift+Enter for newline
+              </span>
+              <button
+                type="button"
+                onClick={() => send(input)}
+                disabled={!canSend}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 7,
+                  padding: "7px 16px",
+                  background: canSend ? "var(--acid)" : "rgba(255,255,255,0.05)",
+                  border: "none",
+                  borderRadius: 7,
+                  color: canSend ? "var(--bg)" : "var(--muted)",
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 10,
+                  fontWeight: 700,
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                  cursor: canSend ? "pointer" : "not-allowed",
+                  transition: "background 0.15s, color 0.15s",
+                }}
+              >
+                <svg width="11" height="11" viewBox="0 0 14 14" fill="none">
+                  <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                Send
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
