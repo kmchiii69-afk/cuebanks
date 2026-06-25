@@ -409,33 +409,83 @@ function PlayBtn({ video, onPlay }: { video: Video; onPlay: (v: Video) => void }
   );
 }
 
+// Globe position per section (hero + 6 phases)
+const GLOBE_POS = [
+  { left: 78, top: 30, scale: 2.8, opacity: 0.32 }, // hero
+  { left: 88, top: 52, scale: 2.0, opacity: 0.28 }, // phase 01
+  { left: 16, top: 50, scale: 2.2, opacity: 0.26 }, // phase 02
+  { left: 76, top: 22, scale: 1.8, opacity: 0.25 }, // phase 03
+  { left: 72, top: 44, scale: 2.6, opacity: 0.30 }, // phase 04
+  { left: 15, top: 42, scale: 2.0, opacity: 0.26 }, // phase 05
+  { left: 82, top: 28, scale: 3.0, opacity: 0.28 }, // phase 06
+];
+
 // ─── Page ──────────────────────────────────────────────────────────────────────
 export default function RoadmapPage() {
   const [activeVideo, setActiveVideo] = useState<ModalVideo | null>(null);
+  const [globeTransform, setGlobeTransform] = useState(
+    `translate3d(78vw, 30vh, 0) translate3d(-50%, -50%, 0) scale3d(2.8, 2.8, 1)`
+  );
+  const [globeOpacity, setGlobeOpacity] = useState(0.32);
   const phaseRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const heroRef = useRef<HTMLElement>(null);
 
   const totalVideos = PHASES.reduce((acc, p) => acc + p.items.reduce((a, i) => a + (i.videos?.length ?? 0), 0), 0);
+
+  // Parallax globe — snap to nearest section
+  useEffect(() => {
+    function handleScroll() {
+      const refs: (Element | null)[] = [
+        heroRef.current,
+        ...Array.from({ length: PHASES.length }, (_, i) => phaseRefs.current[i] ?? null),
+      ];
+      const midpoint = window.innerHeight / 2;
+      let closest = 0;
+      let minDist = Infinity;
+      refs.forEach((el, i) => {
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        const dist = Math.abs(rect.top + rect.height / 2 - midpoint);
+        if (dist < minDist) { minDist = dist; closest = i; }
+      });
+      const p = GLOBE_POS[closest] ?? GLOBE_POS[0];
+      setGlobeTransform(
+        `translate3d(${p.left}vw, ${p.top}vh, 0) translate3d(-50%, -50%, 0) scale3d(${p.scale}, ${p.scale}, 1)`
+      );
+      setGlobeOpacity(p.opacity);
+    }
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   function jumpTo(i: number) {
     phaseRefs.current[i]?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   return (
-    <div className="grid-bg" style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--bone)", position: "relative" }}>
+    <div style={{ minHeight: "100vh", background: "#000", color: "var(--bone)", position: "relative" }}>
 
-      {/* ── Globe background ─────────────────────────────────────────────────── */}
-      <div style={{ position: "fixed", top: "5%", right: "-8%", zIndex: 0, pointerEvents: "none", opacity: 0.22, filter: "blur(0px)" }}>
-        <Globe size={620} />
-      </div>
-      <div style={{ position: "fixed", bottom: "8%", left: "-6%", zIndex: 0, pointerEvents: "none", opacity: 0.10 }}>
-        <Globe size={380} />
+      {/* ── Space atmosphere ─────────────────────────────────────────────────── */}
+      <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse 100% 70% at 65% 28%, rgba(6,10,20,1) 0%, rgba(0,0,0,1) 65%)" }} />
+
+      {/* ── Parallax Globe ───────────────────────────────────────────────────── */}
+      <div style={{
+        position: "fixed", top: 0, left: 0,
+        zIndex: 0, pointerEvents: "none",
+        opacity: globeOpacity,
+        willChange: "transform, opacity",
+        transform: globeTransform,
+        transition: "transform 1400ms cubic-bezier(0.23, 1, 0.32, 1), opacity 700ms ease",
+      }}>
+        <Globe size={250} />
       </div>
 
       {activeVideo && <VideoModal video={activeVideo} onClose={() => setActiveVideo(null)} />}
       <CueChat />
 
       {/* HEADER */}
-      <header style={{ borderBottom: "1px solid var(--line)", padding: "20px 48px", display: "flex", justifyContent: "space-between", alignItems: "center", position: "sticky", top: 0, background: "rgba(0,0,0,0.92)", backdropFilter: "blur(12px)", zIndex: 100 }}>
+      <header style={{ borderBottom: "1px solid rgba(255,255,255,0.07)", padding: "18px 48px", display: "flex", justifyContent: "space-between", alignItems: "center", position: "sticky", top: 0, background: "rgba(0,0,0,0.88)", backdropFilter: "blur(20px)", zIndex: 100 }}>
         <Link href="/ig" style={{ display: "flex", alignItems: "center", gap: 14, textDecoration: "none" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/wsa/home/1.png" alt="Wall Street Academy" style={{ height: 44, width: 44, borderRadius: "50%", objectFit: "cover" }} />
@@ -444,9 +494,9 @@ export default function RoadmapPage() {
         {/* Phase jump nav */}
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
           {PHASES.map((p, i) => (
-            <button key={i} onClick={() => jumpTo(i)} style={{ background: "none", border: "1px solid var(--line)", color: "var(--muted)", fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", padding: "4px 8px", cursor: "pointer", transition: "color 0.15s, border-color 0.15s" }}
+            <button key={i} onClick={() => jumpTo(i)} style={{ background: "none", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.3)", fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", padding: "4px 8px", cursor: "pointer", transition: "color 0.15s, border-color 0.15s", borderRadius: 3 }}
               onMouseEnter={e => { e.currentTarget.style.color = "var(--acid)"; e.currentTarget.style.borderColor = "rgba(249,255,60,0.4)"; }}
-              onMouseLeave={e => { e.currentTarget.style.color = "var(--muted)"; e.currentTarget.style.borderColor = "var(--line)"; }}>
+              onMouseLeave={e => { e.currentTarget.style.color = "rgba(255,255,255,0.3)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)"; }}>
               {p.num}
             </button>
           ))}
@@ -457,31 +507,30 @@ export default function RoadmapPage() {
       </header>
 
       {/* HERO */}
-      <section style={{ maxWidth: 900, margin: "0 auto", padding: "72px 48px 8px", textAlign: "center", position: "relative" }}>
-        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(900px 480px at 50% 0%, rgba(249,255,60,0.09), transparent 60%)" }} />
+      <section ref={heroRef} style={{ maxWidth: 860, margin: "0 auto", padding: "96px 48px 24px", textAlign: "center", position: "relative", zIndex: 1 }}>
         <div style={{ position: "relative" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 24, background: "rgba(249,255,60,0.06)", border: "1px solid rgba(249,255,60,0.2)", padding: "6px 16px" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 28, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 100, padding: "6px 18px" }}>
             <span className="pulse" style={{ width: 5, height: 5, background: "var(--acid)", borderRadius: "50%", display: "inline-block" }} />
-            <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "var(--acid)", letterSpacing: "0.22em", textTransform: "uppercase" }}>Inner Circle Member Access</span>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.55)", letterSpacing: "0.22em", textTransform: "uppercase" }}>Inner Circle Member Access</span>
           </div>
-          <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "clamp(44px, 7vw, 80px)", lineHeight: 0.95, letterSpacing: "-0.045em", color: "var(--bone)", margin: "0 0 20px" }}>
+          <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(48px, 7.5vw, 88px)", lineHeight: 0.92, letterSpacing: "-0.045em", color: "var(--bone)", margin: "0 0 24px" }}>
             The Inner Circle<br />
             <em style={{ color: "var(--acid)", fontStyle: "normal" }}>Roadmap.</em>
           </h1>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 18, lineHeight: 1.6, color: "var(--ash)", margin: "0 auto 28px", maxWidth: 540 }}>
-            Every module. Every drill. Every live session. In the exact order that builds a profitable trader — not just someone who watched videos.
+          <p style={{ fontFamily: "var(--font-body)", fontWeight: 300, fontSize: 18, lineHeight: 1.65, color: "rgba(255,255,255,0.45)", margin: "0 auto 36px", maxWidth: 500, letterSpacing: "0.01em" }}>
+            Every module. Every drill. Every live session — in the exact order that builds a profitable trader.
           </p>
           {/* Stats row */}
-          <div style={{ display: "inline-flex", gap: 0, border: "1px solid var(--line)", overflow: "hidden", marginBottom: 64 }}>
+          <div style={{ display: "inline-flex", gap: 0, border: "1px solid rgba(255,255,255,0.07)", overflow: "hidden", marginBottom: 80, borderRadius: 12 }}>
             {[
               { n: "6", label: "Phases" },
               { n: "16", label: "Weeks" },
               { n: String(totalVideos) + "+", label: "Videos" },
               { n: `${CNC.length + CUECASTS.length}`, label: "Live Sessions" },
             ].map((s, i) => (
-              <div key={i} style={{ padding: "14px 24px", borderRight: i < 3 ? "1px solid var(--line)" : "none", textAlign: "center", background: "var(--bg-1)" }}>
-                <div style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 28, letterSpacing: "-0.03em", color: "var(--acid)", lineHeight: 1 }}>{s.n}</div>
-                <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "var(--muted)", letterSpacing: "0.18em", textTransform: "uppercase", marginTop: 4 }}>{s.label}</div>
+              <div key={i} style={{ padding: "18px 28px", borderRight: i < 3 ? "1px solid rgba(255,255,255,0.07)" : "none", textAlign: "center", background: "rgba(255,255,255,0.03)" }}>
+                <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 32, letterSpacing: "-0.04em", color: "var(--acid)", lineHeight: 1 }}>{s.n}</div>
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.3)", letterSpacing: "0.18em", textTransform: "uppercase", marginTop: 6 }}>{s.label}</div>
               </div>
             ))}
           </div>
@@ -489,9 +538,9 @@ export default function RoadmapPage() {
       </section>
 
       {/* PHASES */}
-      <section style={{ maxWidth: 920, margin: "0 auto", padding: "0 48px 100px" }}>
+      <section style={{ maxWidth: 920, margin: "0 auto", padding: "0 48px 100px", position: "relative", zIndex: 1 }}>
         <div style={{ position: "relative" }}>
-          <div style={{ position: "absolute", left: 28, top: 0, bottom: 0, width: 1, background: "linear-gradient(to bottom, var(--acid) 0%, rgba(249,255,60,0.06) 100%)", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", left: 28, top: 0, bottom: 0, width: 1, background: "linear-gradient(to bottom, rgba(249,255,60,0.5) 0%, rgba(249,255,60,0.04) 100%)", pointerEvents: "none" }} />
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             {PHASES.map((phase, i) => {
               const videoCount = phase.items.reduce((a, item) => a + (item.videos?.length ?? 0), 0);
@@ -499,42 +548,42 @@ export default function RoadmapPage() {
                 <div key={i} ref={el => { phaseRefs.current[i] = el; }} style={{ display: "flex", gap: 32, position: "relative", scrollMarginTop: 80 }}>
                   {/* Dot */}
                   <div style={{ flexShrink: 0, width: 56, display: "flex", flexDirection: "column", alignItems: "center", paddingTop: 32, position: "relative", zIndex: 1 }}>
-                    <div style={{ width: 36, height: 36, borderRadius: "50%", background: "var(--bg)", border: "2px solid var(--acid)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 24px rgba(249,255,60,0.2)" }}>
+                    <div style={{ width: 36, height: 36, borderRadius: "50%", background: "#000", border: "1.5px solid rgba(249,255,60,0.6)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 20px rgba(249,255,60,0.12), 0 0 60px rgba(249,255,60,0.05)" }}>
                       <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: "var(--acid)", letterSpacing: "0.04em" }}>{phase.num}</span>
                     </div>
                   </div>
 
                   {/* Card */}
-                  <div style={{ flex: 1, background: "var(--bg-1)", border: "1px solid var(--line)", borderTop: "1px solid rgba(249,255,60,0.22)", overflow: "hidden" }}>
+                  <div style={{ flex: 1, background: "rgba(12,16,24,0.7)", border: "1px solid rgba(255,255,255,0.07)", borderTop: "1px solid rgba(249,255,60,0.3)", overflow: "hidden", backdropFilter: "blur(8px)", boxShadow: "0 0 0 0 transparent, 0 8px 40px rgba(0,0,0,0.5)" }}>
                     {/* Card header */}
-                    <div style={{ padding: "26px 32px 20px" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-                        <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "var(--muted)", letterSpacing: "0.22em", textTransform: "uppercase", background: "var(--bg-2)", border: "1px solid var(--line)", padding: "4px 10px" }}>{phase.duration}</div>
+                    <div style={{ padding: "28px 32px 20px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+                        <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.3)", letterSpacing: "0.22em", textTransform: "uppercase", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 4, padding: "4px 10px" }}>{phase.duration}</div>
                         {videoCount > 0 && (
-                          <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "var(--acid)", letterSpacing: "0.18em", textTransform: "uppercase", background: "rgba(249,255,60,0.07)", border: "1px solid rgba(249,255,60,0.2)", padding: "4px 10px" }}>
+                          <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "var(--acid)", letterSpacing: "0.18em", textTransform: "uppercase", background: "rgba(249,255,60,0.07)", border: "1px solid rgba(249,255,60,0.18)", borderRadius: 4, padding: "4px 10px" }}>
                             ▶ {videoCount} videos
                           </div>
                         )}
                       </div>
-                      <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(22px, 3vw, 28px)", letterSpacing: "-0.025em", color: "var(--bone)", margin: "0 0 10px" }}>{phase.title}</h2>
-                      <p style={{ fontFamily: "var(--font-body)", fontSize: 14, lineHeight: 1.65, color: "var(--ash)", margin: 0, maxWidth: 620 }}>{phase.tagline}</p>
+                      <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "clamp(22px, 3vw, 27px)", letterSpacing: "-0.03em", color: "var(--bone)", margin: "0 0 10px" }}>{phase.title}</h2>
+                      <p style={{ fontFamily: "var(--font-body)", fontWeight: 300, fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,0.4)", margin: 0, maxWidth: 600, letterSpacing: "0.005em" }}>{phase.tagline}</p>
                     </div>
 
                     {/* Items */}
-                    <div style={{ borderTop: "1px solid var(--line)", padding: "0 32px" }}>
+                    <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", padding: "0 32px" }}>
                       {phase.items.map((item, j) => (
-                        <div key={j} style={{ display: "flex", alignItems: "flex-start", gap: 14, padding: "15px 0", borderBottom: j < phase.items.length - 1 ? "1px solid var(--line)" : "none" }}>
-                          <div style={{ flexShrink: 0, width: 22, height: 22, borderRadius: "50%", border: "1px solid var(--line-2)", background: "var(--bg-2)", display: "flex", alignItems: "center", justifyContent: "center", marginTop: 1 }}>
-                            <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "var(--muted)" }}>{j + 1}</span>
+                        <div key={j} style={{ display: "flex", alignItems: "flex-start", gap: 14, padding: "15px 0", borderBottom: j < phase.items.length - 1 ? "1px solid rgba(255,255,255,0.05)" : "none" }}>
+                          <div style={{ flexShrink: 0, width: 22, height: 22, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", display: "flex", alignItems: "center", justifyContent: "center", marginTop: 1 }}>
+                            <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.25)" }}>{j + 1}</span>
                           </div>
                           <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3, flexWrap: "wrap" }}>
-                              <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 14, color: "var(--bone)", letterSpacing: "-0.01em" }}>{item.label}</span>
+                            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
+                              <span style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: 14, color: "rgba(255,255,255,0.88)", letterSpacing: "-0.01em" }}>{item.label}</span>
                               {item.tag && (
-                                <span style={{ fontFamily: "var(--font-mono)", fontSize: 8, fontWeight: 700, letterSpacing: "0.14em", color: "var(--bg)", background: "var(--acid)", padding: "2px 6px" }}>{item.tag}</span>
+                                <span style={{ fontFamily: "var(--font-mono)", fontSize: 8, fontWeight: 700, letterSpacing: "0.14em", color: "var(--bg)", background: "var(--acid)", padding: "2px 7px", borderRadius: 3 }}>{item.tag}</span>
                               )}
                             </div>
-                            <div style={{ fontFamily: "var(--font-body)", fontSize: 12.5, lineHeight: 1.55, color: "var(--ash)", marginBottom: item.videos?.length ? 10 : 0 }}>{item.note}</div>
+                            <div style={{ fontFamily: "var(--font-body)", fontWeight: 300, fontSize: 12.5, lineHeight: 1.6, color: "rgba(255,255,255,0.35)", marginBottom: item.videos?.length ? 10 : 0 }}>{item.note}</div>
                             {item.videos && item.videos.length > 0 && (
                               <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
                                 {item.videos.map(v => <PlayBtn key={v.id} video={v} onPlay={setActiveVideo} />)}
@@ -546,9 +595,9 @@ export default function RoadmapPage() {
                     </div>
 
                     {/* Checkpoint */}
-                    <div style={{ borderTop: "1px solid var(--line)", background: "rgba(249,255,60,0.035)", padding: "14px 32px", display: "flex", alignItems: "flex-start", gap: 12 }}>
-                      <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "var(--acid)", letterSpacing: "0.18em", textTransform: "uppercase", flexShrink: 0, paddingTop: 1, whiteSpace: "nowrap" }}>· After ·</div>
-                      <div style={{ fontFamily: "var(--font-body)", fontSize: 12.5, lineHeight: 1.55, color: "var(--acid)", opacity: 0.8 }}>{phase.checkpoint}</div>
+                    <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", background: "rgba(249,255,60,0.025)", padding: "14px 32px", display: "flex", alignItems: "flex-start", gap: 12 }}>
+                      <div style={{ fontFamily: "var(--font-mono)", fontSize: 8, fontWeight: 700, color: "rgba(249,255,60,0.5)", letterSpacing: "0.22em", textTransform: "uppercase", flexShrink: 0, paddingTop: 1, whiteSpace: "nowrap" }}>· After ·</div>
+                      <div style={{ fontFamily: "var(--font-body)", fontWeight: 300, fontSize: 12.5, lineHeight: 1.6, color: "rgba(249,255,60,0.6)" }}>{phase.checkpoint}</div>
                     </div>
                   </div>
                 </div>
@@ -559,21 +608,21 @@ export default function RoadmapPage() {
       </section>
 
       {/* INCLUDED */}
-      <section style={{ maxWidth: 920, margin: "0 auto", padding: "0 48px 80px" }}>
-        <div style={{ borderTop: "1px solid var(--line)", paddingTop: 48 }}>
-          <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: "var(--muted)", letterSpacing: "0.22em", textTransform: "uppercase", textAlign: "center", marginBottom: 28 }}>· What's included ·</div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 2 }}>
+      <section style={{ maxWidth: 920, margin: "0 auto", padding: "0 48px 80px", position: "relative", zIndex: 1 }}>
+        <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", paddingTop: 48 }}>
+          <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.2)", letterSpacing: "0.26em", textTransform: "uppercase", textAlign: "center", marginBottom: 28 }}>· What&apos;s included ·</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 1 }}>
             {[
               { label: `${totalVideos}+ Videos`, desc: "Every module, webinar, and live session — all on demand." },
-              { label: `${CNC.length} Chart N Chill Sessions`, desc: "Every Chart N Chill on record. The answer is probably already in here." },
-              { label: `${CUECASTS.length} CueCAST Sessions`, desc: "Cue's live market analysis sessions — real time, real charts." },
+              { label: `${CNC.length} Chart N Chill`, desc: "Every Chart N Chill on record. The answer is probably already in here." },
+              { label: `${CUECASTS.length} CueCAST Sessions`, desc: "Cue's live market analysis — real time, real charts." },
               { label: "Monthly Group Q&A", desc: "4 live calls with Cue across the 4 months. Bring your charts." },
               { label: "Structured Drills", desc: "Practice between phases is required. This is a training program, not a library." },
               { label: "Cue AI — On Demand", desc: "Ask Cue anything, anytime. Trained on WSA content, answers in his voice." },
             ].map((s, i) => (
-              <div key={i} style={{ background: "var(--bg-1)", border: "1px solid var(--line)", padding: "18px 20px" }}>
-                <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 14, color: "var(--bone)", marginBottom: 5, letterSpacing: "-0.01em" }}>{s.label}</div>
-                <div style={{ fontFamily: "var(--font-body)", fontSize: 12.5, lineHeight: 1.5, color: "var(--ash)" }}>{s.desc}</div>
+              <div key={i} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", padding: "20px 22px" }}>
+                <div style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: 14, color: "rgba(255,255,255,0.85)", marginBottom: 6, letterSpacing: "-0.01em" }}>{s.label}</div>
+                <div style={{ fontFamily: "var(--font-body)", fontWeight: 300, fontSize: 12.5, lineHeight: 1.55, color: "rgba(255,255,255,0.32)" }}>{s.desc}</div>
               </div>
             ))}
           </div>
@@ -581,22 +630,22 @@ export default function RoadmapPage() {
       </section>
 
       {/* CTA */}
-      <section style={{ maxWidth: 680, margin: "0 auto", padding: "0 48px 120px", textAlign: "center" }}>
-        <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: "var(--muted)", letterSpacing: "0.22em", textTransform: "uppercase", marginBottom: 20 }}>· 6 phases · 16 weeks · $15,000 ·</div>
-        <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "clamp(32px, 5vw, 56px)", letterSpacing: "-0.04em", color: "var(--bone)", margin: "0 0 16px", lineHeight: 1.0 }}>
+      <section style={{ maxWidth: 680, margin: "0 auto", padding: "0 48px 120px", textAlign: "center", position: "relative", zIndex: 1 }}>
+        <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.2)", letterSpacing: "0.26em", textTransform: "uppercase", marginBottom: 20 }}>· 6 phases · 16 weeks · $15,000 ·</div>
+        <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(32px, 5vw, 56px)", letterSpacing: "-0.04em", color: "var(--bone)", margin: "0 0 16px", lineHeight: 1.0 }}>
           Apply and see if you&rsquo;re<br /><em style={{ color: "var(--acid)", fontStyle: "normal" }}>the right fit.</em>
         </h2>
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 17, lineHeight: 1.55, color: "var(--ash)", margin: "0 auto 36px", maxWidth: 440 }}>
+        <p style={{ fontFamily: "var(--font-body)", fontWeight: 300, fontSize: 17, lineHeight: 1.6, color: "rgba(255,255,255,0.4)", margin: "0 auto 40px", maxWidth: 400 }}>
           The roadmap is built. The system is proven. The only question is whether you&rsquo;re ready to follow it.
         </p>
-        <Link href="/ig/apply" style={{ display: "inline-block", padding: "20px 52px", background: "var(--acid)", color: "var(--bg)", fontFamily: "var(--font-mono)", fontSize: 13, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", textDecoration: "none", boxShadow: "0 0 0 1px var(--acid), 0 0 64px rgba(249,255,60,0.3)" }}>
+        <Link href="/ig/apply" style={{ display: "inline-block", padding: "20px 52px", background: "var(--acid)", color: "var(--bg)", fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", textDecoration: "none", borderRadius: 4, boxShadow: "0 0 80px rgba(249,255,60,0.25), 0 0 0 1px rgba(249,255,60,0.4)" }}>
           Apply for the Inner Circle →
         </Link>
-        <p style={{ marginTop: 16, fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: "var(--muted)", letterSpacing: "0.18em", textTransform: "uppercase" }}>· Takes 2 minutes · Spots are limited ·</p>
+        <p style={{ marginTop: 16, fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.18)", letterSpacing: "0.22em", textTransform: "uppercase" }}>· Takes 2 minutes · Spots are limited ·</p>
       </section>
 
       {/* FOOTER */}
-      <footer style={{ borderTop: "1px solid var(--line)", padding: "32px 48px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16, fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: "var(--muted)", letterSpacing: "0.22em", textTransform: "uppercase" }}>
+      <footer style={{ borderTop: "1px solid rgba(255,255,255,0.06)", padding: "32px 48px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16, fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.18)", letterSpacing: "0.22em", textTransform: "uppercase", position: "relative", zIndex: 1 }}>
         <span>© 2026 · iknkfx inc · All Rights Reserved</span>
         <span>· Not financial advice · Trading involves real risk of loss ·</span>
       </footer>
