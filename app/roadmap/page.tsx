@@ -1,8 +1,26 @@
 "use client";
 
 import Link from "next/link";
+import { useState, useEffect } from "react";
 
-const PHASES = [
+type Video = { id: string; label: string };
+
+type PhaseItem = {
+  label: string;
+  note: string;
+  videos?: Video[];
+};
+
+type Phase = {
+  num: string;
+  title: string;
+  duration: string;
+  tagline: string;
+  checkpoint: string;
+  items: PhaseItem[];
+};
+
+const PHASES: Phase[] = [
   {
     num: "01",
     title: "Foundation & Mindset",
@@ -23,18 +41,26 @@ const PHASES = [
       {
         label: "Risk Management 101",
         note: "1% to 5% risk per trade — conservative to the absolute most you should go. Cue blew four $1,000 accounts before he understood this. You don't have to.",
+        videos: [{ id: "160573172", label: "Risk Management 101" }],
       },
       {
         label: "Mental Health — The Trader's Environment",
         note: "Once you get greedy, that's what kills your success. This module covers the mindset before the market exposes every weak point in your psychology.",
+        videos: [{ id: "200293134", label: "Psychology" }],
       },
       {
         label: "The Four Fears + Greed, Revenge, FOMO",
         note: "You are the problem at times. Not the broker. The market. You. Know your patterns before they cost you. Take accountability for your own actions.",
+        videos: [
+          { id: "226589336", label: "The Four Fears" },
+          { id: "1090926102", label: "Fear of Market 2.0" },
+          { id: "1090913021", label: "Greed 2.0" },
+        ],
       },
       {
         label: "Demo vs Live — Understanding the Difference",
         note: "Demo doesn't replicate the emotional weight of real money. This module bridges that gap so your first live account doesn't become a tuition payment.",
+        videos: [{ id: "1090929269", label: "Demo vs Live 2.0" }],
       },
     ],
   },
@@ -50,10 +76,12 @@ const PHASES = [
       {
         label: "Identifying The Trend (1.0 + 2.0)",
         note: "Higher high points, higher low points — that's a bullish market. Lower highs, lower lows — that's a bearish market. This is always first. Structure is always first.",
+        videos: [{ id: "208979674", label: "Market Structure 2.0" }],
       },
       {
         label: "Support & Resistance (1.0 + 2.0)",
         note: "The base of every style of trading. Daily levels on the line chart, H4 on the line chart, H1 on candles — that's how Cue marks his S&R from the top down.",
+        videos: [{ id: "208544828", label: "Support & Resistance 2.0" }],
       },
       {
         label: "Supply & Demand",
@@ -62,6 +90,7 @@ const PHASES = [
       {
         label: "Drawing Trendlines (1.0 + 2.0)",
         note: "If you can't walk in it, it's invalid. Most traders draw them wrong. Learn where to anchor, when they break, and exactly what that means for the next move.",
+        videos: [{ id: "1162341882", label: "Trendlines 2.0" }],
       },
       {
         label: "Chart Practice: 10 Drawn Charts",
@@ -81,10 +110,12 @@ const PHASES = [
       {
         label: "Drawing Market Structure (1.0 + 2.0)",
         note: "Break of structure. Change of character. Continuation versus reversal. You need to know what the market is doing before you can know where it's going.",
+        videos: [{ id: "208979674", label: "Market Structure 2.0" }],
       },
       {
         label: "Using Fibonacci (1.0 + 2.0)",
         note: "Point A to point B — 38.2% is your first higher-low opportunity, 23.6% is where it gets sloppy. Know which levels to trust and which ones to wait through.",
+        videos: [{ id: "214333836", label: "Fibonacci 2.0" }],
       },
       {
         label: "Fibonacci Drill: 20 Historical Moves",
@@ -112,22 +143,39 @@ const PHASES = [
       {
         label: "Confluence Trading 1.0 → 2.0 → 2.5",
         note: "Watch in order. Don't skip. Each version builds on the last — this is Cue's full journey developing the system from its foundation. The stack starts here.",
+        videos: [
+          { id: "169326892", label: "Confluence 2.0" },
+          { id: "187488265", label: "Confluence 2.5" },
+        ],
       },
       {
         label: "Confluence Trading 2.9 → 3.0",
         note: "Advanced application. Cue thinking out loud on live charts — what he filters, what disqualifies a setup, how the whole system runs when it's second nature.",
+        videos: [
+          { id: "248648721", label: "Confluence 2.9" },
+          { id: "308011962", label: "Confluence 3.0" },
+        ],
       },
       {
         label: "Confluence XXX + Confluence 30.0",
         note: "The deep end. Live charts, real setups, the full system in motion. This is where it clicks — high MAs smooth below, 38.2% respected, price acting like butter.",
+        videos: [
+          { id: "351940671", label: "Confluence XXX" },
+          { id: "680498239", label: "Confluence 30.0" },
+        ],
       },
       {
         label: "The Process — Maintaining a Live Trade",
         note: "Never have urgency for the market to go in your favor — that's how you close prematurely. This is entry to exit: how Cue manages a trade in real time, tick by tick.",
+        videos: [{ id: "218319570", label: "The Process" }],
       },
       {
         label: "Confluence Tick By Tick + Confluence RAW",
         note: "Unfiltered real-time execution. Tick by tick — that means every candle, every close, every moment the market makes a new move. This is how the professional thinks.",
+        videos: [
+          { id: "1042367807", label: "Tick by Tick" },
+          { id: "1149579397", label: "Confluence RAW" },
+        ],
       },
       {
         label: "50 Setup Drill",
@@ -147,22 +195,27 @@ const PHASES = [
       {
         label: "Ichimoku Kinko Hyo",
         note: "If it says strong buy, try not to sell. This tool shows trend, momentum, and support in one read — an additional filter that confirms what your structure is already telling you.",
+        videos: [{ id: "148838797", label: "Ichimoku" }],
       },
       {
         label: "Pivot Points",
         note: "Institutional levels that recalculate daily. High-confluence zones that print consistently — where banks are watching and price responds.",
+        videos: [{ id: "152105266", label: "Pivot Points" }],
       },
       {
         label: "Using Channels to Catch Breakouts",
         note: "How to position before the move, not after. Float the trend — don't try to catch five-pip micro moves inside a channel. Wait for the real break.",
+        videos: [{ id: "160432593", label: "Channels & Breakouts" }],
       },
       {
         label: "Average Directional Index (ADX)",
         note: "Your trend strength filter. Don't try to trade a ranging, choppy market — that's where most accounts bleed out. ADX tells you when the trend is real.",
+        videos: [{ id: "153460551", label: "ADX" }],
       },
       {
         label: "Common Technical F**k Ups",
         note: "Treat the charts like a piece of art. Precision, precision, precision. This is Cue's breakdown of the exact mistakes he sees most — the ones that are easily fixed once you see them.",
+        videos: [{ id: "1135918376", label: "Common Technical Mistakes" }],
       },
       {
         label: "Major Market Patterns — All 13",
@@ -186,6 +239,12 @@ const PHASES = [
       {
         label: "Chart N Chill Webinar Library",
         note: "100+ sessions on demand. When you have a question, the answer is probably already recorded. Check the library first — the CSM will redirect you there if it is.",
+        videos: [
+          { id: "1155829854", label: "Chart N Chill — Jan 18" },
+          { id: "1133013682", label: "Chart N Chill — Nov 2" },
+          { id: "1158257286", label: "CueCAST — Jan 25" },
+          { id: "1130752380", label: "CueCAST — Oct 26" },
+        ],
       },
       {
         label: "NY + London Session Focus",
@@ -207,12 +266,125 @@ const PHASES = [
   },
 ];
 
+function PlayIcon() {
+  return (
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+      <path d="M2.5 1.5L8.5 5L2.5 8.5V1.5Z" fill="currentColor" />
+    </svg>
+  );
+}
+
+function CloseIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+      <path d="M2 2L16 16M16 2L2 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+type ModalVideo = { id: string; label: string };
+
+function VideoModal({ video, onClose }: { video: ModalVideo; onClose: () => void }) {
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [onClose]);
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(0,0,0,0.88)",
+        zIndex: 1000,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "24px",
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          width: "100%",
+          maxWidth: 960,
+          background: "var(--bg-1)",
+          border: "1px solid var(--line)",
+          borderTop: "1px solid rgba(249,255,60,0.3)",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {/* Modal header */}
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "14px 20px",
+          borderBottom: "1px solid var(--line)",
+        }}>
+          <div style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: 11,
+            fontWeight: 700,
+            color: "var(--acid)",
+            letterSpacing: "0.16em",
+            textTransform: "uppercase",
+          }}>
+            {video.label}
+          </div>
+          <button
+            onClick={onClose}
+            style={{
+              background: "none",
+              border: "none",
+              color: "var(--muted)",
+              cursor: "pointer",
+              padding: 4,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <CloseIcon />
+          </button>
+        </div>
+        {/* 16:9 iframe */}
+        <div style={{ position: "relative", paddingTop: "56.25%" }}>
+          <iframe
+            src={`https://player.vimeo.com/video/${video.id}?autoplay=1&color=f9ff3c&title=0&byline=0&portrait=0`}
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowFullScreen
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              border: "none",
+            }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function RoadmapPage() {
+  const [activeVideo, setActiveVideo] = useState<ModalVideo | null>(null);
+
   return (
     <div
       className="grid-bg"
       style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--bone)" }}
     >
+      {/* VIDEO MODAL */}
+      {activeVideo && (
+        <VideoModal video={activeVideo} onClose={() => setActiveVideo(null)} />
+      )}
+
       {/* HEADER */}
       <header
         style={{
@@ -323,7 +495,6 @@ export default function RoadmapPage() {
 
       {/* PHASES */}
       <section style={{ maxWidth: 900, margin: "0 auto", padding: "0 48px 100px" }}>
-        {/* Timeline connector */}
         <div style={{ position: "relative" }}>
           <div
             style={{
@@ -444,12 +615,7 @@ export default function RoadmapPage() {
                   </div>
 
                   {/* Items */}
-                  <div
-                    style={{
-                      borderTop: "1px solid var(--line)",
-                      padding: "0 32px",
-                    }}
-                  >
+                  <div style={{ borderTop: "1px solid var(--line)", padding: "0 32px" }}>
                     {phase.items.map((item, j) => (
                       <div
                         key={j}
@@ -457,13 +623,14 @@ export default function RoadmapPage() {
                           display: "flex",
                           alignItems: "flex-start",
                           gap: 16,
-                          padding: "14px 0",
+                          padding: "16px 0",
                           borderBottom:
                             j < phase.items.length - 1
                               ? "1px solid var(--line)"
                               : "none",
                         }}
                       >
+                        {/* Index dot */}
                         <div
                           style={{
                             flexShrink: 0,
@@ -489,14 +656,16 @@ export default function RoadmapPage() {
                             {j + 1}
                           </span>
                         </div>
-                        <div style={{ flex: 1 }}>
+
+                        {/* Content */}
+                        <div style={{ flex: 1, minWidth: 0 }}>
                           <div
                             style={{
                               fontFamily: "var(--font-display)",
                               fontWeight: 600,
                               fontSize: 14,
                               color: "var(--bone)",
-                              marginBottom: 3,
+                              marginBottom: 4,
                               letterSpacing: "-0.01em",
                             }}
                           >
@@ -508,10 +677,50 @@ export default function RoadmapPage() {
                               fontSize: 12.5,
                               lineHeight: 1.55,
                               color: "var(--ash)",
+                              marginBottom: item.videos ? 10 : 0,
                             }}
                           >
                             {item.note}
                           </div>
+
+                          {/* Video buttons */}
+                          {item.videos && item.videos.length > 0 && (
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                              {item.videos.map((v) => (
+                                <button
+                                  key={v.id}
+                                  onClick={() => setActiveVideo(v)}
+                                  style={{
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    gap: 6,
+                                    padding: "4px 10px 4px 8px",
+                                    background: "rgba(249,255,60,0.07)",
+                                    border: "1px solid rgba(249,255,60,0.2)",
+                                    color: "var(--acid)",
+                                    fontFamily: "var(--font-mono)",
+                                    fontSize: 10,
+                                    fontWeight: 700,
+                                    letterSpacing: "0.1em",
+                                    textTransform: "uppercase",
+                                    cursor: "pointer",
+                                    transition: "background 0.15s, border-color 0.15s",
+                                  }}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.background = "rgba(249,255,60,0.14)";
+                                    e.currentTarget.style.borderColor = "rgba(249,255,60,0.45)";
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.background = "rgba(249,255,60,0.07)";
+                                    e.currentTarget.style.borderColor = "rgba(249,255,60,0.2)";
+                                  }}
+                                >
+                                  <PlayIcon />
+                                  {v.label}
+                                </button>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -563,20 +772,8 @@ export default function RoadmapPage() {
       </section>
 
       {/* WHAT'S INCLUDED STRIP */}
-      <section
-        style={{
-          maxWidth: 900,
-          margin: "0 auto",
-          padding: "0 48px 80px",
-        }}
-      >
-        <div
-          style={{
-            borderTop: "1px solid var(--line)",
-            paddingTop: 48,
-            marginBottom: 48,
-          }}
-        >
+      <section style={{ maxWidth: 900, margin: "0 auto", padding: "0 48px 80px" }}>
+        <div style={{ borderTop: "1px solid var(--line)", paddingTop: 48, marginBottom: 48 }}>
           <div
             style={{
               fontFamily: "var(--font-mono)",
@@ -591,13 +788,7 @@ export default function RoadmapPage() {
           >
             · What's included in the program ·
           </div>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: 2,
-            }}
-          >
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 2 }}>
             {[
               {
                 label: "100+ Hours of Video",
