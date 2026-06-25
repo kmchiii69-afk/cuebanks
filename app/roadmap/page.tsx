@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useRef, useEffect, FormEvent } from "react";
+import Globe from "@/components/ui/globe";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type Video = { id: string; label: string };
@@ -385,7 +386,16 @@ export default function RoadmapPage() {
   }
 
   return (
-    <div className="grid-bg" style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--bone)" }}>
+    <div className="grid-bg" style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--bone)", position: "relative" }}>
+
+      {/* ── Globe background ─────────────────────────────────────────────────── */}
+      <div style={{ position: "fixed", top: "5%", right: "-8%", zIndex: 0, pointerEvents: "none", opacity: 0.22, filter: "blur(0px)" }}>
+        <Globe size={620} />
+      </div>
+      <div style={{ position: "fixed", bottom: "8%", left: "-6%", zIndex: 0, pointerEvents: "none", opacity: 0.10 }}>
+        <Globe size={380} />
+      </div>
+
       {activeVideo && <VideoModal video={activeVideo} onClose={() => setActiveVideo(null)} />}
       <CueChat />
 
