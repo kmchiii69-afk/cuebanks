@@ -298,7 +298,7 @@ function CueChat() {
               <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 700, color: "var(--bone)", letterSpacing: "0.14em" }}>CUE AI</div>
               <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 2 }}>
                 <span className="pulse" style={{ width: 4, height: 4, background: "#22c55e", borderRadius: "50%", display: "inline-block" }} />
-                <span style={{ fontFamily: "var(--font-body)", fontSize: 10, color: "#22c55e" }}>Online · 200+ Q&As</span>
+                <span style={{ fontFamily: "var(--font-body)", fontSize: 10, color: "#22c55e" }}>Online · Ask me anything</span>
               </div>
             </div>
             <button onClick={() => setOpen(false)} style={{ background: "none", border: "none", color: "var(--muted)", cursor: "pointer", fontSize: 18, lineHeight: 1, padding: "0 2px", transition: "color 0.15s" }}
@@ -307,18 +307,29 @@ function CueChat() {
           </div>
 
           {/* Messages */}
-          <div style={{ flex: 1, overflowY: "auto", padding: "16px 18px", display: "flex", flexDirection: "column", gap: 18 }}>
+          <div style={{ flex: 1, overflowY: "auto", padding: "16px 18px", display: "flex", flexDirection: "column", gap: 14 }}>
             {messages.length === 0 ? (
-              <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 10 }}>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--ash)", lineHeight: 1.65, margin: "0 0 6px", textAlign: "center" }}>
-                  Ask Cue anything — confluence, risk, entries, mindset. Trained on every WSA session.
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start", paddingTop: 8, gap: 8 }}>
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "rgba(249,255,60,0.5)", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 4 }}>ASK CUE ANYTHING</div>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(255,255,255,0.45)", lineHeight: 1.65, margin: "0 0 10px" }}>
+                  Stuck on the roadmap? Not sure where to start? Ask me. I built this. I can walk you through all of it.
                 </p>
-                {["What is the stack?", "How do I draw a fib?", "Walk me through H4 → M5"].map(q => (
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: 8, fontWeight: 700, color: "rgba(255,255,255,0.2)", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 2 }}>ROADMAP</div>
+                {["How do I go through this roadmap?", "Where do I start?", "What's Phase 1 about?", "How long does this take?"].map(q => (
                   <button key={q} onClick={() => send(q)}
-                    style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 100, padding: "8px 14px", color: "var(--ash)", fontFamily: "var(--font-body)", fontSize: 12, textAlign: "left", cursor: "pointer", display: "flex", alignItems: "center", gap: 7, transition: "background 0.15s, border-color 0.15s, color 0.15s" }}
-                    onMouseEnter={e => { e.currentTarget.style.background = "rgba(249,255,60,0.07)"; e.currentTarget.style.borderColor = "rgba(249,255,60,0.3)"; e.currentTarget.style.color = "var(--bone)"; }}
-                    onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.color = "var(--ash)"; }}>
-                    <span style={{ color: "var(--acid)", fontSize: 9 }}>▸</span>{q}
+                    style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8, padding: "9px 13px", color: "rgba(255,255,255,0.55)", fontFamily: "var(--font-body)", fontSize: 12, textAlign: "left", cursor: "pointer", display: "flex", alignItems: "center", gap: 8, transition: "background 0.15s, border-color 0.15s, color 0.15s" }}
+                    onMouseEnter={e => { e.currentTarget.style.background = "rgba(249,255,60,0.07)"; e.currentTarget.style.borderColor = "rgba(249,255,60,0.25)"; e.currentTarget.style.color = "var(--bone)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.color = "rgba(255,255,255,0.55)"; }}>
+                    <span style={{ color: "var(--acid)", fontSize: 9, flexShrink: 0 }}>▸</span>{q}
+                  </button>
+                ))}
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: 8, fontWeight: 700, color: "rgba(255,255,255,0.2)", letterSpacing: "0.18em", textTransform: "uppercase", marginTop: 6, marginBottom: 2 }}>TRADING</div>
+                {["What is the stack?", "Walk me through top-down analysis", "How do I manage a trade?"].map(q => (
+                  <button key={q} onClick={() => send(q)}
+                    style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8, padding: "9px 13px", color: "rgba(255,255,255,0.55)", fontFamily: "var(--font-body)", fontSize: 12, textAlign: "left", cursor: "pointer", display: "flex", alignItems: "center", gap: 8, transition: "background 0.15s, border-color 0.15s, color 0.15s" }}
+                    onMouseEnter={e => { e.currentTarget.style.background = "rgba(249,255,60,0.07)"; e.currentTarget.style.borderColor = "rgba(249,255,60,0.25)"; e.currentTarget.style.color = "var(--bone)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.color = "rgba(255,255,255,0.55)"; }}>
+                    <span style={{ color: "var(--acid)", fontSize: 9, flexShrink: 0 }}>▸</span>{q}
                   </button>
                 ))}
               </div>
