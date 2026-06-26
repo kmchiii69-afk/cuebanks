@@ -18,11 +18,35 @@ const NAV_SECTIONS = [
   { id: "who",        label: "Who It's For" },
   { id: "problem",    label: "The Problem" },
   { id: "quillan",    label: "Quillan Black" },
+  { id: "wins",       label: "Student Wins" },
   { id: "included",   label: "What's Inside" },
   { id: "roadmap",    label: "The Roadmap" },
   { id: "cue-ai",     label: "Cue AI" },
   { id: "sessions",   label: "Live Sessions" },
   { id: "investment", label: "Investment" },
+];
+
+const WINS = [
+  {
+    quote: "Bought my first car off trading. One year out of high school. I wouldn't have believed it was possible before WSA.",
+    name: "WSA Member",
+    tag: "First car — 1 year in",
+  },
+  {
+    quote: "Finally got consistent after struggling for two years. The stack changed everything. I stopped taking setups that didn't qualify and my results flipped.",
+    name: "WSA Member",
+    tag: "Funded account passed",
+  },
+  {
+    quote: "Made money while I was asleep. That used to sound like a scam to me. Now I understand how it actually works — because the system is that clear.",
+    name: "WSA Member",
+    tag: "Multi-session wins",
+  },
+  {
+    quote: "I'm calmer. More sure of it. Not panicking over every trade. That's the thing nobody tells you — the psychology changes when the system is solid.",
+    name: "WSA Member",
+    tag: "Full program graduate",
+  },
 ];
 
 const PHASES = [
@@ -206,10 +230,36 @@ export default function InnerCirclePage() {
         </div>
       </section>
 
+      {/* ── CLIENT WINS ───────────────────────────────────────────────────────── */}
+      <section id="wins" style={S.section}>
+        <div style={S.wrap}>
+          <div style={S.ghost}>04</div>
+          <p className="ic-reveal" style={S.eyebrow}>Student wins</p>
+          <h2 className="ic-reveal" style={{ fontFamily: "var(--font-display)", fontSize: "clamp(34px,5vw,52px)", fontWeight: 700, letterSpacing: "-0.035em", lineHeight: 1.0, position: "relative", zIndex: 1 }}>
+            The results nobody<br /><em style={{ color: "var(--acid)", fontStyle: "normal" }}>puts on the feed.</em>
+          </h2>
+          <p className="ic-reveal" style={{ ...S.body, position: "relative", zIndex: 1 }}>The algorithm shows you the highlight. It never shows you the actual turn — the person who struggled for two years and then flipped everything. These are those people.</p>
+
+          <div className="ic-reveal" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1, background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.07)", marginTop: 48, position: "relative", zIndex: 1 }}>
+            {WINS.map(({ quote, tag }) => (
+              <div key={tag} style={{ background: "#000", padding: "36px 32px", display: "flex", flexDirection: "column", justifyContent: "space-between", gap: 28, minHeight: 220 }}>
+                <blockquote style={{ fontFamily: "var(--font-display)", fontSize: 16, fontWeight: 600, lineHeight: 1.55, letterSpacing: "-0.01em", color: "rgba(255,255,255,0.82)", margin: 0 }}>
+                  &ldquo;{quote}&rdquo;
+                </blockquote>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--acid)", flexShrink: 0 }} />
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)" }}>{tag}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── WHAT'S INSIDE ─────────────────────────────────────────────────────── */}
       <section id="included" style={S.section}>
         <div style={S.wrap}>
-          <div style={S.ghost}>04</div>
+          <div style={S.ghost}>05</div>
           <p className="ic-reveal" style={S.eyebrow}>What&apos;s inside</p>
           <h2 className="ic-reveal" style={{ fontFamily: "var(--font-display)", fontSize: "clamp(34px,5vw,52px)", fontWeight: 700, letterSpacing: "-0.035em", lineHeight: 1.0, position: "relative", zIndex: 1 }}>
             Every tool. <em style={{ color: "var(--acid)", fontStyle: "normal" }}>Nothing missing.</em>
