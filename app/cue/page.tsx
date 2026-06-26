@@ -397,107 +397,73 @@ export default function CuePage() {
 
         {/* ── CHAT THREAD ─────────────────────────────────────────────────────── */}
         {hasMessages && (
-          <div
-            style={{
-              flex: 1,
-              overflowY: "auto",
-              padding: "32px 20px 140px",
-            }}
-          >
-            <div
-              style={{
-                maxWidth: 760,
-                margin: "0 auto",
-                display: "flex",
-                flexDirection: "column",
-                gap: 28,
-              }}
-            >
-              {messages.map((msg, i) => (
-                <div key={i} style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
-                  {/* Avatar */}
-                  <div
-                    style={{
-                      width: 30,
-                      height: 30,
-                      borderRadius: "50%",
-                      flexShrink: 0,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginTop: 2,
-                      background: msg.role === "assistant" ? "var(--acid)" : "var(--bg-2)",
-                      border: msg.role === "user" ? "1px solid var(--line-2)" : "none",
-                      boxShadow: msg.role === "assistant" ? "0 0 16px rgba(249,255,60,0.2)" : "none",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: "var(--font-mono)",
-                        fontWeight: 800,
-                        fontSize: 11,
-                        color: msg.role === "assistant" ? "var(--bg)" : "var(--ash)",
-                      }}
-                    >
-                      {msg.role === "assistant" ? "C" : "Y"}
-                    </span>
-                  </div>
-
-                  {/* Content */}
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div
-                      style={{
-                        fontFamily: "var(--font-mono)",
-                        fontSize: 9,
-                        fontWeight: 700,
-                        color: msg.role === "assistant" ? "var(--acid)" : "var(--muted)",
-                        marginBottom: 8,
-                        letterSpacing: "0.16em",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      {msg.role === "assistant" ? "Cue" : "You"}
+          <div style={{ flex: 1, overflowY: "auto", padding: "40px 20px 160px" }}>
+            <div style={{ maxWidth: 700, margin: "0 auto", display: "flex", flexDirection: "column", gap: 6 }}>
+              {messages.map((msg, i) => {
+                const isStreaming = streaming && i === messages.length - 1 && msg.role === "assistant";
+                if (msg.role === "user") {
+                  return (
+                    <div key={i} style={{ display: "flex", justifyContent: "flex-end", paddingTop: 18 }}>
+                      <div style={{
+                        maxWidth: "72%",
+                        background: "rgba(255,255,255,0.06)",
+                        border: "1px solid rgba(255,255,255,0.09)",
+                        borderRadius: "18px 18px 4px 18px",
+                        padding: "12px 18px",
+                        fontFamily: "var(--font-body)",
+                        fontSize: 14,
+                        lineHeight: 1.6,
+                        color: "rgba(255,255,255,0.7)",
+                        wordBreak: "break-word",
+                      }}>
+                        {msg.content}
+                      </div>
                     </div>
-                    <div
-                      style={{
+                  );
+                }
+                return (
+                  <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start", paddingTop: 10 }}>
+                    {/* Cue avatar */}
+                    <div style={{
+                      width: 28, height: 28, borderRadius: "50%", flexShrink: 0,
+                      background: "var(--acid)", display: "flex", alignItems: "center", justifyContent: "center",
+                      marginTop: 14, boxShadow: "0 0 20px rgba(249,255,60,0.18)",
+                    }}>
+                      <span style={{ fontFamily: "var(--font-mono)", fontWeight: 800, fontSize: 11, color: "var(--bg)" }}>C</span>
+                    </div>
+                    {/* Response card */}
+                    <div style={{
+                      flex: 1, minWidth: 0,
+                      background: "rgba(249,255,60,0.025)",
+                      borderLeft: "2px solid rgba(249,255,60,0.35)",
+                      borderRadius: "0 12px 12px 0",
+                      padding: "16px 22px",
+                    }}>
+                      <div style={{
                         fontFamily: "var(--font-body)",
                         fontSize: 15,
-                        lineHeight: 1.7,
-                        color: msg.role === "assistant" ? "var(--bone)" : "var(--ash)",
+                        lineHeight: 1.75,
+                        color: "rgba(255,255,255,0.92)",
                         whiteSpace: "pre-wrap",
                         wordBreak: "break-word",
-                      }}
-                    >
-                      {msg.content}
-                      {/* Typing indicators */}
-                      {msg.role === "assistant" && streaming && i === messages.length - 1 && msg.content === "" && (
-                        <span style={{ display: "inline-flex", gap: 4, verticalAlign: "middle", marginLeft: 2 }}>
-                          {[0, 1, 2].map((d) => (
-                            <span
-                              key={d}
-                              className="pulse"
-                              style={{ width: 4, height: 4, background: "var(--acid)", borderRadius: "50%", display: "inline-block", animationDelay: `${d * 0.18}s` }}
-                            />
-                          ))}
-                        </span>
-                      )}
-                      {msg.role === "assistant" && streaming && i === messages.length - 1 && msg.content.length > 0 && (
-                        <span
-                          style={{
-                            display: "inline-block",
-                            width: 2,
-                            height: "0.9em",
-                            background: "var(--acid)",
-                            marginLeft: 2,
-                            verticalAlign: "text-bottom",
-                            animation: "pulse 1s ease-in-out infinite",
-                          }}
-                        />
-                      )}
+                        letterSpacing: "0.01em",
+                      }}>
+                        {msg.content}
+                        {isStreaming && msg.content === "" && (
+                          <span style={{ display: "inline-flex", gap: 4, verticalAlign: "middle" }}>
+                            {[0, 1, 2].map((d) => (
+                              <span key={d} className="pulse" style={{ width: 4, height: 4, background: "var(--acid)", borderRadius: "50%", display: "inline-block", animationDelay: `${d * 0.18}s` }} />
+                            ))}
+                          </span>
+                        )}
+                        {isStreaming && msg.content.length > 0 && (
+                          <span style={{ display: "inline-block", width: 2, height: "0.85em", background: "var(--acid)", marginLeft: 2, verticalAlign: "text-bottom", animation: "pulse 1s ease-in-out infinite" }} />
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
               <div ref={bottomRef} />
             </div>
           </div>
