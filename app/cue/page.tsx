@@ -236,19 +236,6 @@ export default function CuePage() {
                 <em style={{ color: "var(--acid)", fontStyle: "normal" }}>anything.</em>
               </h1>
 
-              <p
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: "clamp(14px, 2vw, 17px)",
-                  lineHeight: 1.55,
-                  color: "var(--ash)",
-                  margin: 0,
-                  maxWidth: 460,
-                }}
-              >
-                Trained on 200+ Q&As from every WSA session.{" "}
-                <span style={{ color: "var(--bone)", opacity: 0.7 }}>Structure first, everything else follows.</span>
-              </p>
             </div>
 
             {/* Input card */}
