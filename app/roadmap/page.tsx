@@ -554,10 +554,6 @@ export default function RoadmapPage() {
       {/* HERO */}
       <section ref={heroRef} style={{ maxWidth: 860, margin: "0 auto", padding: "96px 48px 24px", textAlign: "center", position: "relative", zIndex: 1 }}>
         <div style={{ position: "relative" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 28, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 100, padding: "6px 18px" }}>
-            <span className="pulse" style={{ width: 5, height: 5, background: "var(--acid)", borderRadius: "50%", display: "inline-block" }} />
-            <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.55)", letterSpacing: "0.22em", textTransform: "uppercase" }}>Inner Circle Member Access</span>
-          </div>
           <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(48px, 7.5vw, 88px)", lineHeight: 0.92, letterSpacing: "-0.045em", color: "var(--bone)", margin: "0 0 24px" }}>
             The Inner Circle<br />
             <em style={{ color: "var(--acid)", fontStyle: "normal" }}>Roadmap.</em>
