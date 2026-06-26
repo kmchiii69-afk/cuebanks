@@ -11,12 +11,57 @@ const NAV_SECTIONS = [
   { id: "problem",    label: "The Problem" },
   { id: "quillan",    label: "Quillan Black" },
   { id: "wins",       label: "Student Wins" },
+  { id: "proof",      label: "The Receipts" },
   { id: "included",   label: "What's Inside" },
   { id: "roadmap",    label: "The Roadmap" },
   { id: "cue-ai",     label: "Cue AI" },
   { id: "sessions",   label: "Live Sessions" },
   { id: "investment", label: "Investment" },
 ];
+
+// Student win screenshots from the funnel (real account screenshots)
+const STUDENT_WIN_IMGS = [
+  { src: "/wsa/home/11.jpg", label: "Doubled account today" },
+  { src: "/wsa/home/12.jpg", label: "$6,429" },
+  { src: "/wsa/home/13.jpg", label: "$5K ×4" },
+  { src: "/wsa/home/14.jpg", label: "$35,400 on US30" },
+  { src: "/wsa/home/15.jpg", label: "FTMO $56,281" },
+  { src: "/wsa/home/16.jpg", label: "15 racks for the day" },
+  { src: "/wsa/home/17.jpg", label: "Made money while asleep" },
+  { src: "/wsa/home/18.jpg", label: "$12,433 on US30" },
+  { src: "/wsa/home/19.jpg", label: "Monthly salary in 1 hr" },
+  { src: "/wsa/home/20.jpg", label: "First car from trading" },
+];
+
+// Cue's documented live trades
+const CUE_WIN_IMGS = [
+  { src: "/wsa/cue-wins/2.jpg",  label: "$10,299" },
+  { src: "/wsa/cue-wins/3.jpg",  label: "$31,464" },
+  { src: "/wsa/cue-wins/4.jpg",  label: "$29,703" },
+  { src: "/wsa/cue-wins/5.jpg",  label: "$16,068" },
+  { src: "/wsa/cue-wins/6.jpg",  label: "$28,790" },
+  { src: "/wsa/cue-wins/9.jpg",  label: "$46,800" },
+];
+
+// Marquee component — row of images auto-scrolling, reversed for every other row
+function WinMarquee({ images, reverse, height = 160 }: { images: typeof STUDENT_WIN_IMGS; reverse?: boolean; height?: number }) {
+  const doubled = [...images, ...images];
+  return (
+    <div style={{ overflow: "hidden", width: "100%" }}>
+      <div style={{
+        display: "flex", gap: 10, width: "max-content",
+        animation: `ticker ${reverse ? "38s" : "30s"} linear infinite ${reverse ? "reverse" : ""}`,
+      }}>
+        {doubled.map((img, i) => (
+          <div key={i} style={{ flexShrink: 0, height, width: "auto", borderRadius: 8, overflow: "hidden", border: "1px solid rgba(255,255,255,0.08)" }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={img.src} alt={img.label} style={{ height: "100%", width: "auto", display: "block", objectFit: "cover" }} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 const PHASES = [
   { num: "01", weeks: "Wk 1–2",   title: "Foundation & Mindset",   desc: "Risk management, platform setup, psychology. The most important phase. You don't start Phase 2 without this locked in." },
@@ -324,6 +369,42 @@ export default function InnerCirclePage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ══ PROOF — COMMUNITY WINS ════════════════════════════════════════════════ */}
+      <section id="proof" style={{ ...slide, flexDirection: "column", alignItems: "flex-start", overflow: "hidden", padding: "80px 0" }}>
+        {/* Heading stays in the wrap */}
+        <div style={{ maxWidth: 860, margin: "0 auto", padding: "0 48px", width: "100%", position: "relative", zIndex: 1, marginBottom: 36 }}>
+          <Eyebrow label="Community wins" />
+          <Heading>The receipts.<br /><em style={{ color: acid, fontStyle: "normal" }}>Real accounts. Real money.</em></Heading>
+          <p className="ic-reveal" style={{ fontFamily: body, fontSize: 19, lineHeight: 1.7, color: "rgba(255,255,255,0.4)", maxWidth: 560, marginTop: 16 }}>
+            Every one of these was posted live. Not hand-picked after the fact — documented in real time, same system, same rules.
+          </p>
+        </div>
+
+        {/* Full-bleed marquee rows */}
+        <div style={{ width: "100vw", display: "flex", flexDirection: "column", gap: 10, marginLeft: "calc(-50vw + 50%)" }}>
+          {/* Row 1 — student wins (→) */}
+          <WinMarquee images={STUDENT_WIN_IMGS} height={170} />
+          {/* Row 2 — student wins reversed (←) */}
+          <WinMarquee images={[...STUDENT_WIN_IMGS].reverse()} reverse height={170} />
+          {/* Row 3 — Cue's documented trades (→) */}
+          <WinMarquee images={CUE_WIN_IMGS} height={170} />
+        </div>
+
+        {/* Stats bar */}
+        <div className="ic-reveal" style={{ maxWidth: 860, margin: "28px auto 0", padding: "0 48px", width: "100%", display: "flex", gap: 40, flexWrap: "wrap" }}>
+          {[
+            { n: "$500K+", l: "Documented in 5 days" },
+            { n: "10,000+", l: "Traders mentored" },
+            { n: "2019", l: "Posting live since" },
+          ].map((s) => (
+            <div key={s.l}>
+              <div style={{ fontFamily: display, fontSize: 36, fontWeight: 800, letterSpacing: "-0.04em", color: acid, lineHeight: 1 }}>{s.n}</div>
+              <div style={{ fontFamily: mono, fontSize: 9, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.25)", marginTop: 6 }}>{s.l}</div>
+            </div>
+          ))}
         </div>
       </section>
 
