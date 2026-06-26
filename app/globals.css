@@ -322,6 +322,53 @@ input[type="range"].qc-dv-slider:focus::-moz-range-thumb {
   box-shadow: 0 0 0 1px var(--acid);
 }
 
+/* ── Inner Circle offer deck ───────────────────────────────────────────────── */
+.ic-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+.ic-reveal.visible { opacity: 1; transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) {
+  .ic-reveal { opacity: 1; transform: none; transition: none; }
+}
+
+.ic-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 3px 0;
+  background: none;
+  border: none;
+  text-align: left;
+  color: rgba(255,255,255,0.2);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+.ic-nav-item::before {
+  content: '';
+  display: block;
+  width: 18px;
+  height: 1px;
+  background: currentColor;
+  transition: width 0.2s, background 0.2s;
+  flex-shrink: 0;
+}
+.ic-nav-item:hover { color: rgba(255,255,255,0.45); }
+.ic-nav-item.active { color: var(--acid); }
+.ic-nav-item.active::before { width: 30px; background: var(--acid); }
+
+.ic-phase-row { transition: background 0.15s; }
+.ic-phase-row:hover { background: rgba(255,255,255,0.018); }
+
+.ic-icp-no span { text-decoration: line-through; text-decoration-color: rgba(255,255,255,0.1); }
+
 /* ── Globe ─────────────────────────────────────────────────────────────────── */
 @keyframes earthRotate {
   0%   { background-position: 0 center; }
