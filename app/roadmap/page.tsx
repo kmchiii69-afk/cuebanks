@@ -409,6 +409,51 @@ function PlayBtn({ video, onPlay }: { video: Video; onPlay: (v: Video) => void }
   );
 }
 
+// ─── Module Item ──────────────────────────────────────────────────────────────
+function ModuleItem({ item, index, isLast, onPlay }: { item: PhaseItem; index: number; isLast: boolean; onPlay: (v: Video) => void }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: "flex", alignItems: "flex-start", gap: 20,
+        padding: "26px 0",
+        borderBottom: isLast ? "none" : "1px solid rgba(255,255,255,0.06)",
+        transition: "background 0.15s",
+        borderRadius: 6,
+        marginLeft: -12, marginRight: -12, paddingLeft: 12, paddingRight: 12,
+        background: hovered ? "rgba(255,255,255,0.025)" : "transparent",
+        cursor: "default",
+      }}
+    >
+      <div style={{
+        flexShrink: 0, width: 30, height: 30, borderRadius: "50%",
+        border: hovered ? "1px solid rgba(249,255,60,0.35)" : "1px solid rgba(255,255,255,0.1)",
+        background: hovered ? "rgba(249,255,60,0.06)" : "rgba(255,255,255,0.03)",
+        display: "flex", alignItems: "center", justifyContent: "center", marginTop: 2,
+        transition: "border-color 0.15s, background 0.15s",
+      }}>
+        <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: hovered ? "rgba(249,255,60,0.7)" : "rgba(255,255,255,0.3)" }}>{index + 1}</span>
+      </div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8, flexWrap: "wrap" }}>
+          <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 17, color: hovered ? "rgba(255,255,255,1)" : "rgba(255,255,255,0.9)", letterSpacing: "-0.02em", transition: "color 0.15s" }}>{item.label}</span>
+          {item.tag && (
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", color: "var(--bg)", background: "var(--acid)", padding: "3px 8px", borderRadius: 3 }}>{item.tag}</span>
+          )}
+        </div>
+        <div style={{ fontFamily: "var(--font-body)", fontWeight: 400, fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,0.5)", marginBottom: item.videos?.length ? 14 : 0 }}>{item.note}</div>
+        {item.videos && item.videos.length > 0 && (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+            {item.videos.map(v => <PlayBtn key={v.id} video={v} onPlay={onPlay} />)}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // Globe position per section (hero + 6 phases)
 const GLOBE_POS = [
   { left: 78, top: 30, scale: 2.8, opacity: 0.32 }, // hero
@@ -556,48 +601,30 @@ export default function RoadmapPage() {
                   {/* Card */}
                   <div style={{ flex: 1, background: "rgba(12,16,24,0.7)", border: "1px solid rgba(255,255,255,0.07)", borderTop: "1px solid rgba(249,255,60,0.3)", overflow: "hidden", backdropFilter: "blur(8px)", boxShadow: "0 0 0 0 transparent, 0 8px 40px rgba(0,0,0,0.5)" }}>
                     {/* Card header */}
-                    <div style={{ padding: "28px 32px 20px" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
-                        <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.3)", letterSpacing: "0.22em", textTransform: "uppercase", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 4, padding: "4px 10px" }}>{phase.duration}</div>
+                    <div style={{ padding: "36px 40px 24px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
+                        <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.35)", letterSpacing: "0.2em", textTransform: "uppercase", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 4, padding: "5px 12px" }}>{phase.duration}</div>
                         {videoCount > 0 && (
-                          <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "var(--acid)", letterSpacing: "0.18em", textTransform: "uppercase", background: "rgba(249,255,60,0.07)", border: "1px solid rgba(249,255,60,0.18)", borderRadius: 4, padding: "4px 10px" }}>
+                          <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: "var(--acid)", letterSpacing: "0.14em", textTransform: "uppercase", background: "rgba(249,255,60,0.07)", border: "1px solid rgba(249,255,60,0.2)", borderRadius: 4, padding: "5px 12px" }}>
                             ▶ {videoCount} videos
                           </div>
                         )}
                       </div>
-                      <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "clamp(22px, 3vw, 27px)", letterSpacing: "-0.03em", color: "var(--bone)", margin: "0 0 10px" }}>{phase.title}</h2>
-                      <p style={{ fontFamily: "var(--font-body)", fontWeight: 300, fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,0.4)", margin: 0, maxWidth: 600, letterSpacing: "0.005em" }}>{phase.tagline}</p>
+                      <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(26px, 3vw, 34px)", letterSpacing: "-0.03em", color: "var(--bone)", margin: "0 0 14px" }}>{phase.title}</h2>
+                      <p style={{ fontFamily: "var(--font-body)", fontWeight: 400, fontSize: 16, lineHeight: 1.75, color: "rgba(255,255,255,0.48)", margin: 0, maxWidth: 620 }}>{phase.tagline}</p>
                     </div>
 
                     {/* Items */}
-                    <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", padding: "0 32px" }}>
+                    <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", padding: "8px 40px" }}>
                       {phase.items.map((item, j) => (
-                        <div key={j} style={{ display: "flex", alignItems: "flex-start", gap: 14, padding: "15px 0", borderBottom: j < phase.items.length - 1 ? "1px solid rgba(255,255,255,0.05)" : "none" }}>
-                          <div style={{ flexShrink: 0, width: 22, height: 22, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", display: "flex", alignItems: "center", justifyContent: "center", marginTop: 1 }}>
-                            <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.25)" }}>{j + 1}</span>
-                          </div>
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
-                              <span style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: 14, color: "rgba(255,255,255,0.88)", letterSpacing: "-0.01em" }}>{item.label}</span>
-                              {item.tag && (
-                                <span style={{ fontFamily: "var(--font-mono)", fontSize: 8, fontWeight: 700, letterSpacing: "0.14em", color: "var(--bg)", background: "var(--acid)", padding: "2px 7px", borderRadius: 3 }}>{item.tag}</span>
-                              )}
-                            </div>
-                            <div style={{ fontFamily: "var(--font-body)", fontWeight: 300, fontSize: 12.5, lineHeight: 1.6, color: "rgba(255,255,255,0.35)", marginBottom: item.videos?.length ? 10 : 0 }}>{item.note}</div>
-                            {item.videos && item.videos.length > 0 && (
-                              <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
-                                {item.videos.map(v => <PlayBtn key={v.id} video={v} onPlay={setActiveVideo} />)}
-                              </div>
-                            )}
-                          </div>
-                        </div>
+                        <ModuleItem key={j} item={item} index={j} isLast={j === phase.items.length - 1} onPlay={setActiveVideo} />
                       ))}
                     </div>
 
                     {/* Checkpoint */}
-                    <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", background: "rgba(249,255,60,0.025)", padding: "14px 32px", display: "flex", alignItems: "flex-start", gap: 12 }}>
-                      <div style={{ fontFamily: "var(--font-mono)", fontSize: 8, fontWeight: 700, color: "rgba(249,255,60,0.5)", letterSpacing: "0.22em", textTransform: "uppercase", flexShrink: 0, paddingTop: 1, whiteSpace: "nowrap" }}>· After ·</div>
-                      <div style={{ fontFamily: "var(--font-body)", fontWeight: 300, fontSize: 12.5, lineHeight: 1.6, color: "rgba(249,255,60,0.6)" }}>{phase.checkpoint}</div>
+                    <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", background: "rgba(249,255,60,0.03)", padding: "20px 40px", display: "flex", alignItems: "flex-start", gap: 16 }}>
+                      <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "rgba(249,255,60,0.45)", letterSpacing: "0.22em", textTransform: "uppercase", flexShrink: 0, paddingTop: 3, whiteSpace: "nowrap" }}>· After ·</div>
+                      <div style={{ fontFamily: "var(--font-body)", fontWeight: 400, fontSize: 14, lineHeight: 1.7, color: "rgba(249,255,60,0.65)" }}>{phase.checkpoint}</div>
                     </div>
                   </div>
                 </div>
@@ -629,20 +656,6 @@ export default function RoadmapPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section style={{ maxWidth: 680, margin: "0 auto", padding: "0 48px 120px", textAlign: "center", position: "relative", zIndex: 1 }}>
-        <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.2)", letterSpacing: "0.26em", textTransform: "uppercase", marginBottom: 20 }}>· 6 phases · 16 weeks · $15,000 ·</div>
-        <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(32px, 5vw, 56px)", letterSpacing: "-0.04em", color: "var(--bone)", margin: "0 0 16px", lineHeight: 1.0 }}>
-          Apply and see if you&rsquo;re<br /><em style={{ color: "var(--acid)", fontStyle: "normal" }}>the right fit.</em>
-        </h2>
-        <p style={{ fontFamily: "var(--font-body)", fontWeight: 300, fontSize: 17, lineHeight: 1.6, color: "rgba(255,255,255,0.4)", margin: "0 auto 40px", maxWidth: 400 }}>
-          The roadmap is built. The system is proven. The only question is whether you&rsquo;re ready to follow it.
-        </p>
-        <Link href="/ig/apply" style={{ display: "inline-block", padding: "20px 52px", background: "var(--acid)", color: "var(--bg)", fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", textDecoration: "none", borderRadius: 4, boxShadow: "0 0 80px rgba(249,255,60,0.25), 0 0 0 1px rgba(249,255,60,0.4)" }}>
-          Apply for the Inner Circle →
-        </Link>
-        <p style={{ marginTop: 16, fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.18)", letterSpacing: "0.22em", textTransform: "uppercase" }}>· Takes 2 minutes · Spots are limited ·</p>
-      </section>
 
       {/* FOOTER */}
       <footer style={{ borderTop: "1px solid rgba(255,255,255,0.06)", padding: "32px 48px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16, fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.18)", letterSpacing: "0.22em", textTransform: "uppercase", position: "relative", zIndex: 1 }}>
