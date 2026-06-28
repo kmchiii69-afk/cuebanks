@@ -8,7 +8,10 @@ import Globe from "@/components/ui/globe";
 type Video = { id?: string; label: string; href?: string };
 type DocSection = { heading: string; paras?: string[]; bullets?: string[]; footer?: string };
 type DocContent = { title: string; sections: DocSection[] };
-type PhaseItem = { label: string; note: string; tag?: string; videos?: Video[]; doc?: DocContent };
+type ChecklistItem = { text: string };
+type ChecklistSection = { heading: string; items: ChecklistItem[] };
+type ChecklistDoc = { title: string; theme: "red" | "green"; sections: ChecklistSection[]; rule?: string };
+type PhaseItem = { label: string; note: string; tag?: string; videos?: Video[]; doc?: DocContent; checklist?: ChecklistDoc };
 type Phase = { num: string; title: string; duration: string; tagline: string; checkpoint: string; items: PhaseItem[] };
 
 // ─── Intro Forex Document ─────────────────────────────────────────────────────
@@ -136,6 +139,116 @@ const CUECASTS: Video[] = [
   { id: "1068805247", label: "3/24/25" },
 ];
 
+// ─── Checklist Data ────────────────────────────────────────────────────────────
+const NO_TRADE_CHECKLIST: ChecklistDoc = {
+  title: "No Trade Checklist",
+  theme: "red",
+  rule: "2 OR MORE BOXES CHECKED = NO TRADE TODAY",
+  sections: [
+    { heading: "Choppy Market", items: [
+      { text: "Market is ranging with no clear direction" },
+      { text: "Price is stuck mid-range with no momentum" },
+      { text: "Liquidity grabs with no follow-through" },
+    ]},
+    { heading: "Bad Timing", items: [
+      { text: "Wrong session or the move already ran" },
+      { text: "Missed the initial setup — now chasing" },
+      { text: "Low volume, dead market hours" },
+    ]},
+    { heading: "Timeframe Conflict", items: [
+      { text: "HTF and LTF are not aligned" },
+      { text: "Mixed directional signals across timeframes" },
+      { text: "Major level directly blocking the target" },
+    ]},
+    { heading: "Poor Setup", items: [
+      { text: "Fibonacci zone is weak or not clean" },
+      { text: "No confluence layers present" },
+      { text: "Indecisive candles at the entry zone" },
+    ]},
+    { heading: "Risk Reward", items: [
+      { text: "R:R is below minimum threshold" },
+      { text: "Stop loss placement doesn't make sense" },
+      { text: "Target is vague or overlapping a major level" },
+    ]},
+    { heading: "Emotional State", items: [
+      { text: "Trying to recover a previous loss" },
+      { text: "Feeling frustrated, impatient, or anxious" },
+      { text: "Trading out of boredom — no real edge present" },
+    ]},
+  ],
+};
+
+const TRADE_READY_CHECKLIST: ChecklistDoc = {
+  title: "Trade Ready Checklist",
+  theme: "green",
+  sections: [
+    { heading: "Market Structure & Trend Context", items: [
+      { text: "Higher highs & higher lows confirmed (uptrend)" },
+      { text: "Lower highs & lower lows confirmed (downtrend)" },
+      { text: "Price respecting structure, not breaking randomly" },
+      { text: "Recent BOS or ChoCH identified on entry timeframe" },
+    ]},
+    { heading: "Multi-Timeframe Alignment", items: [
+      { text: "Higher timeframe bias identified (1H / 4H)" },
+      { text: "Entry timeframe aligned with HTF direction" },
+      { text: "No major HTF level directly blocking the target" },
+    ]},
+    { heading: "Support, Resistance & Key Levels", items: [
+      { text: "Major horizontal S&R levels marked" },
+      { text: "Daily and session highs/lows identified" },
+      { text: "Previous structure highs/lows marked" },
+      { text: "Price reacting at a key level — not mid-range" },
+    ]},
+    { heading: "Fibonacci Confluence", items: [
+      { text: "Fibonacci drawn from correct swing high to low (or reverse)" },
+      { text: "Confluence at a key level: 38.2%, 50%, 61.8%, 78.6%, 88.6%" },
+      { text: "Fib zone aligns with structure, S&R, or MA" },
+    ]},
+    { heading: "Trendlines & Counter-Trend Lines", items: [
+      { text: "Valid trendline drawn with minimum 2–3 confirmed touches" },
+      { text: "Counter-trend line showing the current pullback or correction" },
+      { text: "Entry aligns with trendline support or resistance" },
+      { text: "Trendline angles are natural — no forced drawings" },
+    ]},
+    { heading: "Risk, Target & Trade Quality", items: [
+      { text: "Clear invalidation level for stop loss placement" },
+      { text: "Risk:Reward meets minimum (2R or better)" },
+      { text: "Target aligns with structure, liquidity, or major level" },
+      { text: "Position size calculated correctly for account size" },
+    ]},
+  ],
+};
+
+const CHART_PATTERNS_CHECKLIST: ChecklistDoc = {
+  title: "Chart Pattern Anatomy",
+  theme: "green",
+  sections: [
+    { heading: "Reversal Patterns", items: [
+      { text: "Double Top — two peaks at resistance, bearish reversal" },
+      { text: "Double Bottom — two troughs at support, bullish reversal" },
+      { text: "Head & Shoulders — three peaks, middle highest, bearish reversal" },
+      { text: "Inverse Head & Shoulders — three troughs, middle lowest, bullish reversal" },
+    ]},
+    { heading: "Wedge Patterns", items: [
+      { text: "Rising Wedge — converging up, bearish breakdown (reversal in downtrend)" },
+      { text: "Falling Wedge — converging down, bullish breakout (reversal in uptrend)" },
+      { text: "Rising Wedge (continuation) — bearish, within a downtrend move" },
+      { text: "Falling Wedge (continuation) — bullish, within an uptrend move" },
+    ]},
+    { heading: "Rectangle & Pennant Patterns", items: [
+      { text: "Bullish Rectangle — consolidation between S&R, bullish continuation breakout" },
+      { text: "Bearish Rectangle — consolidation between S&R, bearish continuation breakdown" },
+      { text: "Bullish Pennant — small symmetrical triangle after strong upward move" },
+      { text: "Bearish Pennant — small symmetrical triangle after strong downward move" },
+    ]},
+    { heading: "Triangle Patterns", items: [
+      { text: "Ascending Triangle — flat resistance, rising support → bullish breakout" },
+      { text: "Descending Triangle — flat support, falling resistance → bearish breakdown" },
+      { text: "Symmetrical Triangle — converging trendlines → continuation of prior trend" },
+    ]},
+  ],
+};
+
 const PHASES: Phase[] = [
   {
     num: "01", title: "Foundation & Mindset", duration: "Week 1 – 2",
@@ -150,7 +263,6 @@ const PHASES: Phase[] = [
       {
         label: "Introduction to Forex",
         note: "What the market actually is, how it moves, and what it isn't. The foundation is support and resistance — everything else is built on top of that.",
-        videos: [{ label: "Course Files", href: "https://whop.com/joined/wallstreetacademy/wsa-main-course-2TNeKSURFqVkEA/app/courses/cors_1peLhRn7tgoROkzgHhpiQu/lessons/lesn_2DvHwp4ZNjye63KykdiZQX/" }],
         doc: INTRO_FOREX_DOC,
       },
       {
@@ -184,8 +296,8 @@ const PHASES: Phase[] = [
         label: "Identifying The Trend",
         note: "Higher high points, higher low points — that's a bullish market. Lower highs, lower lows — that's bearish. Structure is always first.",
         videos: [
-          { id: "208979674", label: "Market Structure 2.0" },
-          { id: "245645634", label: "Identifying The Trend" },
+          { label: "Identifying The Trend", href: "https://whop.com/joined/wallstreetacademy/wsa-main-course-2TNeKSURFqVkEA/app/courses/cors_1peLhRn7tgoROkzgHhpiQu/lessons/lesn_gmL7xLobMtjjE/" },
+          { label: "Market Structure", href: "https://whop.com/joined/wallstreetacademy/wsa-main-course-2TNeKSURFqVkEA/app/courses/cors_1peLhRn7tgoROkzgHhpiQu/lessons/lesn_6eUCKLRmOxHl6ZkMx97Szc/" },
         ],
       },
       {
@@ -201,8 +313,7 @@ const PHASES: Phase[] = [
         label: "Drawing Trendlines 2.0",
         note: "If you can't walk in it, it's invalid. Most traders draw them wrong. Learn where to anchor, when they break, and exactly what that means for the next move.",
         videos: [
-          { id: "1162341882", label: "Trendlines 2.0" },
-          { id: "337766458", label: "GBPJPY Breakdown" },
+          { label: "GBPJPY Breakdown", href: "https://whop.com/joined/wallstreetacademy/wsa-main-course-2TNeKSURFqVkEA/app/courses/cors_1peLhRn7tgoROkzgHhpiQu/lessons/lesn_8Mcc5EAkHy0SY8iguVYsG/" },
         ],
       },
       {
@@ -240,7 +351,7 @@ const PHASES: Phase[] = [
       },
       {
         label: "Chart Practice: 10 Drawn Charts",
-        tag: "DRILL",
+        tag: "Practice",
         note: "Draw 10 charts with trend direction, S&R, and trendlines marked. This is how you build the eye. You can't skip the reps — submit before moving to Phase 3.",
       },
     ],
@@ -256,12 +367,8 @@ const PHASES: Phase[] = [
         videos: [
           { id: "214333836", label: "Fibonacci 2.0" },
           { id: "148814763", label: "Fibonacci 1.0" },
+          { label: "Fibonacci Chart Breakdown", href: "https://whop.com/joined/wallstreetacademy/wsa-main-course-2TNeKSURFqVkEA/app/courses/cors_1peLhRn7tgoROkzgHhpiQu/lessons/lesn_3aFE0gwi6QEB5tPgvzloPi/" },
         ],
-      },
-      {
-        label: "Fibonacci Drill: 20 Historical Moves",
-        tag: "DRILL",
-        note: "Pull 20 historical moves and map the fib on each one. Find where price reacted. This repetition is what builds the eye — you cannot shortcut this.",
       },
       {
         label: "Top Down Analysis — Cue's Exact Flow",
@@ -270,6 +377,12 @@ const PHASES: Phase[] = [
       {
         label: "Chart Pattern Anatomy",
         note: "The patterns that repeat across every market. Double tops only work in a downtrend. Double bottoms confirm an uptrend. Know the shape before the market confirms it.",
+        checklist: CHART_PATTERNS_CHECKLIST,
+      },
+      {
+        label: "Fibonacci Drill: 20 Historical Moves",
+        tag: "Practice",
+        note: "Pull 20 historical moves and map the fib on each one. Find where price reacted. This repetition is what builds the eye — you cannot shortcut this.",
       },
     ],
   },
@@ -296,6 +409,11 @@ const PHASES: Phase[] = [
         ],
       },
       {
+        label: "66 and Friends",
+        note: "Cue's advanced confluence framework. When you see 66 set up on a chart, you already know what's about to happen. This is the system within the system.",
+        videos: [{ id: "901447438", label: "66 and Friends" }],
+      },
+      {
         label: "Confluence XXX + Confluence 30.0",
         note: "The deep end. Live charts, real setups, the full system in motion. High MAs smooth below, 38.2% respected, price acting like butter.",
         videos: [
@@ -318,7 +436,7 @@ const PHASES: Phase[] = [
       },
       {
         label: "50 Setup Drill",
-        tag: "DRILL",
+        tag: "Practice",
         note: "Mark confluence zones on 50 historical setups — entry, stop, target. Then ask yourself: was structure first? Did the MAs confirm? Was the candle close there? That's the checklist.",
       },
     ],
@@ -333,24 +451,16 @@ const PHASES: Phase[] = [
         note: "Head & shoulders, double tops/bottoms, wedges, pennants, triangles, rectangles — all of them. Know the shape before the market prints the confirmation candle.",
       },
       {
-        label: "Using Channels to Catch Breakouts",
-        note: "How to position before the move, not after. Float the trend — don't try to catch five-pip micro moves inside a channel. Wait for the real break.",
-        videos: [{ id: "160432593", label: "Channels & Breakouts" }],
-      },
-      {
         label: "Common Technical F**k Ups",
         note: "Treat the charts like a piece of art. Precision, precision, precision. This is Cue's breakdown of the exact mistakes he sees most — the ones that are easily fixed once you see them.",
         videos: [{ id: "1135918376", label: "Common Technical Mistakes" }],
       },
       {
-        label: "66 and Friends",
-        note: "Cue's advanced confluence framework. When you see 66 set up on a chart, you already know what's about to happen. This is the system within the system.",
-        videos: [{ id: "901447438", label: "66 and Friends" }],
-      },
-      {
         label: "Post Course Mindset",
         note: "Patience is the biggest thing. It's a transfer of money from the impatient to the patient. Growing a small account, when to scale lot size, when to withdraw — and when not to.",
-        videos: [{ id: "300094585", label: "Post Course Mindset" }],
+        videos: [
+          { label: "Post Course Mindset", href: "https://whop.com/joined/wallstreetacademy/wsa-main-course-2TNeKSURFqVkEA/app/courses/cors_1peLhRn7tgoROkzgHhpiQu/lessons/lesn_1Vfg5CgbxMboEcfY291o9a/" },
+        ],
       },
     ],
   },
@@ -359,12 +469,21 @@ const PHASES: Phase[] = [
     tagline: "All I need is 20 or 30 pips a day. The real money is here. This phase is where you stop watching and start compounding.",
     checkpoint: "You're posting setups, getting reviewed, journaling every trade. After every loss you're writing down what you did wrong and what you could do better. The majority wins is all that matters — and you're building toward that.",
     items: [
+      {
+        label: "No Trade Checklist",
+        note: "Before you click — run this first. If 2 or more boxes are checked, step away from the charts. The market will be there tomorrow. Your account might not be if you force it.",
+        checklist: NO_TRADE_CHECKLIST,
+      },
+      {
+        label: "Trade Ready Checklist",
+        note: "Every piece of your confluence stack — confirmed and documented. When all six sections check out, the setup is real. If anything's missing, wait for a better one.",
+        checklist: TRADE_READY_CHECKLIST,
+      },
       { label: `Chart N Chill — ${CNC.length} Sessions`, note: "Every Chart N Chill session on demand. When you have a question, the answer is probably already recorded here. Most recent first.", videos: CNC },
       { label: `CueCAST — ${CUECASTS.length} Sessions`, note: "Cue's live market analysis sessions. Real time, real charts, real decisions — this is how the professional thinks through a session.", videos: CUECASTS },
       { label: "NY + London Session Focus", note: "NY and London are where the volume is, where the setups form, where the money moves. Build your schedule around these sessions and stop forcing trades in dead markets." },
-      { label: "Post Course Mindset", note: "Patience is the biggest thing. It's a transfer of money from the impatient to the patient. This module covers growing a small account, when to scale lot size, when to withdraw — and when not to." },
       { label: "Monthly Group Q&A with Cue — 8 Calls", note: "Bring your charts. Bring your questions. Eight live orientation calls with Cue — real feedback on real setups, not a lecture. This is your checkpoint before you go fully independent. Show up prepared or show up ready to learn from someone who is." },
-      { label: "30-Day Live Trading Journal", tag: "DRILL", note: "Track every trade: entry, stop, target, outcome, and notes. Review it weekly. This data is what makes you better — not more videos. The journal is the system." },
+      { label: "30-Day Live Trading Journal", tag: "Practice", note: "Track every trade: entry, stop, target, outcome, and notes. Review it weekly. This data is what makes you better — not more videos. The journal is the system." },
     ],
   },
 ];
@@ -407,6 +526,72 @@ function DocumentModal({ doc, onClose }: { doc: DocContent; onClose: () => void 
             </div>
           ))}
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Checklist Modal ───────────────────────────────────────────────────────────
+function ChecklistModal({ doc, onClose }: { doc: ChecklistDoc; onClose: () => void }) {
+  const [checked, setChecked] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    const h = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", h);
+    return () => document.removeEventListener("keydown", h);
+  }, [onClose]);
+
+  const totalItems = doc.sections.reduce((sum, s) => sum + s.items.length, 0);
+  const checkedCount = Object.values(checked).filter(Boolean).length;
+  const isRed = doc.theme === "red";
+  const accent = isRed ? "#ef4444" : "#22c55e";
+  const noTrade = isRed && checkedCount >= 2;
+
+  function toggle(key: string) { setChecked(prev => ({ ...prev, [key]: !prev[key] })); }
+
+  return (
+    <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.94)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+      <div onClick={e => e.stopPropagation()} style={{ width: "100%", maxWidth: 680, maxHeight: "85vh", background: isRed ? "rgba(10,3,3,0.98)" : "rgba(3,10,6,0.98)", border: `1px solid ${accent}22`, borderTop: `2px solid ${accent}`, display: "flex", flexDirection: "column" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 24px", borderBottom: `1px solid ${accent}1a`, flexShrink: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 700, color: accent, letterSpacing: "0.16em", textTransform: "uppercase" }}>{doc.title}</span>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: `${accent}66`, letterSpacing: "0.14em" }}>{checkedCount} / {totalItems}</span>
+          </div>
+          <button onClick={onClose} style={{ background: "none", border: "none", color: "var(--muted)", cursor: "pointer", fontSize: 20, lineHeight: 1, padding: "0 4px" }}>✕</button>
+        </div>
+        {noTrade && (
+          <div style={{ padding: "10px 24px", background: "#ef44441a", borderBottom: "1px solid #ef444430", flexShrink: 0 }}>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 800, color: "#ef4444", letterSpacing: "0.14em", textTransform: "uppercase" }}>⛔ NO TRADE TODAY</span>
+          </div>
+        )}
+        <div style={{ overflowY: "auto", padding: "20px 24px", flex: 1 }}>
+          {doc.sections.map((section, si) => (
+            <div key={si} style={{ marginBottom: 22 }}>
+              <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: `${accent}aa`, letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 10 }}>{section.heading}</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                {section.items.map((item, ii) => {
+                  const key = `${si}-${ii}`;
+                  const on = !!checked[key];
+                  return (
+                    <label key={key} onClick={() => toggle(key)} style={{ display: "flex", alignItems: "flex-start", gap: 10, cursor: "pointer", padding: "8px 12px", borderRadius: 5, background: on ? `${accent}10` : "rgba(255,255,255,0.02)", border: `1px solid ${on ? accent + "30" : "rgba(255,255,255,0.06)"}`, transition: "all 0.12s" }}>
+                      <div style={{ width: 15, height: 15, borderRadius: 3, border: `1.5px solid ${on ? accent : "rgba(255,255,255,0.18)"}`, background: on ? accent : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 2, transition: "all 0.12s" }}>
+                        {on && <svg width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke={isRed ? "#fff" : "#000"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                      </div>
+                      <span style={{ fontFamily: "var(--font-body)", fontSize: 13.5, lineHeight: 1.55, color: on ? accent : "rgba(255,255,255,0.55)", transition: "color 0.12s" }}>{item.text}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+        {doc.rule && (
+          <div style={{ padding: "12px 24px", borderTop: `1px solid ${accent}18`, background: noTrade ? "#ef44441a" : "transparent", flexShrink: 0 }}>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: noTrade ? "#ef4444" : `${accent}44`, letterSpacing: "0.18em", textTransform: "uppercase" }}>
+              {noTrade ? "⛔ " : "· "}{doc.rule} ·
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -690,7 +875,7 @@ function PlayBtn({ video, onPlay }: { video: Video; onPlay: (v: Video) => void }
 }
 
 // ─── Module Item ──────────────────────────────────────────────────────────────
-function ModuleItem({ item, index, isLast, onPlay, onOpenDoc }: { item: PhaseItem; index: number; isLast: boolean; onPlay: (v: Video) => void; onOpenDoc: (doc: DocContent) => void }) {
+function ModuleItem({ item, index, isLast, onPlay, onOpenDoc, onOpenChecklist }: { item: PhaseItem; index: number; isLast: boolean; onPlay: (v: Video) => void; onOpenDoc: (doc: DocContent) => void; onOpenChecklist: (c: ChecklistDoc) => void }) {
   const [hovered, setHovered] = useState(false);
   return (
     <div
@@ -723,7 +908,7 @@ function ModuleItem({ item, index, isLast, onPlay, onOpenDoc }: { item: PhaseIte
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", color: "var(--bg)", background: "var(--acid)", padding: "3px 8px", borderRadius: 3 }}>{item.tag}</span>
           )}
         </div>
-        <div style={{ fontFamily: "var(--font-body)", fontWeight: 400, fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,0.5)", marginBottom: (item.videos?.length || item.doc) ? 14 : 0 }}>{item.note}</div>
+        <div style={{ fontFamily: "var(--font-body)", fontWeight: 400, fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,0.5)", marginBottom: (item.videos?.length || item.doc || item.checklist) ? 14 : 0 }}>{item.note}</div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
           {item.doc && (
             <button onClick={() => onOpenDoc(item.doc!)}
@@ -731,7 +916,16 @@ function ModuleItem({ item, index, isLast, onPlay, onOpenDoc }: { item: PhaseIte
               onMouseEnter={e => { e.currentTarget.style.background = "rgba(249,255,60,0.07)"; e.currentTarget.style.borderColor = "rgba(249,255,60,0.3)"; e.currentTarget.style.color = "var(--acid)"; }}
               onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.05)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.14)"; e.currentTarget.style.color = "rgba(255,255,255,0.55)"; }}>
               <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 1h4l2 2v5H1V1z" stroke="currentColor" strokeWidth="1"/><path d="M5 1v2h2" stroke="currentColor" strokeWidth="1"/></svg>
-              Read Intro
+              Read
+            </button>
+          )}
+          {item.checklist && (
+            <button onClick={() => onOpenChecklist(item.checklist!)}
+              style={{ ...btnStyle, background: item.checklist.theme === "red" ? "rgba(239,68,68,0.07)" : "rgba(34,197,94,0.07)", border: `1px solid ${item.checklist.theme === "red" ? "rgba(239,68,68,0.25)" : "rgba(34,197,94,0.25)"}`, color: item.checklist.theme === "red" ? "#ef4444" : "#22c55e" }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = item.checklist!.theme === "red" ? "rgba(239,68,68,0.15)" : "rgba(34,197,94,0.15)"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = item.checklist!.theme === "red" ? "rgba(239,68,68,0.07)" : "rgba(34,197,94,0.07)"; }}>
+              <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 2h6M1 4h4M1 6h5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>
+              Checklist
             </button>
           )}
           {item.videos?.map(v => <PlayBtn key={v.href ?? v.id} video={v} onPlay={onPlay} />)}
@@ -756,6 +950,7 @@ const GLOBE_POS = [
 export default function RoadmapPage() {
   const [activeVideo, setActiveVideo] = useState<ModalVideo | null>(null);
   const [activeDoc, setActiveDoc] = useState<DocContent | null>(null);
+  const [activeChecklist, setActiveChecklist] = useState<ChecklistDoc | null>(null);
   const [globeTransform, setGlobeTransform] = useState(
     `translate3d(78vw, 30vh, 0) translate3d(-50%, -50%, 0) scale3d(2.8, 2.8, 1)`
   );
@@ -816,6 +1011,7 @@ export default function RoadmapPage() {
 
       {activeVideo && <VideoModal video={activeVideo} onClose={() => setActiveVideo(null)} />}
       {activeDoc && <DocumentModal doc={activeDoc} onClose={() => setActiveDoc(null)} />}
+      {activeChecklist && <ChecklistModal doc={activeChecklist} onClose={() => setActiveChecklist(null)} />}
       <CueChat />
 
       {/* HEADER */}
@@ -902,7 +1098,7 @@ export default function RoadmapPage() {
                     {/* Items */}
                     <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", padding: "8px 40px" }}>
                       {phase.items.map((item, j) => (
-                        <ModuleItem key={j} item={item} index={j} isLast={j === phase.items.length - 1} onPlay={v => { if (v.id) setActiveVideo({ id: v.id, label: v.label }); }} onOpenDoc={setActiveDoc} />
+                        <ModuleItem key={j} item={item} index={j} isLast={j === phase.items.length - 1} onPlay={v => { if (v.id) setActiveVideo({ id: v.id, label: v.label }); }} onOpenDoc={setActiveDoc} onOpenChecklist={setActiveChecklist} />
                       ))}
                     </div>
 
