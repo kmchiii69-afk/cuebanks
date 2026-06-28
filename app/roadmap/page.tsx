@@ -207,7 +207,36 @@ const PHASES: Phase[] = [
       },
       {
         label: "Additional Information",
-        note: "Supplemental breakdowns and reference material to reinforce the foundations covered in this phase.",
+        note: "Helpful notes on risk management, pair selection, and lot sizing — the practical details that make the difference.",
+        doc: {
+          title: "Helpful Notes",
+          sections: [
+            {
+              heading: "Cue's Risk Management",
+              paras: ["Forex-specific sizing rules — different rules apply for metals and indices."],
+              bullets: [
+                "0.50 Lot per $500 in your account",
+                "1.00 Lot per $1,000 in your account",
+                "Scale proportionally from there",
+              ],
+              footer: "Disclaimer: This is Cue's personal approach based on his experience. Adjust based on your own account size and risk tolerance.",
+            },
+            {
+              heading: "Focus and Master One Pair",
+              paras: [
+                "You can master that one pair and make a profit from that one pair every day for the rest of your life. Jumping from pair to pair isn't going to help you with being consistent and being able to catch major moves from a pair.",
+                "Choose a pair that suits your lifestyle with the times that the pair is the most volatile (sessions).",
+              ],
+            },
+            {
+              heading: "Lot Size & Position Management",
+              paras: [
+                "Keep in mind that the smaller your lot size, the more you are going to want to stay in the market to see a substantial amount of profit. A higher lot size means you will see a larger profit with a smaller pip gain.",
+                "Once you learn how to manage your risk, you can definitely take advantage of this.",
+              ],
+            },
+          ],
+        },
       },
       {
         label: "Chart Practice: 10 Drawn Charts",
