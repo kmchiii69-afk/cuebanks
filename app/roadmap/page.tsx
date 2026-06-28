@@ -599,26 +599,70 @@ function CueChat() {
       )}
 
       {/* Toggle FAB */}
-      <button
-        onClick={() => setOpen(o => !o)}
-        style={{
-          position: "fixed", bottom: 24, right: 24, width: 56, height: 56, borderRadius: "50%",
-          background: open ? "rgba(255,255,255,0.06)" : "var(--acid)",
-          border: open ? "1px solid rgba(255,255,255,0.12)" : "none",
-          cursor: "pointer", zIndex: 999,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          boxShadow: open ? "none" : "0 0 0 1px var(--acid), 0 8px 32px rgba(249,255,60,0.4)",
-          transition: "background 0.2s, box-shadow 0.2s",
-        }}
-      >
-        {open ? (
-          <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+      {!open && (
+        <div style={{ position: "fixed", bottom: 24, right: 24, zIndex: 999, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 10 }}>
+          {/* Tooltip nudge */}
+          <div style={{
+            background: "rgba(10,14,22,0.92)", backdropFilter: "blur(12px)",
+            border: "1px solid rgba(249,255,60,0.25)", borderRadius: 10,
+            padding: "8px 14px", display: "flex", alignItems: "center", gap: 8,
+            boxShadow: "0 4px 24px rgba(0,0,0,0.5)",
+            animation: "fabNudge 0.4s ease both",
+          }}>
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e", flexShrink: 0, animation: "pulse 1.4s ease-in-out infinite" }} />
+            <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(255,255,255,0.75)", whiteSpace: "nowrap" }}>Got a question? Ask Cue</span>
+          </div>
+          {/* Pill button */}
+          <div style={{ position: "relative" }}>
+            {/* Pulse ring */}
+            <span style={{
+              position: "absolute", inset: -6, borderRadius: 40,
+              border: "1.5px solid rgba(249,255,60,0.35)",
+              animation: "fabRing 2s ease-in-out infinite",
+              pointerEvents: "none",
+            }} />
+            <span style={{
+              position: "absolute", inset: -12, borderRadius: 44,
+              border: "1px solid rgba(249,255,60,0.15)",
+              animation: "fabRing 2s ease-in-out infinite 0.4s",
+              pointerEvents: "none",
+            }} />
+            <button
+              onClick={() => setOpen(true)}
+              style={{
+                display: "flex", alignItems: "center", gap: 10,
+                padding: "0 18px 0 6px", height: 52, borderRadius: 36,
+                background: "var(--acid)",
+                border: "none", cursor: "pointer",
+                boxShadow: "0 0 0 1px rgba(249,255,60,0.6), 0 8px 40px rgba(249,255,60,0.45)",
+              }}
+            >
+              <div style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(0,0,0,0.18)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <span style={{ fontFamily: "var(--font-mono)", fontWeight: 800, fontSize: 17, color: "#000", letterSpacing: "-0.02em" }}>C</span>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 1 }}>
+                <span style={{ fontFamily: "var(--font-mono)", fontWeight: 800, fontSize: 11, color: "#000", letterSpacing: "0.1em", textTransform: "uppercase", lineHeight: 1 }}>Cue AI</span>
+                <span style={{ fontFamily: "var(--font-body)", fontSize: 10.5, color: "rgba(0,0,0,0.6)", lineHeight: 1 }}>Ask me anything</span>
+              </div>
+            </button>
+          </div>
+        </div>
+      )}
+      {open && (
+        <button
+          onClick={() => setOpen(false)}
+          style={{
+            position: "fixed", bottom: 24, right: 24, width: 48, height: 48, borderRadius: "50%",
+            background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)",
+            cursor: "pointer", zIndex: 999,
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}
+        >
+          <svg width="14" height="14" viewBox="0 0 18 18" fill="none">
             <path d="M2 2L16 16M16 2L2 16" stroke="var(--muted)" strokeWidth="1.5" strokeLinecap="round"/>
           </svg>
-        ) : (
-          <span style={{ fontFamily: "var(--font-mono)", fontWeight: 800, fontSize: 18, color: "var(--bg)", letterSpacing: "-0.02em" }}>C</span>
-        )}
-      </button>
+        </button>
+      )}
     </>
   );
 }
