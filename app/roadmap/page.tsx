@@ -5,9 +5,95 @@ import { useState, useRef, useEffect, FormEvent } from "react";
 import Globe from "@/components/ui/globe";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-type Video = { id: string; label: string };
-type PhaseItem = { label: string; note: string; tag?: string; videos?: Video[] };
+type Video = { id?: string; label: string; href?: string };
+type DocSection = { heading: string; paras?: string[]; bullets?: string[]; footer?: string };
+type DocContent = { title: string; sections: DocSection[] };
+type PhaseItem = { label: string; note: string; tag?: string; videos?: Video[]; doc?: DocContent };
 type Phase = { num: string; title: string; duration: string; tagline: string; checkpoint: string; items: PhaseItem[] };
+
+// ─── Intro Forex Document ─────────────────────────────────────────────────────
+const INTRO_FOREX_DOC: DocContent = {
+  title: "Introduction to Forex",
+  sections: [
+    {
+      heading: "What is Forex & Why do people trade?",
+      paras: ["Forex is short for the Foreign Exchange. The Forex market is the most liquid market in the world. It exchanges approximately $4.3 Trillion per day opposed to less liquid markets such as the New York Stock Exchange that exchanges approximately $20 Billion per day. People turn to trade the Forex markets for a variety of reasons:"],
+      bullets: [
+        "You can trade from anywhere in the world",
+        "Most liquid market in the world",
+        "Traders can profit whether a specific currency is increasing or decreasing in value",
+        "Forex does not require a high initial investment",
+        "Traders can begin with as little as $100 which makes Forex all the more popular",
+        "High liquidity allows large amounts of leverage",
+        "Some brokers allow leverage up to 1:1000",
+      ],
+      footer: "The goal of Forex is to buy a currency that is anticipated to gain value or sell a currency that is anticipated to lose value against another currency.",
+    },
+    {
+      heading: "What do people trade?",
+      paras: [
+        "When trading Forex, it is inevitable that traders will run across currencies known as \"The Majors\". This term refers to the most frequently traded currencies in the world, with a list normally including the Euro (EUR), US Dollar (USD), Japanese Yen (JPY), Great British Pound (GBP), Australian Dollar (AUD), and the Swiss Franc (CHF).",
+        "These currencies each carry a symbol (ISO code) and a nickname. These names will often come up in research and will be handy when communicating with other Forex Traders.",
+      ],
+    },
+    {
+      heading: "What are the four major markets to trade?",
+      paras: ["The four major markets to trade include the London Session (3am EST–12pm EST), the New York Session (8am EST–5pm EST), the Sydney Session (5pm EST–2am EST), and the Tokyo Session (7pm EST–4am EST). During summer and winter months from 8am to 12pm the London and New York session overlap."],
+    },
+    {
+      heading: "The London Session",
+      paras: ["It is this session that 99% of traders keep their eyes on as London controls essentially the entire European market movements. Roughly 30% of all market transactions take place in the London Session."],
+      bullets: [
+        "Due to overlapping with two other major trading sessions, a large portion of Forex transactions are made during this time — leading to a massive surge in liquidity and lower transaction costs.",
+        "The London Session is known to be specifically volatile for the EUR/USD, as a plethora of European news is released within a couple hours of the opening.",
+        "Most major movements that occur during the London Session carry over into the New York Session.",
+        "The best times to trade the EU & GBP/USD is during the overlap of the London & New York Session.",
+        "Price action may slow down and trends start to change as European traders close their trades and take profits.",
+      ],
+    },
+    {
+      heading: "The New York Session",
+      paras: ["This session begins at 8am EST and is the most traded session amongst all Forex traders, primarily due to influential market news. The most commonly traded pairs during this session are USD/JPY and EUR/USD, as well as Gold."],
+      bullets: [
+        "Major news is released in the beginning of this session.",
+        "Every major transaction in the world involves the USD — whenever major news comes out that affects the USD, anything directly related to it will move drastically.",
+        "The New York Session begins to majorly slow down after 1pm EST.",
+        "There is almost little or no movement Friday afternoons as Asian and London traders are done for the weekend.",
+      ],
+    },
+    {
+      heading: "The Tokyo Session",
+      paras: ["The Tokyo Session is often referred to as the Asian session. Japan is the third largest trading center in the world, and the Japanese Yen partakes in 16.5% of all forex transactions — with about 21% of all transactions taking place during this session."],
+      bullets: [
+        "The most commonly traded pair is the USD/JPY.",
+        "The Bank of Japan (BOJ) has been known to inject massive amounts of government printed money into the markets, causing moves of 2000 pips within 20 minutes.",
+        "Liquidity can often be very thin, making this session boring because of the lack of activity.",
+        "It is more likely to see movement in Asia Pacific pairs like the AUD/USD and NZD/USD.",
+        "Most action takes place early in this session due to major economic data that is released.",
+      ],
+    },
+    {
+      heading: "The Sydney Session",
+      paras: ["This session starts and ends the trading week — opening Sunday at 5pm EST and closing Friday at 5pm EST. This session focuses on the volatility of AUD pairs (ex. AUDUSD, GBPAUD, AUDJPY). Normally this session has very low volatility compared to the other sessions."],
+    },
+    {
+      heading: "Overview",
+      paras: [
+        "If you are looking for times of major volatility, look for times when two sessions overlap. Also note, trading on Fridays and Sundays can be a costly venture. Sunday is when investors are looking for the news to create a market path — paths can often go one way Sunday and completely reverse come Monday.",
+        "NEVER hold a trade through the weekend as you are exposed to gaps in the market come Sunday when markets open due to news announced when the market is closed. The only exception is if you plan on swinging a trade for an extended period of time, and it is a part of your strategy.",
+      ],
+    },
+    {
+      heading: "Three Types of Analysis",
+      paras: ["Traders often break down the analysis of the charts or Forex pairs into three different categories:"],
+      bullets: [
+        "Technical Analysis — Reading charts using a series of technical tools, normally involving mathematical equations and historical data to predict what will happen next.",
+        "Fundamental Analysis — A review of the economics and political forces that might come into play when forecasting the direction of a currency pair. Examining economic health of a region, interest rates, or relationships between countries.",
+        "Sentiment Analysis — How traders devise their own opinions over how the market is changing and where it's heading, often using Line Charts, Bar Charts, or Candlestick Charts.",
+      ],
+    },
+  ],
+};
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const CNC: Video[] = [
@@ -56,55 +142,78 @@ const PHASES: Phase[] = [
     tagline: "Your strategy isn't gonna be the basis of your trading success. Risk management will be. Before you touch a chart, you need to understand that.",
     checkpoint: "You know the rules that keep your account alive. You understand why there is not one single successful trader who uses improper risk management. You're not starting phase two without this locked in.",
     items: [
-      { label: "Introduction to Forex", note: "What the market actually is, how it moves, and what it isn't. The foundation is support and resistance — everything else is built on top of that." },
-      { label: "Platform Setup — MT4 + TradingView", note: "Cue's exact indicators, moving averages, and chart templates before anything else. If the setup is wrong, the analysis is wrong from the start." },
-      { label: "Risk Management 101", note: "1% to 5% risk per trade — conservative to the absolute most you should go. Cue blew four $1,000 accounts before he understood this. You don't have to.",
-        videos: [{ id: "160573172", label: "Risk Management 101" }] },
-      { label: "Mental Health — The Trader's Environment", note: "Once you get greedy, that's what kills your success. This module covers the mindset before the market exposes every weak point in your psychology.",
-        videos: [{ id: "200293134", label: "Psychology" }] },
-      { label: "The Four Fears + Greed, Revenge, FOMO", note: "You are the problem at times. Not the broker. The market. You. Know your patterns before they cost you.",
+      {
+        label: "Welcome Video",
+        note: "Start here. Quillan walks you through what Wall Street Academy is, what this program is built on, and exactly what to expect over the next 16 weeks.",
+        videos: [{ id: "1120998383", label: "Welcome" }],
+      },
+      {
+        label: "Introduction to Forex",
+        note: "What the market actually is, how it moves, and what it isn't. The foundation is support and resistance — everything else is built on top of that.",
+        videos: [{ label: "Course Files", href: "https://whop.com/joined/wallstreetacademy/wsa-main-course-2TNeKSURFqVkEA/app/courses/cors_1peLhRn7tgoROkzgHhpiQu/lessons/lesn_2DvHwp4ZNjye63KykdiZQX/" }],
+        doc: INTRO_FOREX_DOC,
+      },
+      {
+        label: "Risk Management 101",
+        note: "Cue usually risks 5–15% per trade, depending on his confidence, the confluence, and the cushion in his account. He always says \"The most confident person in the room will make the most amount of money\"",
+        videos: [{ id: "160573172", label: "Risk Management 101" }],
+      },
+      {
+        label: "The Four Fears + Greed, Revenge & Trading Style",
+        note: "You are the problem at times. Not the broker. The market. You. Know your patterns before they cost you.",
         videos: [
-          { id: "226589336", label: "The Four Fears" },
+          { id: "1090913021", label: "The Greed Effect 2.0" },
+          { id: "1090918934", label: "Knowing Your Trading Style 2.0" },
           { id: "1090926102", label: "Fear of Market 2.0" },
-          { id: "150539053", label: "Fear of Market 1.0" },
-          { id: "1090913021", label: "Greed 2.0" },
-          { id: "148024071", label: "The Greed Effect" },
-          { id: "492840038", label: "Fear & Greed" },
-        ] },
-      { label: "Demo vs Live — Understanding the Difference", note: "Demo doesn't replicate the emotional weight of real money. This module bridges that gap so your first live account doesn't become a tuition payment.",
-        videos: [
-          { id: "1090929269", label: "Demo vs Live 2.0" },
-          { id: "150556196", label: "Demo vs Live 1.0" },
-        ] },
+          { id: "1090921899", label: "Revenge Trading 2.0" },
+        ],
+      },
+      {
+        label: "Demo vs Live — Understanding the Difference",
+        note: "Demo doesn't replicate the emotional weight of real money. This module bridges that gap so your first live account doesn't become a tuition payment.",
+        videos: [{ id: "1090929269", label: "Demo vs Live 2.0" }],
+      },
     ],
   },
   {
-    num: "02", title: "Reading Price", duration: "Week 2 – 3",
+    num: "02", title: "Reading Price Action", duration: "Week 2 – 3",
     tagline: "If the market is above the MAs, focus on buys. If it's under the MAs, focus on sells. Learn to see what the market is actually showing you — and flow with it.",
-    checkpoint: "You can look at any chart and tell the trend, mark your S&R levels, and identify supply and demand zones. You know what's noise and what's a real move. Charts don't lie to you anymore.",
+    checkpoint: "You can look at any chart and tell the trend, mark your S&R levels, and draw trendlines clean. You know what's noise and what's a real move. Charts don't lie to you anymore.",
     items: [
-      { label: "Identifying The Trend (1.0 + 2.0)", note: "Higher high points, higher low points — that's a bullish market. Lower highs, lower lows — that's bearish. Structure is always first.",
+      {
+        label: "Identifying The Trend",
+        note: "Higher high points, higher low points — that's a bullish market. Lower highs, lower lows — that's bearish. Structure is always first.",
         videos: [
           { id: "208979674", label: "Market Structure 2.0" },
-          { id: "153506121", label: "50 & 200 EMA" },
-        ] },
-      { label: "Support & Resistance (1.0 + 2.0)", note: "The base of every style of trading. Daily levels on the line chart, H4 on the line chart, H1 on candles — that's how Cue marks his S&R from the top down.",
-        videos: [
-          { id: "208544828", label: "S&R 2.0" },
-          { id: "163877268", label: "S&R 1.0" },
-          { id: "156109526", label: "S&R HD" },
-        ] },
-      { label: "Supply & Demand", note: "The institutional orders behind every real move. Not retail psychology — the actual zones where price is going to react, repeatedly.",
-        videos: [
-          { id: "148405472", label: "Drawing Supply & Demand" },
-          { id: "163878343", label: "S&D with Structure" },
-        ] },
-      { label: "Drawing Trendlines (1.0 + 2.0)", note: "If you can't walk in it, it's invalid. Most traders draw them wrong. Learn where to anchor, when they break, and exactly what that means for the next move.",
+          { id: "245645634", label: "Identifying The Trend" },
+        ],
+      },
+      {
+        label: "Introducing TradeLocker",
+        note: "No MT4 or MT5? No problem. This module walks you through TradeLocker — Cue's preferred alternative platform — and how to get your charts set up correctly from day one.",
+        videos: [{ id: "900590824", label: "Introducing TradeLocker" }],
+      },
+      {
+        label: "Support & Resistance",
+        note: "The base of every style of trading. Daily levels on the line chart, H4 on the line chart, H1 on candles — that's how Cue marks his S&R from the top down. New updated video coming.",
+      },
+      {
+        label: "Drawing Trendlines 2.0",
+        note: "If you can't walk in it, it's invalid. Most traders draw them wrong. Learn where to anchor, when they break, and exactly what that means for the next move.",
         videos: [
           { id: "1162341882", label: "Trendlines 2.0" },
-          { id: "161399675", label: "Drawing Trendlines Correctly" },
-        ] },
-      { label: "Chart Practice: 10 Drawn Charts", tag: "DRILL", note: "Draw 10 charts with trend direction, S&R, and supply/demand marked. This is how you build the eye. You can't skip the reps — submit before moving to Phase 3." },
+          { id: "337766458", label: "GBPJPY Breakdown" },
+        ],
+      },
+      {
+        label: "Additional Information",
+        note: "Supplemental breakdowns and reference material to reinforce the foundations covered in this phase.",
+      },
+      {
+        label: "Chart Practice: 10 Drawn Charts",
+        tag: "DRILL",
+        note: "Draw 10 charts with trend direction, S&R, and trendlines marked. This is how you build the eye. You can't skip the reps — submit before moving to Phase 3.",
+      },
     ],
   },
   {
@@ -112,19 +221,27 @@ const PHASES: Phase[] = [
     tagline: "Regardless of what the MAs are doing, always ask yourself — what is structure doing? This phase is where you learn to read the blueprint of every move before it happens.",
     checkpoint: "You can map market structure clean on any pair. You can draw a fib from point A to point B and identify where price is most likely to react — 38.2%, 23.6%, the green zone. Entries stop being guesses.",
     items: [
-      { label: "Drawing Market Structure (1.0 + 2.0)", note: "Break of structure. Change of character. Continuation versus reversal. You need to know what the market is doing before you can know where it's going.",
-        videos: [
-          { id: "208979674", label: "Market Structure 2.0" },
-          { id: "153504825", label: "Structure, Pushes & Daily Cycle" },
-        ] },
-      { label: "Using Fibonacci (1.0 + 2.0)", note: "Point A to point B — 38.2% is your first higher-low opportunity, 23.6% is where it gets sloppy. Know which levels to trust and which ones to wait through.",
+      {
+        label: "Using Fibonacci (1.0 + 2.0)",
+        note: "Point A to point B — 38.2% is your first higher-low opportunity, 23.6% is where it gets sloppy. Know which levels to trust and which ones to wait through.",
         videos: [
           { id: "214333836", label: "Fibonacci 2.0" },
           { id: "148814763", label: "Fibonacci 1.0" },
-        ] },
-      { label: "Fibonacci Drill: 20 Historical Moves", tag: "DRILL", note: "Pull 20 historical moves and map the fib on each one. Find where price reacted. This repetition is what builds the eye — you cannot shortcut this." },
-      { label: "Top Down Analysis — Cue's Exact Flow", note: "H4 for 30% of your time, M5 for 60%, H1 or M30 for the last 10%. Top down every single session before you touch a lower timeframe entry." },
-      { label: "Chart Pattern Anatomy", note: "The patterns that repeat across every market. Double tops only work in a downtrend. Double bottoms confirm an uptrend. Know the shape before the market confirms it." },
+        ],
+      },
+      {
+        label: "Fibonacci Drill: 20 Historical Moves",
+        tag: "DRILL",
+        note: "Pull 20 historical moves and map the fib on each one. Find where price reacted. This repetition is what builds the eye — you cannot shortcut this.",
+      },
+      {
+        label: "Top Down Analysis — Cue's Exact Flow",
+        note: "H4 for 30% of your time, M5 for 60%, H1 or M30 for the last 10%. Top down every single session before you touch a lower timeframe entry.",
+      },
+      {
+        label: "Chart Pattern Anatomy",
+        note: "The patterns that repeat across every market. Double tops only work in a downtrend. Double bottoms confirm an uptrend. Know the shape before the market confirms it.",
+      },
     ],
   },
   {
@@ -132,48 +249,80 @@ const PHASES: Phase[] = [
     tagline: "When it shows up that smooth — structure clean, MAs below the market, 38.2% respected, everything aligned — you have to take advantage of it. This is the system.",
     checkpoint: "You can identify a full confluence setup: structure first, MAs confirm direction, fib level respected, candle close confirms the entry. You stop entering on feeling. You enter on evidence.",
     items: [
-      { label: "Confluence Trading 1.0 → 2.0 → 2.5", note: "Watch in order. Don't skip. Each version builds on the last — this is Cue's full journey developing the system from its foundation. The stack starts here.",
+      {
+        label: "Confluence Trading 1.0 → 2.0 → 2.5",
+        note: "Watch in order. Don't skip. Each version builds on the last — this is Cue's full journey developing the system from its foundation. The stack starts here.",
         videos: [
           { id: "148803452", label: "Confluence 1.0" },
           { id: "169326892", label: "Confluence 2.0" },
           { id: "187488265", label: "Confluence 2.5" },
-        ] },
-      { label: "Confluence Trading 2.9 → 3.0", note: "Advanced application. Cue thinking out loud on live charts — what he filters, what disqualifies a setup, how the whole system runs when it's second nature.",
+        ],
+      },
+      {
+        label: "Confluence Trading 2.9 → 3.0",
+        note: "Advanced application. Cue thinking out loud on live charts — what he filters, what disqualifies a setup, how the whole system runs when it's second nature.",
         videos: [
           { id: "248648721", label: "Confluence 2.9" },
           { id: "308011962", label: "Confluence 3.0" },
-        ] },
-      { label: "Confluence XXX + Confluence 30.0", note: "The deep end. Live charts, real setups, the full system in motion. High MAs smooth below, 38.2% respected, price acting like butter.",
+        ],
+      },
+      {
+        label: "Confluence XXX + Confluence 30.0",
+        note: "The deep end. Live charts, real setups, the full system in motion. High MAs smooth below, 38.2% respected, price acting like butter.",
         videos: [
           { id: "351940671", label: "Confluence XXX" },
           { id: "680498239", label: "Confluence 30.0" },
-        ] },
-      { label: "The Process — Maintaining a Live Trade", note: "Never have urgency for the market to go in your favor — that's how you close prematurely. This is entry to exit: how Cue manages a trade in real time, tick by tick.",
-        videos: [{ id: "218319570", label: "The Process" }] },
-      { label: "Confluence Tick By Tick + Confluence RAW", note: "Unfiltered real-time execution. Tick by tick — that means every candle, every close, every moment the market makes a new move. This is how the professional thinks.",
+        ],
+      },
+      {
+        label: "The Process — Maintaining a Live Trade",
+        note: "Never have urgency for the market to go in your favor — that's how you close prematurely. This is entry to exit: how Cue manages a trade in real time, tick by tick.",
+        videos: [{ id: "218319570", label: "The Process" }],
+      },
+      {
+        label: "Confluence Tick By Tick + Confluence RAW",
+        note: "Unfiltered real-time execution. Tick by tick — that means every candle, every close, every moment the market makes a new move. This is how the professional thinks.",
         videos: [
           { id: "1042367807", label: "Tick by Tick" },
           { id: "1149579397", label: "Confluence RAW" },
-        ] },
-      { label: "50 Setup Drill", tag: "DRILL", note: "Mark confluence zones on 50 historical setups — entry, stop, target. Then ask yourself: was structure first? Did the MAs confirm? Was the candle close there? That's the checklist." },
+        ],
+      },
+      {
+        label: "50 Setup Drill",
+        tag: "DRILL",
+        note: "Mark confluence zones on 50 historical setups — entry, stop, target. Then ask yourself: was structure first? Did the MAs confirm? Was the candle close there? That's the checklist.",
+      },
     ],
   },
   {
     num: "05", title: "Advanced Execution", duration: "Week 7 – 10",
     tagline: "Stop being afraid to up your lot size when the risk is tight and the setup is clean. This phase layers in the tools that sharpen your entries and filter the trash.",
-    checkpoint: "You have additional confirmation tools in your stack. You can identify trend strength before entering, catch breakouts early, and recognize the technical mistakes that kill accounts before you make them.",
+    checkpoint: "You have additional tools in your stack. You can identify patterns, catch breakouts early, and recognize the technical mistakes that kill accounts before you make them.",
     items: [
-      { label: "Ichimoku Kinko Hyo", note: "If it says strong buy, try not to sell. This tool shows trend, momentum, and support in one read — an additional filter that confirms what your structure is already telling you.",
-        videos: [{ id: "148838797", label: "Ichimoku" }] },
-      { label: "Pivot Points", note: "Institutional levels that recalculate daily. High-confluence zones that print consistently — where banks are watching and price responds.",
-        videos: [{ id: "152105266", label: "Pivot Points" }] },
-      { label: "Using Channels to Catch Breakouts", note: "How to position before the move, not after. Float the trend — don't try to catch five-pip micro moves inside a channel. Wait for the real break.",
-        videos: [{ id: "160432593", label: "Channels & Breakouts" }] },
-      { label: "Average Directional Index (ADX)", note: "Your trend strength filter. Don't try to trade a ranging, choppy market — that's where most accounts bleed out. ADX tells you when the trend is real.",
-        videos: [{ id: "153460551", label: "ADX" }] },
-      { label: "Common Technical F**k Ups", note: "Treat the charts like a piece of art. Precision, precision, precision. This is Cue's breakdown of the exact mistakes he sees most — the ones that are easily fixed once you see them.",
-        videos: [{ id: "1135918376", label: "Common Technical Mistakes" }] },
-      { label: "Major Market Patterns — All 13", note: "Head & shoulders, double tops/bottoms, wedges, pennants, triangles, rectangles — all of them. Know the shape before the market prints the confirmation candle." },
+      {
+        label: "Major Market Patterns — All 13",
+        note: "Head & shoulders, double tops/bottoms, wedges, pennants, triangles, rectangles — all of them. Know the shape before the market prints the confirmation candle.",
+      },
+      {
+        label: "Using Channels to Catch Breakouts",
+        note: "How to position before the move, not after. Float the trend — don't try to catch five-pip micro moves inside a channel. Wait for the real break.",
+        videos: [{ id: "160432593", label: "Channels & Breakouts" }],
+      },
+      {
+        label: "Common Technical F**k Ups",
+        note: "Treat the charts like a piece of art. Precision, precision, precision. This is Cue's breakdown of the exact mistakes he sees most — the ones that are easily fixed once you see them.",
+        videos: [{ id: "1135918376", label: "Common Technical Mistakes" }],
+      },
+      {
+        label: "66 and Friends",
+        note: "Cue's advanced confluence framework. When you see 66 set up on a chart, you already know what's about to happen. This is the system within the system.",
+        videos: [{ id: "901447438", label: "66 and Friends" }],
+      },
+      {
+        label: "Post Course Mindset",
+        note: "Patience is the biggest thing. It's a transfer of money from the impatient to the patient. Growing a small account, when to scale lot size, when to withdraw — and when not to.",
+        videos: [{ id: "300094585", label: "Post Course Mindset" }],
+      },
     ],
   },
   {
@@ -193,6 +342,46 @@ const PHASES: Phase[] = [
 
 // ─── Video Modal ───────────────────────────────────────────────────────────────
 type ModalVideo = { id: string; label: string };
+
+// ─── Document Modal ────────────────────────────────────────────────────────────
+function DocumentModal({ doc, onClose }: { doc: DocContent; onClose: () => void }) {
+  useEffect(() => {
+    const h = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", h);
+    return () => document.removeEventListener("keydown", h);
+  }, [onClose]);
+
+  return (
+    <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.94)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+      <div onClick={e => e.stopPropagation()} style={{ width: "100%", maxWidth: 720, maxHeight: "85vh", background: "var(--bg-1)", border: "1px solid var(--line)", borderTop: "2px solid var(--acid)", display: "flex", flexDirection: "column" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 24px", borderBottom: "1px solid var(--line)", flexShrink: 0 }}>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 700, color: "var(--acid)", letterSpacing: "0.16em", textTransform: "uppercase" }}>{doc.title}</span>
+          <button onClick={onClose} style={{ background: "none", border: "none", color: "var(--muted)", cursor: "pointer", lineHeight: 1, fontSize: 20, padding: "0 4px" }}>✕</button>
+        </div>
+        <div style={{ overflowY: "auto", padding: "28px 32px", flex: 1 }}>
+          {doc.sections.map((s, i) => (
+            <div key={i} style={{ marginBottom: 28 }}>
+              <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: "var(--acid)", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 10 }}>{s.heading}</div>
+              {s.paras?.map((p, j) => (
+                <p key={j} style={{ fontFamily: "var(--font-body)", fontSize: 14, lineHeight: 1.75, color: "rgba(255,255,255,0.6)", margin: "0 0 10px" }}>{p}</p>
+              ))}
+              {s.bullets && (
+                <ul style={{ margin: "8px 0 0", padding: 0, listStyle: "none" }}>
+                  {s.bullets.map((b, j) => (
+                    <li key={j} style={{ display: "flex", gap: 10, fontFamily: "var(--font-body)", fontSize: 13.5, lineHeight: 1.7, color: "rgba(255,255,255,0.5)", marginBottom: 7 }}>
+                      <span style={{ color: "var(--acid)", flexShrink: 0, marginTop: 1 }}>·</span>{b}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {s.footer && <p style={{ fontFamily: "var(--font-body)", fontSize: 14, lineHeight: 1.7, color: "rgba(249,255,60,0.65)", marginTop: 12, fontStyle: "italic", margin: "12px 0 0" }}>{s.footer}</p>}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function VideoModal({ video, onClose }: { video: ModalVideo; onClose: () => void }) {
   useEffect(() => {
@@ -406,14 +595,21 @@ function CueChat() {
 }
 
 // ─── Play button ───────────────────────────────────────────────────────────────
+const btnStyle = { display: "inline-flex" as const, alignItems: "center" as const, gap: 5, padding: "3px 9px 3px 7px", background: "rgba(249,255,60,0.07)", border: "1px solid rgba(249,255,60,0.2)", color: "var(--acid)", fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const, cursor: "pointer", transition: "background 0.12s, border-color 0.12s", whiteSpace: "nowrap" as const, textDecoration: "none" };
+const btnEnter = (e: React.MouseEvent<HTMLElement>) => { (e.currentTarget as HTMLElement).style.background = "rgba(249,255,60,0.15)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(249,255,60,0.5)"; };
+const btnLeave = (e: React.MouseEvent<HTMLElement>) => { (e.currentTarget as HTMLElement).style.background = "rgba(249,255,60,0.07)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(249,255,60,0.2)"; };
+
 function PlayBtn({ video, onPlay }: { video: Video; onPlay: (v: Video) => void }) {
+  if (video.href) {
+    return (
+      <a href={video.href} target="_blank" rel="noopener noreferrer" style={btnStyle} onMouseEnter={btnEnter} onMouseLeave={btnLeave}>
+        <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 1h6v6H1zM3 3h2v2H3z" stroke="currentColor" strokeWidth="1"/></svg>
+        {video.label}
+      </a>
+    );
+  }
   return (
-    <button
-      onClick={() => onPlay(video)}
-      style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "3px 9px 3px 7px", background: "rgba(249,255,60,0.07)", border: "1px solid rgba(249,255,60,0.2)", color: "var(--acid)", fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer", transition: "background 0.12s, border-color 0.12s", whiteSpace: "nowrap" }}
-      onMouseEnter={e => { e.currentTarget.style.background = "rgba(249,255,60,0.15)"; e.currentTarget.style.borderColor = "rgba(249,255,60,0.5)"; }}
-      onMouseLeave={e => { e.currentTarget.style.background = "rgba(249,255,60,0.07)"; e.currentTarget.style.borderColor = "rgba(249,255,60,0.2)"; }}
-    >
+    <button onClick={() => onPlay(video)} style={btnStyle} onMouseEnter={btnEnter} onMouseLeave={btnLeave}>
       <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 1L7 4L1.5 7V1Z" fill="currentColor"/></svg>
       {video.label}
     </button>
@@ -421,7 +617,7 @@ function PlayBtn({ video, onPlay }: { video: Video; onPlay: (v: Video) => void }
 }
 
 // ─── Module Item ──────────────────────────────────────────────────────────────
-function ModuleItem({ item, index, isLast, onPlay }: { item: PhaseItem; index: number; isLast: boolean; onPlay: (v: Video) => void }) {
+function ModuleItem({ item, index, isLast, onPlay, onOpenDoc }: { item: PhaseItem; index: number; isLast: boolean; onPlay: (v: Video) => void; onOpenDoc: (doc: DocContent) => void }) {
   const [hovered, setHovered] = useState(false);
   return (
     <div
@@ -454,12 +650,19 @@ function ModuleItem({ item, index, isLast, onPlay }: { item: PhaseItem; index: n
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", color: "var(--bg)", background: "var(--acid)", padding: "3px 8px", borderRadius: 3 }}>{item.tag}</span>
           )}
         </div>
-        <div style={{ fontFamily: "var(--font-body)", fontWeight: 400, fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,0.5)", marginBottom: item.videos?.length ? 14 : 0 }}>{item.note}</div>
-        {item.videos && item.videos.length > 0 && (
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-            {item.videos.map(v => <PlayBtn key={v.id} video={v} onPlay={onPlay} />)}
-          </div>
-        )}
+        <div style={{ fontFamily: "var(--font-body)", fontWeight: 400, fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,0.5)", marginBottom: (item.videos?.length || item.doc) ? 14 : 0 }}>{item.note}</div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+          {item.doc && (
+            <button onClick={() => onOpenDoc(item.doc!)}
+              style={{ ...btnStyle, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.14)", color: "rgba(255,255,255,0.55)" }}
+              onMouseEnter={e => { e.currentTarget.style.background = "rgba(249,255,60,0.07)"; e.currentTarget.style.borderColor = "rgba(249,255,60,0.3)"; e.currentTarget.style.color = "var(--acid)"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.05)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.14)"; e.currentTarget.style.color = "rgba(255,255,255,0.55)"; }}>
+              <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 1h4l2 2v5H1V1z" stroke="currentColor" strokeWidth="1"/><path d="M5 1v2h2" stroke="currentColor" strokeWidth="1"/></svg>
+              Read Intro
+            </button>
+          )}
+          {item.videos?.map(v => <PlayBtn key={v.href ?? v.id} video={v} onPlay={onPlay} />)}
+        </div>
       </div>
     </div>
   );
@@ -479,6 +682,7 @@ const GLOBE_POS = [
 // ─── Page ──────────────────────────────────────────────────────────────────────
 export default function RoadmapPage() {
   const [activeVideo, setActiveVideo] = useState<ModalVideo | null>(null);
+  const [activeDoc, setActiveDoc] = useState<DocContent | null>(null);
   const [globeTransform, setGlobeTransform] = useState(
     `translate3d(78vw, 30vh, 0) translate3d(-50%, -50%, 0) scale3d(2.8, 2.8, 1)`
   );
@@ -538,6 +742,7 @@ export default function RoadmapPage() {
       </div>
 
       {activeVideo && <VideoModal video={activeVideo} onClose={() => setActiveVideo(null)} />}
+      {activeDoc && <DocumentModal doc={activeDoc} onClose={() => setActiveDoc(null)} />}
       <CueChat />
 
       {/* HEADER */}
@@ -624,7 +829,7 @@ export default function RoadmapPage() {
                     {/* Items */}
                     <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", padding: "8px 40px" }}>
                       {phase.items.map((item, j) => (
-                        <ModuleItem key={j} item={item} index={j} isLast={j === phase.items.length - 1} onPlay={setActiveVideo} />
+                        <ModuleItem key={j} item={item} index={j} isLast={j === phase.items.length - 1} onPlay={v => { if (v.id) setActiveVideo({ id: v.id, label: v.label }); }} onOpenDoc={setActiveDoc} />
                       ))}
                     </div>
 
