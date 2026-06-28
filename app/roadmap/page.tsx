@@ -359,11 +359,11 @@ const PHASES: Phase[] = [
     tagline: "All I need is 20 or 30 pips a day. The real money is here. This phase is where you stop watching and start compounding.",
     checkpoint: "You're posting setups, getting reviewed, journaling every trade. After every loss you're writing down what you did wrong and what you could do better. The majority wins is all that matters — and you're building toward that.",
     items: [
-      { label: "Monthly Group Q&A with Cue", note: "Bring your charts. Bring your questions. Four live calls across four months — real feedback on real setups, not a lecture. Show up prepared or show up ready to learn from someone who is." },
       { label: `Chart N Chill — ${CNC.length} Sessions`, note: "Every Chart N Chill session on demand. When you have a question, the answer is probably already recorded here. Most recent first.", videos: CNC },
       { label: `CueCAST — ${CUECASTS.length} Sessions`, note: "Cue's live market analysis sessions. Real time, real charts, real decisions — this is how the professional thinks through a session.", videos: CUECASTS },
       { label: "NY + London Session Focus", note: "NY and London are where the volume is, where the setups form, where the money moves. Build your schedule around these sessions and stop forcing trades in dead markets." },
       { label: "Post Course Mindset", note: "Patience is the biggest thing. It's a transfer of money from the impatient to the patient. This module covers growing a small account, when to scale lot size, when to withdraw — and when not to." },
+      { label: "Monthly Group Q&A with Cue — 8 Calls", note: "Bring your charts. Bring your questions. Eight live orientation calls with Cue — real feedback on real setups, not a lecture. This is your checkpoint before you go fully independent. Show up prepared or show up ready to learn from someone who is." },
       { label: "30-Day Live Trading Journal", tag: "DRILL", note: "Track every trade: entry, stop, target, outcome, and notes. Review it weekly. This data is what makes you better — not more videos. The journal is the system." },
     ],
   },
