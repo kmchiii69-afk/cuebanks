@@ -78,8 +78,8 @@ const OUTCOME_CONFIG: Record<Outcome, { label: string; emoji: string; color: num
   group_call:             { label: 'GROUP CALL Lead',            emoji: '✅', color: 0x22c55e },
   oneonone_call:          { label: '1-ON-1 Lead',                emoji: '💎', color: 0xf9ff3c },
   stepdown_group:         { label: 'STEP DOWN — Group Call',     emoji: '↘️', color: 0x3b82f6 },
-  not_qualified_budget:   { label: 'NOT QUALIFIED — Budget',     emoji: '❌', color: 0xef4444 },
-  not_qualified_early:    { label: 'NOT QUALIFIED — Too Early',  emoji: '⏳', color: 0xef4444 },
+  not_qualified_budget:   { label: '5K TICKET — Low Budget',     emoji: '📦', color: 0xf97316 },
+  not_qualified_early:    { label: '5K TICKET — Too Early',      emoji: '📦', color: 0xf97316 },
 };
 
 // ── Create Close CRM lead ──────────────────────────────────────────────────────
