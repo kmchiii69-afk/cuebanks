@@ -10,6 +10,10 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.106.0",
+    "@supabase/supabase-js": "^2.108.2",
+    "@types/bcryptjs": "^2.4.6",
+    "bcryptjs": "^3.0.3",
+    "jose": "^6.2.3",
     "next": "16.2.6",
     "posthog-js": "^1.374.2",
     "react": "19.2.4",

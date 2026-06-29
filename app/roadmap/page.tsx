@@ -5,7 +5,7 @@ import { useState, useRef, useEffect, FormEvent } from "react";
 import Globe from "@/components/ui/globe";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-type Video = { id?: string; label: string; href?: string };
+type Video = { id?: string; hash?: string; label: string; href?: string };
 type DocSection = { heading: string; paras?: string[]; bullets?: string[]; footer?: string };
 type DocContent = { title: string; sections: DocSection[] };
 type ChecklistItem = { text: string };
@@ -320,6 +320,9 @@ const PHASES: Phase[] = [
       {
         label: "Identifying The Trend",
         note: "Higher high points, higher low points — that's a bullish market. Lower highs, lower lows — that's bearish. Structure is always first.",
+        videos: [
+          { id: "1162341882", hash: "e9c9f5a402", label: "Identifying The Trend 2.0" },
+        ],
       },
       {
         label: "Support & Resistance",
@@ -540,7 +543,7 @@ const PHASES: Phase[] = [
 ];
 
 // ─── Video Modal ───────────────────────────────────────────────────────────────
-type ModalVideo = { id: string; label: string };
+type ModalVideo = { id: string; hash?: string; label: string };
 
 // ─── Document Modal ────────────────────────────────────────────────────────────
 function DocumentModal({ doc, onClose }: { doc: DocContent; onClose: () => void }) {
@@ -710,7 +713,7 @@ function VideoModal({ video, onClose }: { video: ModalVideo; onClose: () => void
         </div>
         <div style={{ position: "relative", paddingTop: "56.25%" }}>
           <iframe
-            src={`https://player.vimeo.com/video/${video.id}?autoplay=1&color=f9ff3c&title=0&byline=0&portrait=0`}
+            src={`https://player.vimeo.com/video/${video.id}?${video.hash ? `h=${video.hash}&` : ''}autoplay=1&color=f9ff3c&title=0&byline=0&portrait=0`}
             allow="autoplay; fullscreen; picture-in-picture" allowFullScreen
             style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
           />
@@ -1206,7 +1209,7 @@ export default function RoadmapPage() {
                     {/* Items */}
                     <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", padding: "8px 40px" }}>
                       {phase.items.map((item, j) => (
-                        <ModuleItem key={j} item={item} index={j} isLast={j === phase.items.length - 1} onPlay={v => { if (v.id) setActiveVideo({ id: v.id, label: v.label }); }} onOpenDoc={setActiveDoc} onOpenChecklist={setActiveChecklist} onOpenImages={(imgs, title) => setActiveImages({ images: imgs, title })} />
+                        <ModuleItem key={j} item={item} index={j} isLast={j === phase.items.length - 1} onPlay={v => { if (v.id) setActiveVideo({ id: v.id, hash: v.hash, label: v.label }); }} onOpenDoc={setActiveDoc} onOpenChecklist={setActiveChecklist} onOpenImages={(imgs, title) => setActiveImages({ images: imgs, title })} />
                       ))}
                     </div>
 
