@@ -118,7 +118,7 @@ const INCLUDED_STANDARD = [
   { tag: "Archive",    n: "27+",     title: "CueCAST",                   desc: "Market analysis recordings. His actual weekly prep process.", exclusive: false },
   { tag: "Structured", n: "6",       title: "Phase Drills",              desc: "Complete every drill to stay with your cohort. Accountability is built in.", exclusive: false },
   { tag: "Live",       n: "8 Calls", title: "Group Strategy Sessions",   desc: "Orientation → 6 phase webinars → Final Win Call. Structured, not Q&A.", exclusive: false },
-  { tag: "Support",    n: "Direct",  title: "1-on-1 Chat with Filip",    desc: "CSM support for the full 4 months. Accountability, wins, and escalations.", exclusive: false },
+  { tag: "Support",    n: "Direct",  title: "1-on-1 Chat with Head CSM",  desc: "Your dedicated CSM — trained by Cue. Accountability, wins, and escalations for the full 4 months.", exclusive: false },
   { tag: "Community",  n: "Active",  title: "WSA Discord",               desc: "Access to the full community for the duration of the program.", exclusive: false },
 ];
 
@@ -132,7 +132,7 @@ const INCLUDED_PREMIUM = [
   { tag: "2.0 Only",   n: "1-on-1",  title: "Private Orientation w/ Cue", desc: "Cue builds your custom plan in your first call. Your situation, your targets, your roadmap.", exclusive: true },
   { tag: "2.0 Only",   n: "TBA",     title: "Special Guest Calls",       desc: "Access to calls with guest traders and mentors. Dates announced throughout the program.", exclusive: true },
   { tag: "2.0 Only",   n: "1-on-1",  title: "Private Final Win Call w/ Cue", desc: "Private close-out call with Quillan. Your wins, your progress, your next steps.", exclusive: true },
-  { tag: "2.0 Only",   n: "Priority", title: "Priority Chat — Cue + Filip", desc: "Direct access to both Cue and Filip. Questions don't wait for the next group call.", exclusive: true },
+  { tag: "2.0 Only",   n: "Priority", title: "Priority Chat — Cue + CSM",   desc: "Direct access to Cue and your Head CSM. Questions don't wait for the next group call.", exclusive: true },
   { tag: "Community",  n: "Active",  title: "WSA Discord",               desc: "Access to the full community for the duration of the program.", exclusive: false },
 ];
 
@@ -257,7 +257,7 @@ const COVER_CONTENT: Record<Tier, { headline: React.ReactNode; sub: string; stat
   },
   premium: {
     headline: <>The system.<br />The AI.<br /><em style={{ color: acid, fontStyle: "normal" }}>Your sessions.</em></>,
-    sub: "A 4-month boot camp with a private orientation and final call with Quillan directly — plus every group session, guest calls, and priority access to Cue and Filip.",
+    sub: "A 4-month boot camp with a private orientation and final call with Quillan directly — plus every group session, guest calls, and priority access to Cue and your Head CSM.",
     stats: [
       { n: "6",      l: "Phases" },
       { n: "16",     l: "Weeks" },
@@ -671,7 +671,7 @@ export default function InnerCirclePage() {
               {isBasic
                 ? "The complete WSA curriculum and Cue AI access. Self-paced. No live calls — but everything you need to build the foundation on your own terms. Upgrade to Inner Circle when you're ready for the boot camp."
                 : isStandard
-                ? "A 4-month cohort boot camp. 8 structured live sessions with Quillan, CSM accountability from Filip, and everything in the system. If you make back 1% of your account consistently — monthly — this pays for itself inside a year."
+                ? "A 4-month cohort boot camp. 8 structured live sessions with Quillan, direct CSM accountability, and everything in the system. If you make back 1% of your account consistently — monthly — this pays for itself inside a year."
                 : "Everything in the Inner Circle — plus private sessions at the start and end of the program with Quillan directly. This is the closest thing to having him in your corner for the full 4 months."}
             </p>
             <div style={{ fontFamily: mono, fontSize: 9, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(255,255,255,0.2)" }}>
