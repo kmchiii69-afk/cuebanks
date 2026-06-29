@@ -659,48 +659,10 @@ export default function InnerCirclePage() {
         <div aria-hidden style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", fontFamily: display, fontSize: "28vw", fontWeight: 800, color: "rgba(255,255,255,0.015)", lineHeight: 1, pointerEvents: "none" }}>$</div>
         <div style={{ ...wrap }}>
           <Eyebrow label="Investment" />
-          <Heading>Three tiers.<br /><em style={{ color: acid, fontStyle: "normal" }}>One system.</em></Heading>
-
-          {/* 3-tier comparison */}
-          <div className="ic-reveal" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 1, background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.07)", marginTop: 36 }}>
-            {(["basic", "standard", "premium"] as Tier[]).map((t) => {
-              const isActive = tier === t;
-              return (
-                <div
-                  key={t}
-                  onClick={() => setTier(t)}
-                  style={{
-                    background: isActive ? (t === "basic" ? "rgba(255,255,255,0.03)" : "rgba(249,255,60,0.06)") : "#000",
-                    borderTop: isActive ? `2px solid ${acid}` : "2px solid transparent",
-                    padding: "32px 24px 28px",
-                    cursor: "pointer",
-                    transition: "all 0.2s",
-                  }}
-                >
-                  <div style={{ fontFamily: mono, fontSize: 9, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: isActive ? acid : "rgba(255,255,255,0.25)", marginBottom: 12 }}>{TIER_LABELS[t]}</div>
-                  <div style={{ fontFamily: display, fontSize: "clamp(32px,4vw,48px)", fontWeight: 800, letterSpacing: "-0.05em", color: isActive ? bone : "rgba(255,255,255,0.35)", lineHeight: 1, marginBottom: 20 }}>
-                    {TIER_PRICES[t]}
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    {(t === "basic"
-                      ? ["6-Phase Roadmap", "Cue AI", "90+ Session Archive", "Phase Drills", "WSA Discord", "— No live calls —"]
-                      : t === "standard"
-                      ? ["6-Phase Roadmap", "Cue AI", "90+ Session Archive", "8 Group Strategy Calls", "CSM — Filip (1-on-1 chat)", "WSA Discord"]
-                      : ["6-Phase Roadmap", "Cue AI", "90+ Session Archive", "Private Orientation w/ Cue", "6 Group Sessions + Guests", "Private Final Call w/ Cue", "Priority Chat — Cue + Filip"]
-                    ).map((item) => (
-                      <div key={item} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <div style={{ width: 4, height: 4, borderRadius: "50%", background: item.startsWith("—") ? "rgba(255,255,255,0.1)" : (isActive ? acid : "rgba(255,255,255,0.2)"), flexShrink: 0 }} />
-                        <span style={{ fontFamily: body, fontSize: 13, lineHeight: 1.5, color: item.startsWith("—") ? "rgba(255,255,255,0.2)" : (isActive ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.3)"), fontStyle: item.startsWith("—") ? "italic" : "normal" }}>{item}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          <Heading>{isPremium ? "Inner Circle 2.0." : isBasic ? "Premium Group." : "Inner Circle."}<br /><em style={{ color: acid, fontStyle: "normal" }}>The investment.</em></Heading>
 
           {/* Selected tier detail */}
-          <div className="ic-reveal" style={{ marginTop: 40, padding: "28px 32px", border: "1px solid rgba(249,255,60,0.15)", background: "rgba(249,255,60,0.03)" }}>
+          <div className="ic-reveal" style={{ marginTop: 36, padding: "28px 32px", border: "1px solid rgba(249,255,60,0.15)", background: "rgba(249,255,60,0.03)" }}>
             <div style={{ display: "flex", alignItems: "baseline", gap: 16, marginBottom: 12, flexWrap: "wrap" }}>
               <span style={{ fontFamily: mono, fontSize: 10, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: acid }}>· {TIER_LABELS[tier]} ·</span>
               <span style={{ fontFamily: display, fontSize: 40, fontWeight: 800, letterSpacing: "-0.05em", color: bone }}>{price}</span>
