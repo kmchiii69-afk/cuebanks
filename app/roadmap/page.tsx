@@ -11,7 +11,7 @@ type DocContent = { title: string; sections: DocSection[] };
 type ChecklistItem = { text: string };
 type ChecklistSection = { heading: string; items: ChecklistItem[] };
 type ChecklistDoc = { title: string; theme: "red" | "green"; sections: ChecklistSection[]; rule?: string };
-type PhaseItem = { label: string; note: string; tag?: string; videos?: Video[]; doc?: DocContent; checklist?: ChecklistDoc };
+type PhaseItem = { label: string; note: string; tag?: string; videos?: Video[]; doc?: DocContent; checklist?: ChecklistDoc; images?: string[] };
 type Phase = { num: string; title: string; duration: string; tagline: string; checkpoint: string; items: PhaseItem[] };
 
 // ─── Intro Forex Document ─────────────────────────────────────────────────────
@@ -219,33 +219,48 @@ const TRADE_READY_CHECKLIST: ChecklistDoc = {
   ],
 };
 
-const CHART_PATTERNS_CHECKLIST: ChecklistDoc = {
-  title: "Chart Pattern Anatomy",
-  theme: "green",
+const TOP_DOWN_DOC: DocContent = {
+  title: "Cue's Steps to Understanding Top-Down Analysis",
   sections: [
-    { heading: "Reversal Patterns", items: [
-      { text: "Double Top — two peaks at resistance, bearish reversal" },
-      { text: "Double Bottom — two troughs at support, bullish reversal" },
-      { text: "Head & Shoulders — three peaks, middle highest, bearish reversal" },
-      { text: "Inverse Head & Shoulders — three troughs, middle lowest, bullish reversal" },
-    ]},
-    { heading: "Wedge Patterns", items: [
-      { text: "Rising Wedge — converging up, bearish breakdown (reversal in downtrend)" },
-      { text: "Falling Wedge — converging down, bullish breakout (reversal in uptrend)" },
-      { text: "Rising Wedge (continuation) — bearish, within a downtrend move" },
-      { text: "Falling Wedge (continuation) — bullish, within an uptrend move" },
-    ]},
-    { heading: "Rectangle & Pennant Patterns", items: [
-      { text: "Bullish Rectangle — consolidation between S&R, bullish continuation breakout" },
-      { text: "Bearish Rectangle — consolidation between S&R, bearish continuation breakdown" },
-      { text: "Bullish Pennant — small symmetrical triangle after strong upward move" },
-      { text: "Bearish Pennant — small symmetrical triangle after strong downward move" },
-    ]},
-    { heading: "Triangle Patterns", items: [
-      { text: "Ascending Triangle — flat resistance, rising support → bullish breakout" },
-      { text: "Descending Triangle — flat support, falling resistance → bearish breakdown" },
-      { text: "Symmetrical Triangle — converging trendlines → continuation of prior trend" },
-    ]},
+    {
+      heading: "Thought Process Is Everything",
+      paras: ["Run through these steps every session before touching a lower timeframe entry. This is the exact flow Cue uses."],
+    },
+    {
+      heading: "Steps 1 – 7",
+      bullets: [
+        "1. Understand what asset you're focused on",
+        "2. See what type of structure you're in — uptrend, downtrend, or consolidation",
+        "3. What timeframe do you see structure on the cleanest? H1 – H4... Daily? Barely",
+        "4. How are the moving averages currently? Up, down, flat",
+        "5. Locate where you are within the structure based on your Fibs 0–100%",
+        "6. Next you'll be seeing if you can see a change in trend coming soon based on the fib level it's at",
+        "7. Look to see if you're able to go to lower timeframes to see if you broke either a higher low (if in uptrend) or a lower high (if in downtrend)",
+      ],
+    },
+    {
+      heading: "Steps 8 – 14",
+      bullets: [
+        "8. Look for candle pattern formations within structure to find a higher low entry opportunity or a lower high entry in a downtrend",
+        "9. Make sure the candle pattern you're entering is based on the direction of the overall trend on the higher timeframe",
+        "10. As you enter, make sure it's flowing with where the higher timeframe structure is headed. Build this minor trend on lower timeframes that matches the higher timeframe's direction",
+        "11. Based on the asset you're trading, identify a 'Nmon fluctuating zone' for stop loss based on lower timeframe structure to minimize risk. Check that your expected projection outweighs the risk",
+        "12. The goal is to aim for risk-to-reward ratios of 2:1 or 3:1+",
+        "13. Projections can be based on higher timeframe Fibonacci — e.g., -27% or -61.8% targets. For intraday, use 15m or 30m timeframes for quicker targets",
+        "14. Always advise taking trades that align with the overall market direction on higher timeframes",
+      ],
+    },
+    {
+      heading: "Focus Points (Permanent)",
+      bullets: [
+        "1. Market Structure (PERMANENT)",
+        "2. Major Time Frame & Minor Timeframe",
+        "3. Moving Averages",
+        "4. Candle Stick Analysis",
+        "5. Fibonacci",
+        "6. Trendlines",
+      ],
+    },
   ],
 };
 
@@ -255,6 +270,11 @@ const PHASES: Phase[] = [
     tagline: "Your strategy isn't gonna be the basis of your trading success. Risk management will be. Before you touch a chart, you need to understand that.",
     checkpoint: "You know the rules that keep your account alive. You understand why there is not one single successful trader who uses improper risk management. You're not starting phase two without this locked in.",
     items: [
+      {
+        label: "Orientation Call",
+        tag: "Live",
+        note: "Kick-off call with your cohort. Cue walks through the roadmap, sets expectations for the 16 weeks ahead, and answers your first questions. Show up ready — this sets the tone for everything.",
+      },
       {
         label: "Welcome Video",
         note: "Start here. Quillan walks you through what Wall Street Academy is, what this program is built on, and exactly what to expect over the next 16 weeks.",
@@ -285,6 +305,11 @@ const PHASES: Phase[] = [
         note: "Demo doesn't replicate the emotional weight of real money. This module bridges that gap so your first live account doesn't become a tuition payment.",
         videos: [{ id: "1090929269", label: "Demo vs Live 2.0" }],
       },
+      {
+        label: "Phase 1 Group Webinar",
+        tag: "Webinar",
+        note: "Live session with Cue — mindset check-in, risk management application, real talk on what separates traders who make it from those who don't. Complete Phase 1 before joining live.",
+      },
     ],
   },
   {
@@ -295,25 +320,23 @@ const PHASES: Phase[] = [
       {
         label: "Identifying The Trend",
         note: "Higher high points, higher low points — that's a bullish market. Lower highs, lower lows — that's bearish. Structure is always first.",
-        videos: [
-          { label: "Identifying The Trend", href: "https://whop.com/joined/wallstreetacademy/wsa-main-course-2TNeKSURFqVkEA/app/courses/cors_1peLhRn7tgoROkzgHhpiQu/lessons/lesn_gmL7xLobMtjjE/" },
-          { label: "Market Structure", href: "https://whop.com/joined/wallstreetacademy/wsa-main-course-2TNeKSURFqVkEA/app/courses/cors_1peLhRn7tgoROkzgHhpiQu/lessons/lesn_6eUCKLRmOxHl6ZkMx97Szc/" },
-        ],
-      },
-      {
-        label: "Introducing TradeLocker",
-        note: "No MT4 or MT5? No problem. This module walks you through TradeLocker — Cue's preferred alternative platform — and how to get your charts set up correctly from day one.",
-        videos: [{ id: "900590824", label: "Introducing TradeLocker" }],
       },
       {
         label: "Support & Resistance",
-        note: "The base of every style of trading. Daily levels on the line chart, H4 on the line chart, H1 on candles — that's how Cue marks his S&R from the top down. New updated video coming.",
+        note: "What forms a support and resistance? What needs to happen to be considered broken or tested?",
       },
       {
         label: "Drawing Trendlines 2.0",
         note: "If you can't walk in it, it's invalid. Most traders draw them wrong. Learn where to anchor, when they break, and exactly what that means for the next move.",
         videos: [
-          { label: "GBPJPY Breakdown", href: "https://whop.com/joined/wallstreetacademy/wsa-main-course-2TNeKSURFqVkEA/app/courses/cors_1peLhRn7tgoROkzgHhpiQu/lessons/lesn_8Mcc5EAkHy0SY8iguVYsG/" },
+          { label: "Drawing Trendlines 2.0", href: "https://whop.com/joined/wallstreetacademy/wsa-main-course-2TNeKSURFqVkEA/app/courses/cors_1trKXs59xiIvElIFjnBxKB/lessons/lesn_mNneTFBWDICUR/" },
+        ],
+        images: [
+          "/images/gbpjpy-tl-1.png",
+          "/images/gbpjpy-tl-2.png",
+          "/images/gbpjpy-tl-3.png",
+          "/images/gbpjpy-tl-4.png",
+          "/images/gbpjpy-tl-5.png",
         ],
       },
       {
@@ -350,9 +373,19 @@ const PHASES: Phase[] = [
         },
       },
       {
+        label: "Introducing TradeLocker",
+        note: "No MT4 or MT5? No problem. This module walks you through TradeLocker — Cue's preferred alternative platform — and how to get your charts set up correctly from day one.",
+        videos: [{ id: "900590824", label: "Introducing TradeLocker" }],
+      },
+      {
         label: "Chart Practice: 10 Drawn Charts",
         tag: "Practice",
         note: "Draw 10 charts with trend direction, S&R, and trendlines marked. This is how you build the eye. You can't skip the reps — submit before moving to Phase 3.",
+      },
+      {
+        label: "Phase 2 Group Webinar",
+        tag: "Webinar",
+        note: "Live session with Cue — trend identification on live charts, S&R walkthroughs, and trendline review. Cue breaks down exactly what he sees and what he ignores. Complete Phase 2 before joining live.",
       },
     ],
   },
@@ -367,22 +400,38 @@ const PHASES: Phase[] = [
         videos: [
           { id: "214333836", label: "Fibonacci 2.0" },
           { id: "148814763", label: "Fibonacci 1.0" },
-          { label: "Fibonacci Chart Breakdown", href: "https://whop.com/joined/wallstreetacademy/wsa-main-course-2TNeKSURFqVkEA/app/courses/cors_1peLhRn7tgoROkzgHhpiQu/lessons/lesn_3aFE0gwi6QEB5tPgvzloPi/" },
+        ],
+        images: [
+          "/images/fib-1.png",
+          "/images/fib-2.png",
+          "/images/fib-3.png",
+        ],
+      },
+      {
+        label: "Market Structure 2.0 + 1.0",
+        note: "The structure of every move — what breaks it, what confirms it, and what it tells you about the next setup. This is the foundation everything else sits on.",
+        videos: [
+          { label: "Market Structure", href: "https://whop.com/joined/wallstreetacademy/wsa-main-course-2TNeKSURFqVkEA/app/courses/cors_vmTT897DEjuNRmvIfiqAE/lessons/lesn_5l2MC05iQ0JI6ctCNtXpB/" },
         ],
       },
       {
         label: "Top Down Analysis — Cue's Exact Flow",
         note: "H4 for 30% of your time, M5 for 60%, H1 or M30 for the last 10%. Top down every single session before you touch a lower timeframe entry.",
+        doc: TOP_DOWN_DOC,
       },
       {
-        label: "Chart Pattern Anatomy",
-        note: "The patterns that repeat across every market. Double tops only work in a downtrend. Double bottoms confirm an uptrend. Know the shape before the market confirms it.",
-        checklist: CHART_PATTERNS_CHECKLIST,
+        label: "Major Market Patterns",
+        note: "The patterns that repeat across every market. Double tops, double bottoms, head & shoulders, wedges, triangles, pennants — know the shape before the market prints the confirmation candle.",
       },
       {
         label: "Fibonacci Drill: 20 Historical Moves",
         tag: "Practice",
         note: "Pull 20 historical moves and map the fib on each one. Find where price reacted. This repetition is what builds the eye — you cannot shortcut this.",
+      },
+      {
+        label: "Phase 3 Group Webinar",
+        tag: "Webinar",
+        note: "Live session with Cue — Fibonacci application on live charts, top-down analysis walkthrough, market structure identification. Cue shows you exactly how he reads structure before entering. Complete Phase 3 before joining live.",
       },
     ],
   },
@@ -391,23 +440,6 @@ const PHASES: Phase[] = [
     tagline: "When it shows up that smooth — structure clean, MAs below the market, 38.2% respected, everything aligned — you have to take advantage of it. This is the system.",
     checkpoint: "You can identify a full confluence setup: structure first, MAs confirm direction, fib level respected, candle close confirms the entry. You stop entering on feeling. You enter on evidence.",
     items: [
-      {
-        label: "Confluence Trading 1.0 → 2.0 → 2.5",
-        note: "Watch in order. Don't skip. Each version builds on the last — this is Cue's full journey developing the system from its foundation. The stack starts here.",
-        videos: [
-          { id: "148803452", label: "Confluence 1.0" },
-          { id: "169326892", label: "Confluence 2.0" },
-          { id: "187488265", label: "Confluence 2.5" },
-        ],
-      },
-      {
-        label: "Confluence Trading 2.9 → 3.0",
-        note: "Advanced application. Cue thinking out loud on live charts — what he filters, what disqualifies a setup, how the whole system runs when it's second nature.",
-        videos: [
-          { id: "248648721", label: "Confluence 2.9" },
-          { id: "308011962", label: "Confluence 3.0" },
-        ],
-      },
       {
         label: "66 and Friends",
         note: "Cue's advanced confluence framework. When you see 66 set up on a chart, you already know what's about to happen. This is the system within the system.",
@@ -439,17 +471,18 @@ const PHASES: Phase[] = [
         tag: "Practice",
         note: "Mark confluence zones on 50 historical setups — entry, stop, target. Then ask yourself: was structure first? Did the MAs confirm? Was the candle close there? That's the checklist.",
       },
+      {
+        label: "Phase 4 Group Webinar",
+        tag: "Webinar",
+        note: "Live session with Cue — the full confluence system on live charts, 66 identification, and real setup critique. Cue breaks down what qualifies and what doesn't. Complete Phase 4 before joining live.",
+      },
     ],
   },
   {
     num: "05", title: "Advanced Execution", duration: "Week 7 – 10",
     tagline: "Stop being afraid to up your lot size when the risk is tight and the setup is clean. This phase layers in the tools that sharpen your entries and filter the trash.",
-    checkpoint: "You have additional tools in your stack. You can identify patterns, catch breakouts early, and recognize the technical mistakes that kill accounts before you make them.",
+    checkpoint: "You have the full stack. You can identify patterns, recognize execution mistakes before they happen, and your mindset is built to hold through volatility and stay patient.",
     items: [
-      {
-        label: "Major Market Patterns — All 13",
-        note: "Head & shoulders, double tops/bottoms, wedges, pennants, triangles, rectangles — all of them. Know the shape before the market prints the confirmation candle.",
-      },
       {
         label: "Common Technical F**k Ups",
         note: "Treat the charts like a piece of art. Precision, precision, precision. This is Cue's breakdown of the exact mistakes he sees most — the ones that are easily fixed once you see them.",
@@ -459,8 +492,18 @@ const PHASES: Phase[] = [
         label: "Post Course Mindset",
         note: "Patience is the biggest thing. It's a transfer of money from the impatient to the patient. Growing a small account, when to scale lot size, when to withdraw — and when not to.",
         videos: [
-          { label: "Post Course Mindset", href: "https://whop.com/joined/wallstreetacademy/wsa-main-course-2TNeKSURFqVkEA/app/courses/cors_1peLhRn7tgoROkzgHhpiQu/lessons/lesn_1Vfg5CgbxMboEcfY291o9a/" },
+          { id: "300094585", label: "Part 1" },
+          { id: "300094738", label: "Part 2" },
+          { id: "300094622", label: "Part 3" },
+          { id: "300094282", label: "Part 4" },
+          { id: "300094389", label: "Part 5" },
+          { id: "300094193", label: "Part 6" },
         ],
+      },
+      {
+        label: "Phase 5 Group Webinar",
+        tag: "Webinar",
+        note: "Live session with Cue — advanced execution breakdown, technical mistake review on real charts, and mindset deep dive. This is where the sharper details get locked in. Complete Phase 5 before joining live.",
       },
     ],
   },
@@ -481,9 +524,17 @@ const PHASES: Phase[] = [
       },
       { label: `Chart N Chill — ${CNC.length} Sessions`, note: "Every Chart N Chill session on demand. When you have a question, the answer is probably already recorded here. Most recent first.", videos: CNC },
       { label: `CueCAST — ${CUECASTS.length} Sessions`, note: "Cue's live market analysis sessions. Real time, real charts, real decisions — this is how the professional thinks through a session.", videos: CUECASTS },
-      { label: "NY + London Session Focus", note: "NY and London are where the volume is, where the setups form, where the money moves. Build your schedule around these sessions and stop forcing trades in dead markets." },
-      { label: "Monthly Group Q&A with Cue — 8 Calls", note: "Bring your charts. Bring your questions. Eight live orientation calls with Cue — real feedback on real setups, not a lecture. This is your checkpoint before you go fully independent. Show up prepared or show up ready to learn from someone who is." },
       { label: "30-Day Live Trading Journal", tag: "Practice", note: "Track every trade: entry, stop, target, outcome, and notes. Review it weekly. This data is what makes you better — not more videos. The journal is the system." },
+      {
+        label: "Phase 6 Group Webinar",
+        tag: "Webinar",
+        note: "Live session with Cue — live trading review, journal critique, and setup analysis. Real accountability on what's working and what needs adjusting. Complete Phase 6 before joining live.",
+      },
+      {
+        label: "Final Call — Progress & Wins",
+        tag: "Live",
+        note: "The closing call. You and your cohort present your growth — wins, lessons, account progress. Cue reviews where you are and maps the path forward. This is the graduation.",
+      },
     ],
   },
 ];
@@ -592,6 +643,52 @@ function ChecklistModal({ doc, onClose }: { doc: ChecklistDoc; onClose: () => vo
             </span>
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+function ImageGalleryModal({ images, title, onClose }: { images: string[]; title: string; onClose: () => void }) {
+  const [active, setActive] = useState<string | null>(null);
+
+  useEffect(() => {
+    const h = (e: KeyboardEvent) => {
+      if (e.key === "Escape") { if (active) setActive(null); else onClose(); }
+    };
+    document.addEventListener("keydown", h);
+    return () => document.removeEventListener("keydown", h);
+  }, [onClose, active]);
+
+  return (
+    <div onClick={() => { if (active) setActive(null); else onClose(); }} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.94)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+      <div onClick={e => e.stopPropagation()} style={{ width: "100%", maxWidth: active ? 1100 : 860, background: "rgba(8,10,16,0.98)", border: "1px solid rgba(255,255,255,0.08)", borderTop: "2px solid var(--acid)", display: "flex", flexDirection: "column", maxHeight: "90vh" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 20px", borderBottom: "1px solid rgba(255,255,255,0.07)", flexShrink: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            {active && (
+              <button onClick={() => setActive(null)} style={{ background: "none", border: "none", color: "var(--muted)", cursor: "pointer", fontSize: 13, padding: "0 4px 0 0", display: "flex", alignItems: "center", gap: 4 }}>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </button>
+            )}
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 700, color: "var(--acid)", letterSpacing: "0.16em", textTransform: "uppercase" }}>{active ? "IMAGE" : title}</span>
+            {!active && <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "rgba(255,255,255,0.25)", letterSpacing: "0.12em" }}>{images.length} charts</span>}
+          </div>
+          <button onClick={onClose} style={{ background: "none", border: "none", color: "var(--muted)", cursor: "pointer", fontSize: 20, lineHeight: 1, padding: "0 4px" }}>✕</button>
+        </div>
+        <div style={{ overflowY: "auto", padding: active ? 0 : 20 }}>
+          {active ? (
+            <img src={active} alt="" style={{ width: "100%", display: "block" }} />
+          ) : (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
+              {images.map((src, i) => (
+                <button key={i} onClick={() => setActive(src)} style={{ background: "none", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 4, padding: 0, cursor: "pointer", overflow: "hidden", transition: "border-color 0.15s" }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(249,255,60,0.35)"; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.08)"; }}>
+                  <img src={src} alt={`Chart ${i + 1}`} style={{ width: "100%", display: "block" }} />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -875,7 +972,7 @@ function PlayBtn({ video, onPlay }: { video: Video; onPlay: (v: Video) => void }
 }
 
 // ─── Module Item ──────────────────────────────────────────────────────────────
-function ModuleItem({ item, index, isLast, onPlay, onOpenDoc, onOpenChecklist }: { item: PhaseItem; index: number; isLast: boolean; onPlay: (v: Video) => void; onOpenDoc: (doc: DocContent) => void; onOpenChecklist: (c: ChecklistDoc) => void }) {
+function ModuleItem({ item, index, isLast, onPlay, onOpenDoc, onOpenChecklist, onOpenImages }: { item: PhaseItem; index: number; isLast: boolean; onPlay: (v: Video) => void; onOpenDoc: (doc: DocContent) => void; onOpenChecklist: (c: ChecklistDoc) => void; onOpenImages: (images: string[], title: string) => void }) {
   const [hovered, setHovered] = useState(false);
   return (
     <div
@@ -908,7 +1005,7 @@ function ModuleItem({ item, index, isLast, onPlay, onOpenDoc, onOpenChecklist }:
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", color: "var(--bg)", background: "var(--acid)", padding: "3px 8px", borderRadius: 3 }}>{item.tag}</span>
           )}
         </div>
-        <div style={{ fontFamily: "var(--font-body)", fontWeight: 400, fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,0.5)", marginBottom: (item.videos?.length || item.doc || item.checklist) ? 14 : 0 }}>{item.note}</div>
+        <div style={{ fontFamily: "var(--font-body)", fontWeight: 400, fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,0.5)", marginBottom: (item.videos?.length || item.doc || item.checklist || item.images?.length) ? 14 : 0 }}>{item.note}</div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
           {item.doc && (
             <button onClick={() => onOpenDoc(item.doc!)}
@@ -926,6 +1023,15 @@ function ModuleItem({ item, index, isLast, onPlay, onOpenDoc, onOpenChecklist }:
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = item.checklist!.theme === "red" ? "rgba(239,68,68,0.07)" : "rgba(34,197,94,0.07)"; }}>
               <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 2h6M1 4h4M1 6h5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>
               Checklist
+            </button>
+          )}
+          {item.images && item.images.length > 0 && (
+            <button onClick={() => onOpenImages(item.images!, item.label)}
+              style={{ ...btnStyle, background: "rgba(99,102,241,0.07)", border: "1px solid rgba(99,102,241,0.25)", color: "#818cf8" }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(99,102,241,0.15)"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(99,102,241,0.07)"; }}>
+              <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="currentColor" strokeWidth="1"/><path d="M1 5.5L3 3.5L4.5 5L5.5 4L7 5.5" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round"/></svg>
+              Images
             </button>
           )}
           {item.videos?.map(v => <PlayBtn key={v.href ?? v.id} video={v} onPlay={onPlay} />)}
@@ -951,6 +1057,7 @@ export default function RoadmapPage() {
   const [activeVideo, setActiveVideo] = useState<ModalVideo | null>(null);
   const [activeDoc, setActiveDoc] = useState<DocContent | null>(null);
   const [activeChecklist, setActiveChecklist] = useState<ChecklistDoc | null>(null);
+  const [activeImages, setActiveImages] = useState<{ images: string[]; title: string } | null>(null);
   const [globeTransform, setGlobeTransform] = useState(
     `translate3d(78vw, 30vh, 0) translate3d(-50%, -50%, 0) scale3d(2.8, 2.8, 1)`
   );
@@ -1012,6 +1119,7 @@ export default function RoadmapPage() {
       {activeVideo && <VideoModal video={activeVideo} onClose={() => setActiveVideo(null)} />}
       {activeDoc && <DocumentModal doc={activeDoc} onClose={() => setActiveDoc(null)} />}
       {activeChecklist && <ChecklistModal doc={activeChecklist} onClose={() => setActiveChecklist(null)} />}
+      {activeImages && <ImageGalleryModal images={activeImages.images} title={activeImages.title} onClose={() => setActiveImages(null)} />}
       <CueChat />
 
       {/* HEADER */}
@@ -1098,7 +1206,7 @@ export default function RoadmapPage() {
                     {/* Items */}
                     <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", padding: "8px 40px" }}>
                       {phase.items.map((item, j) => (
-                        <ModuleItem key={j} item={item} index={j} isLast={j === phase.items.length - 1} onPlay={v => { if (v.id) setActiveVideo({ id: v.id, label: v.label }); }} onOpenDoc={setActiveDoc} onOpenChecklist={setActiveChecklist} />
+                        <ModuleItem key={j} item={item} index={j} isLast={j === phase.items.length - 1} onPlay={v => { if (v.id) setActiveVideo({ id: v.id, label: v.label }); }} onOpenDoc={setActiveDoc} onOpenChecklist={setActiveChecklist} onOpenImages={(imgs, title) => setActiveImages({ images: imgs, title })} />
                       ))}
                     </div>
 
