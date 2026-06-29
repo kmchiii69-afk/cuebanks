@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-type Tier = "standard" | "premium";
+type Tier = "basic" | "standard" | "premium";
 
 const NAV_SECTIONS = [
   { id: "cover",      label: "Overview" },
@@ -14,12 +14,11 @@ const NAV_SECTIONS = [
   { id: "proof",      label: "The Receipts" },
   { id: "included",   label: "What's Inside" },
   { id: "roadmap",    label: "The Roadmap" },
+  { id: "calls",      label: "Live Calls" },
   { id: "cue-ai",     label: "Cue AI" },
-  { id: "sessions",   label: "Live Sessions" },
   { id: "investment", label: "Investment" },
 ];
 
-// Student win screenshots from the funnel (real account screenshots)
 const STUDENT_WIN_IMGS = [
   { src: "/wsa/home/11.jpg", label: "Doubled account today" },
   { src: "/wsa/home/12.jpg", label: "$6,429" },
@@ -33,7 +32,6 @@ const STUDENT_WIN_IMGS = [
   { src: "/wsa/home/20.jpg", label: "First car from trading" },
 ];
 
-// Cue's documented live trades
 const CUE_WIN_IMGS = [
   { src: "/wsa/cue-wins/2.jpg",  label: "$10,299" },
   { src: "/wsa/cue-wins/3.jpg",  label: "$31,464" },
@@ -43,7 +41,6 @@ const CUE_WIN_IMGS = [
   { src: "/wsa/cue-wins/9.jpg",  label: "$46,800" },
 ];
 
-// Marquee component — row of images auto-scrolling, reversed for every other row
 function WinMarquee({ images, reverse, height = 160 }: { images: typeof STUDENT_WIN_IMGS; reverse?: boolean; height?: number }) {
   const doubled = [...images, ...images];
   return (
@@ -64,12 +61,37 @@ function WinMarquee({ images, reverse, height = 160 }: { images: typeof STUDENT_
 }
 
 const PHASES = [
-  { num: "01", weeks: "Wk 1–2",   title: "Foundation & Mindset",   desc: "Risk management, platform setup, psychology. The most important phase. You don't start Phase 2 without this locked in." },
-  { num: "02", weeks: "Wk 2–3",   title: "Reading Price",           desc: "Market structure, S&R, supply and demand, the 200 and 50 EMAs. You learn to see what price is actually doing." },
-  { num: "03", weeks: "Wk 4–6",   title: "The Confluence System",   desc: "Fibonacci from point A to B. The stack — all confluences aligned before you enter. This is where it clicks." },
-  { num: "04", weeks: "Wk 7–10",  title: "Entries & Management",    desc: "Break and retest, order blocks, entry models. You stop guessing and start executing with a reason." },
-  { num: "05", weeks: "Wk 10–13", title: "Live Application",        desc: "Back-testing, journaling, prop firm strategy. The bridge from paper to live account." },
-  { num: "06", weeks: "Wk 13–16", title: "Advanced Concepts",       desc: "ICT, liquidity sweeps, higher-level reads. For when the foundation is locked and you're ready to go deeper." },
+  { num: "01", weeks: "Wk 1–2",   title: "Foundation & Mindset",    desc: "Risk management, platform setup, psychology. The most important phase. You don't start Phase 2 without this locked in." },
+  { num: "02", weeks: "Wk 2–3",   title: "Reading Price Action",    desc: "Market structure, S&R, supply and demand, the 200 and 50 EMAs. You learn to see what price is actually doing." },
+  { num: "03", weeks: "Wk 3–4",   title: "Structure + Levels",      desc: "Major market patterns, key levels, and how structure on higher timeframes controls every trade you'll ever take." },
+  { num: "04", weeks: "Wk 4–7",   title: "The Confluence System",   desc: "Fibonacci from point A to B. The stack — all confluences aligned before you enter. This is where it clicks." },
+  { num: "05", weeks: "Wk 7–10",  title: "Advanced Execution",      desc: "Break and retest, order blocks, entry models. You stop guessing and start executing with a reason." },
+  { num: "06", weeks: "Wk 10–16", title: "Live & Consistent",       desc: "Back-testing, journaling, prop firm strategy, 30-day live trading journal. The bridge from paper to live account." },
+];
+
+// Call schedule for group (standard) — 8 calls total
+const CALL_SCHEDULE_STANDARD = [
+  { n: "01", type: "GROUP",   label: "Orientation Call",                     when: "Week 1",      note: "Q sets the frame, walks the cohort through the full 4-month roadmap. Group." },
+  { n: "02", type: "SESSION", label: "Phase 01 — Foundation & Mindset",      when: "End of Wk 2", note: "Deep-dive on psychology and risk. What Q has never covered in the public material." },
+  { n: "03", type: "SESSION", label: "Phase 02 — Reading Price Action",       when: "End of Wk 3", note: "Live breakdown of how Q actually reads price. Not a Q&A — a structured webinar." },
+  { n: "04", type: "SESSION", label: "Phase 03 — Structure + Levels",         when: "End of Wk 4", note: "Major market patterns in real time. How to identify the levels that actually matter." },
+  { n: "05", type: "SESSION", label: "Phase 04 — The Confluence System",      when: "End of Wk 7", note: "The full stack, live. Q walks through qualification criteria from scratch." },
+  { n: "06", type: "SESSION", label: "Phase 05 — Advanced Execution",         when: "End of Wk 10", note: "Entry models, management, and what separates disciplined traders from the rest." },
+  { n: "07", type: "SESSION", label: "Phase 06 — Live & Consistent",          when: "End of Wk 16", note: "Final phase session. How to trade consistently in live market conditions." },
+  { n: "08", type: "WIN CALL", label: "Final Win Call — Progress & Renewal",  when: "End of program", note: "Group call to review wins, track progress, and map out next steps." },
+];
+
+// Call schedule for 2.0 (premium) — same 6 sessions + 2 private Cue calls
+const CALL_SCHEDULE_PREMIUM = [
+  { n: "01", type: "1-ON-1",  label: "Private Orientation Call with Cue",     when: "Week 1",         note: "Cue maps the roadmap directly to your situation. Your custom plan. Private.", exclusive: true },
+  { n: "02", type: "SESSION", label: "Phase 01 — Foundation & Mindset",       when: "End of Wk 2",    note: "Shared group session with Inner Circle. Deep-dive on psychology and risk.", exclusive: false },
+  { n: "03", type: "SESSION", label: "Phase 02 — Reading Price Action",        when: "End of Wk 3",    note: "Shared group session. Live breakdown of how Q actually reads price.", exclusive: false },
+  { n: "04", type: "SESSION", label: "Phase 03 — Structure + Levels",          when: "End of Wk 4",    note: "Shared group session. Major market patterns and key level identification.", exclusive: false },
+  { n: "05", type: "SESSION", label: "Phase 04 — The Confluence System",       when: "End of Wk 7",    note: "Shared group session. The full stack, live, from scratch.", exclusive: false },
+  { n: "06", type: "SESSION", label: "Phase 05 — Advanced Execution",          when: "End of Wk 10",   note: "Shared group session. Entry models, management, and discipline.", exclusive: false },
+  { n: "07", type: "SESSION", label: "Phase 06 — Live & Consistent",           when: "End of Wk 16",   note: "Shared group session. Final phase. How to trade live consistently.", exclusive: false },
+  { n: "+",  type: "GUESTS",  label: "Special Guest Calls",                    when: "TBA",            note: "Access to calls with guest traders and mentors. Dates announced during the program.", exclusive: true },
+  { n: "08", type: "1-ON-1",  label: "Private Final Win Call with Cue",        when: "End of program", note: "Private close-out with Cue. Your wins, your progress, your next chapter.", exclusive: true },
 ];
 
 const WINS = [
@@ -79,25 +101,39 @@ const WINS = [
   { quote: "I'm calmer. More sure of it. Not panicking over every trade. The psychology changes when the system is solid.", tag: "Full program graduate" },
 ];
 
+// ── What's Included ─────────────────────────────────────────────────────────
+const INCLUDED_BASIC = [
+  { tag: "Core",       n: "16 wks",  title: "The 6-Phase Roadmap",     desc: "All 6 phases in exact order. Self-paced over 4 months. You don't skip phases.", exclusive: false },
+  { tag: "Exclusive",  n: "10+ yrs", title: "Cue AI",                  desc: "AI trained on every session ever recorded. Ask anything — get the WSA answer.", exclusive: false },
+  { tag: "Archive",    n: "90+",     title: "Chart N Chill Sessions",   desc: "Full archive of live sessions on demand. Cue on charts, real setups, real decisions.", exclusive: false },
+  { tag: "Archive",    n: "27+",     title: "CueCAST",                  desc: "Market analysis recordings. His actual weekly prep process.", exclusive: false },
+  { tag: "Structured", n: "6",       title: "Phase Drills",             desc: "Practice assignments between each phase. Training program, not a video library.", exclusive: false },
+  { tag: "Community",  n: "Active",  title: "WSA Discord",              desc: "Access to the community for the duration of the program.", exclusive: false },
+];
+
 const INCLUDED_STANDARD = [
-  { tag: "Core",       n: "16 wks", title: "The 6-Phase Roadmap",   desc: "Every module in exact order. You don't skip phases. Structured the way Cue would've wanted starting out.", exclusive: false },
-  { tag: "Exclusive",  n: "10+ yrs", title: "Cue AI",               desc: "AI trained on every session ever recorded. Ask anything, get the WSA answer in his voice.", exclusive: false },
-  { tag: "Archive",    n: "40+",    title: "Chart N Chill",          desc: "Live sessions on demand. Cue on charts, real setups, real talk.", exclusive: false },
-  { tag: "Archive",    n: "27+",    title: "CueCAST",                desc: "Market analysis recordings. His actual weekly prep process.", exclusive: false },
-  { tag: "Live",       n: "4×",     title: "Group Q&A Calls",        desc: "Four live calls across the program. Bring your charts and questions.", exclusive: false },
-  { tag: "Structured", n: "6",      title: "Phase Drills",           desc: "Practice between each phase. This is a training program, not a library.", exclusive: false },
+  { tag: "Core",       n: "16 wks",  title: "The 6-Phase Roadmap",      desc: "All 6 phases in exact order. You complete each one before the next session.", exclusive: false },
+  { tag: "Exclusive",  n: "10+ yrs", title: "Cue AI",                   desc: "AI trained on every session ever recorded. Most questions get answered here first.", exclusive: false },
+  { tag: "Archive",    n: "90+",     title: "Chart N Chill Sessions",    desc: "Full archive of live sessions on demand. Cue on charts, real setups.", exclusive: false },
+  { tag: "Archive",    n: "27+",     title: "CueCAST",                   desc: "Market analysis recordings. His actual weekly prep process.", exclusive: false },
+  { tag: "Structured", n: "6",       title: "Phase Drills",              desc: "Complete every drill to stay with your cohort. Accountability is built in.", exclusive: false },
+  { tag: "Live",       n: "8 Calls", title: "Group Strategy Sessions",   desc: "Orientation → 6 phase webinars → Final Win Call. Structured, not Q&A.", exclusive: false },
+  { tag: "Support",    n: "Direct",  title: "1-on-1 Chat with Filip",    desc: "CSM support for the full 4 months. Accountability, wins, and escalations.", exclusive: false },
+  { tag: "Community",  n: "Active",  title: "WSA Discord",               desc: "Access to the full community for the duration of the program.", exclusive: false },
 ];
 
 const INCLUDED_PREMIUM = [
-  { tag: "Core",       n: "16 wks", title: "The 6-Phase Roadmap",   desc: "Every module in exact order. You don't skip phases. Structured the way Cue would've wanted starting out.", exclusive: false },
-  { tag: "Exclusive",  n: "10+ yrs", title: "Cue AI",               desc: "AI trained on every session ever recorded. Ask anything, get the WSA answer in his voice.", exclusive: false },
-  { tag: "Archive",    n: "40+",    title: "Chart N Chill",          desc: "Live sessions on demand. Cue on charts, real setups, real talk.", exclusive: false },
-  { tag: "Archive",    n: "27+",    title: "CueCAST",                desc: "Market analysis recordings. His actual weekly prep process.", exclusive: false },
-  { tag: "Live",       n: "4×",     title: "Group Q&A Calls",        desc: "Four live calls across the program. Bring your charts and questions.", exclusive: false },
-  { tag: "Structured", n: "6",      title: "Phase Drills",           desc: "Practice between each phase. This is a training program, not a library.", exclusive: false },
-  { tag: "2.0 Only",   n: "2×",     title: "Personal Setup Calls",   desc: "Two 1-on-1 calls with Quillan. He maps the roadmap to your specific situation and builds your custom plan.", exclusive: true },
-  { tag: "2.0 Only",   n: "Custom", title: "Custom Roadmap Config",  desc: "Quillan personally sets your priorities, adjusts the phase order where needed, and defines your targets.", exclusive: true },
-  { tag: "2.0 Only",   n: "Direct", title: "Priority Chat Access",   desc: "More direct access to Cue between sessions. Questions don't wait for the next group call.", exclusive: true },
+  { tag: "Core",       n: "16 wks",  title: "The 6-Phase Roadmap",      desc: "Reviewed with Cue personally on your orientation call. Customized to your starting point.", exclusive: false },
+  { tag: "Exclusive",  n: "10+ yrs", title: "Cue AI",                   desc: "AI trained on every session ever recorded. Ask anything — get the WSA answer.", exclusive: false },
+  { tag: "Archive",    n: "90+",     title: "Chart N Chill Sessions",    desc: "Full archive of live sessions on demand. Cue on charts, real setups.", exclusive: false },
+  { tag: "Archive",    n: "27+",     title: "CueCAST",                   desc: "Market analysis recordings. His actual weekly prep process.", exclusive: false },
+  { tag: "Structured", n: "6",       title: "Phase Drills",              desc: "Complete every drill to stay with your cohort. Accountability is built in.", exclusive: false },
+  { tag: "Shared",     n: "6 Calls", title: "Group Strategy Sessions",   desc: "6 phase webinars shared with the Inner Circle cohort.", exclusive: false },
+  { tag: "2.0 Only",   n: "1-on-1",  title: "Private Orientation w/ Cue", desc: "Cue builds your custom plan in your first call. Your situation, your targets, your roadmap.", exclusive: true },
+  { tag: "2.0 Only",   n: "TBA",     title: "Special Guest Calls",       desc: "Access to calls with guest traders and mentors. Dates announced throughout the program.", exclusive: true },
+  { tag: "2.0 Only",   n: "1-on-1",  title: "Private Final Win Call w/ Cue", desc: "Private close-out call with Quillan. Your wins, your progress, your next steps.", exclusive: true },
+  { tag: "2.0 Only",   n: "Priority", title: "Priority Chat — Cue + Filip", desc: "Direct access to both Cue and Filip. Questions don't wait for the next group call.", exclusive: true },
+  { tag: "Community",  n: "Active",  title: "WSA Discord",               desc: "Access to the full community for the duration of the program.", exclusive: false },
 ];
 
 const mono = "var(--font-mono)";
@@ -150,7 +186,18 @@ function Ghost({ n }: { n: string }) {
   );
 }
 
-// Tier switcher — fixed top-right, for closers only
+const TIER_LABELS: Record<Tier, string> = {
+  basic: "Premium Group",
+  standard: "Inner Circle",
+  premium: "Inner Circle 2.0",
+};
+
+const TIER_PRICES: Record<Tier, string> = {
+  basic: "$5,000",
+  standard: "$7,500",
+  premium: "$15,000",
+};
+
 function TierSwitcher({ tier, setTier }: { tier: Tier; setTier: (t: Tier) => void }) {
   return (
     <div style={{
@@ -161,7 +208,7 @@ function TierSwitcher({ tier, setTier }: { tier: Tier; setTier: (t: Tier) => voi
       padding: 4, gap: 2,
       boxShadow: "0 4px 40px rgba(0,0,0,0.6)",
     }}>
-      {(["standard", "premium"] as Tier[]).map((t) => {
+      {(["basic", "standard", "premium"] as Tier[]).map((t) => {
         const active = tier === t;
         return (
           <button key={t} onClick={() => setTier(t)} style={{
@@ -173,18 +220,52 @@ function TierSwitcher({ tier, setTier }: { tier: Tier; setTier: (t: Tier) => voi
             fontWeight: 700,
             letterSpacing: "0.16em",
             textTransform: "uppercase",
-            padding: "9px 18px",
+            padding: "9px 16px",
             cursor: "pointer",
             transition: "background 0.18s, color 0.18s",
             whiteSpace: "nowrap",
           }}>
-            {t === "standard" ? "Inner Circle" : "Inner Circle 2.0"}
+            {TIER_LABELS[t]}
           </button>
         );
       })}
     </div>
   );
 }
+
+// ── Cover headline / stats by tier ──────────────────────────────────────────
+const COVER_CONTENT: Record<Tier, { headline: React.ReactNode; sub: string; stats: { n: string; l: string }[] }> = {
+  basic: {
+    headline: <>The system.<br />The AI.<br /><em style={{ color: acid, fontStyle: "normal" }}>Self-paced.</em></>,
+    sub: "The complete WSA curriculum and an AI trained on 10 years of live sessions — yours to work through at your own pace over 4 months.",
+    stats: [
+      { n: "6",   l: "Phases" },
+      { n: "16",  l: "Weeks" },
+      { n: "90+", l: "Live Sessions" },
+      { n: "5K",  l: "Investment" },
+    ],
+  },
+  standard: {
+    headline: <>The system.<br />The AI.<br /><em style={{ color: acid, fontStyle: "normal" }}>The sessions.</em></>,
+    sub: "A 4-month boot camp. 8 structured calls with Quillan, CSM accountability, and every tool WSA has ever built — in cohort with traders doing it alongside you.",
+    stats: [
+      { n: "6",    l: "Phases" },
+      { n: "16",   l: "Weeks" },
+      { n: "8",    l: "Live Calls" },
+      { n: "90+",  l: "Archived Sessions" },
+    ],
+  },
+  premium: {
+    headline: <>The system.<br />The AI.<br /><em style={{ color: acid, fontStyle: "normal" }}>Your sessions.</em></>,
+    sub: "A 4-month boot camp with a private orientation and final call with Quillan directly — plus every group session, guest calls, and priority access to Cue and Filip.",
+    stats: [
+      { n: "6",      l: "Phases" },
+      { n: "16",     l: "Weeks" },
+      { n: "2",      l: "Private Cue Calls" },
+      { n: "Priority", l: "Access" },
+    ],
+  },
+};
 
 export default function InnerCirclePage() {
   const [active, setActive] = useState("cover");
@@ -209,9 +290,13 @@ export default function InnerCirclePage() {
     return () => ro.disconnect();
   }, [tier]);
 
-  const isPremium = tier === "premium";
-  const price = isPremium ? "$15,000" : "$7,500";
-  const included = isPremium ? INCLUDED_PREMIUM : INCLUDED_STANDARD;
+  const isBasic    = tier === "basic";
+  const isPremium  = tier === "premium";
+  const isStandard = tier === "standard";
+  const price = TIER_PRICES[tier];
+  const cover = COVER_CONTENT[tier];
+
+  const included = isBasic ? INCLUDED_BASIC : isPremium ? INCLUDED_PREMIUM : INCLUDED_STANDARD;
 
   return (
     <div style={{ background: "#000", color: bone, overflowX: "hidden", scrollSnapType: "y proximity" }}>
@@ -235,40 +320,39 @@ export default function InnerCirclePage() {
           <div className="ic-reveal" style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
             <span style={{ fontFamily: mono, fontSize: 11, fontWeight: 700, letterSpacing: "0.26em", textTransform: "uppercase", color: "rgba(255,255,255,0.4)" }}>Wall Street Academy</span>
             <div style={{ width: 1, height: 16, background: "rgba(255,255,255,0.1)" }} />
-            {/* Tier badge */}
-            <span style={{ fontFamily: mono, fontSize: 10, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: isPremium ? acid : "rgba(255,255,255,0.25)", transition: "color 0.25s" }}>
-              {isPremium ? "Inner Circle 2.0" : "Inner Circle"}
+            <span style={{ fontFamily: mono, fontSize: 10, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: acid, transition: "color 0.25s" }}>
+              {TIER_LABELS[tier]}
             </span>
           </div>
 
           <h1 className="ic-reveal" style={{ fontFamily: display, fontSize: "clamp(64px,10vw,110px)", fontWeight: 800, lineHeight: 0.9, letterSpacing: "-0.05em", marginBottom: 32 }}>
-            The system.<br />The AI.<br />
-            <em style={{ color: acid, fontStyle: "normal" }}>
-              {isPremium ? "Your sessions." : "The roadmap."}
-            </em>
+            {cover.headline}
           </h1>
 
           <p className="ic-reveal" style={{ fontFamily: body, fontSize: 21, lineHeight: 1.65, color: "rgba(255,255,255,0.45)", maxWidth: 580, marginBottom: 48 }}>
-            {isPremium
-              ? "A decade of live trading, every framework Quillan has built, plus two personal sessions where he maps the system directly to your situation."
-              : "A decade of live trading, hundreds of sessions, every framework Quillan Black has built — packaged into the most complete forex curriculum that exists."}
+            {cover.sub}
           </p>
 
           <div className="ic-reveal" style={{ width: 48, height: 2, background: acid, marginBottom: 40 }} />
 
           <div className="ic-reveal" style={{ display: "flex", gap: 48, flexWrap: "wrap" }}>
-            {[
-              { n: "6",   l: "Phases" },
-              { n: "16",  l: "Weeks" },
-              { n: "67+", l: "Live Sessions" },
-              ...(isPremium ? [{ n: "2×", l: "Personal Calls" }] : [{ n: "10+", l: "Years of Data" }]),
-            ].map((s) => (
+            {cover.stats.map((s) => (
               <div key={s.l}>
                 <div style={{ fontFamily: display, fontSize: 48, fontWeight: 800, letterSpacing: "-0.05em", color: bone, lineHeight: 1 }}>{s.n}</div>
                 <div style={{ fontFamily: mono, fontSize: 9, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(255,255,255,0.25)", marginTop: 6 }}>{s.l}</div>
               </div>
             ))}
           </div>
+
+          {/* 4-month boot camp banner */}
+          {!isBasic && (
+            <div className="ic-reveal" style={{ marginTop: 40, display: "inline-flex", alignItems: "center", gap: 10, background: "rgba(249,255,60,0.06)", border: "1px solid rgba(249,255,60,0.2)", padding: "10px 20px" }}>
+              <div style={{ width: 4, height: 4, borderRadius: "50%", background: acid, flexShrink: 0 }} />
+              <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(249,255,60,0.7)" }}>
+                4-Month Boot Camp · Cohort-Based · Starts July 5th
+              </span>
+            </div>
+          )}
         </div>
       </section>
 
@@ -279,12 +363,17 @@ export default function InnerCirclePage() {
           <Eyebrow label="Who this is for" />
           <Heading>Not everyone.<br /><em style={{ color: acid, fontStyle: "normal" }}>Specifically you.</em></Heading>
           <p className="ic-reveal" style={{ fontFamily: body, fontSize: 19, lineHeight: 1.7, color: "rgba(255,255,255,0.45)", maxWidth: 620, margin: "20px 0 36px" }}>
-            This is built for the trader already in forex — who knows the concepts but can&apos;t figure out why consistency is still escaping them.
+            {isBasic
+              ? "For the trader who wants the system and the AI at their own pace. You know Forex is real — you just want the right curriculum without the overhead."
+              : "This is built for the trader already in forex — who knows the concepts but can't figure out why consistency is still escaping them."}
           </p>
           <div className="ic-reveal" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1, background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.07)" }}>
             <div style={{ background: "#000", padding: "28px 28px" }}>
               <div style={{ fontFamily: mono, fontSize: 9, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: acid, marginBottom: 18 }}>· This is you ·</div>
-              {["Already trading — demo or live", "Know what support & resistance is", "Know what a fib retracement is", "Stuck on consistency, not concepts", "Serious about making this work long-term"].map((t) => (
+              {(isBasic
+                ? ["Already trading — demo or live", "Self-motivated — you do the work", "Want structure without coaching overhead", "Budget-conscious, serious about learning", "Planning to upgrade once results come in"]
+                : ["Already trading — demo or live", "Know what support & resistance is", "Know what a fib retracement is", "Stuck on consistency, not concepts", "Ready to be held accountable for 4 months"]
+              ).map((t) => (
                 <div key={t} style={{ fontFamily: body, fontSize: 16, lineHeight: 1.6, color: "rgba(255,255,255,0.5)", padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>{t}</div>
               ))}
             </div>
@@ -309,7 +398,7 @@ export default function InnerCirclePage() {
               { n: "01", s: "They learned setups without learning structure first.", r: " Higher timeframe structure doesn't support it — the setup is noise." },
               { n: "02", s: "They don't stack confluence.", r: " One reason to enter is never enough. The stack has to qualify. One piece alone is gambling." },
               { n: "03", s: "Risk management is an afterthought.", r: " You can have the best read and still blow your account because you sized wrong." },
-              { n: "04", s: "Nobody built the thing for traders who are already serious.", r: " Everything out there is for total beginners. This isn't that." },
+              { n: "04", s: "Everything out there is just information.", r: " Courses, YouTube, Discord — information doesn't build consistency. Execution under structure does." },
             ].map(({ n, s, r }) => (
               <div key={n} className="ic-reveal" style={{ display: "grid", gridTemplateColumns: "36px 1fr", gap: 20, padding: "18px 0", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
                 <span style={{ fontFamily: mono, fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.2)", paddingTop: 3 }}>{n}</span>
@@ -336,7 +425,7 @@ export default function InnerCirclePage() {
               { yr: "Early days",  t: "Blew four accounts. Learned psychology and risk management kill more traders than bad setups do." },
               { yr: "Years 1–5",  t: "Refined the confluence system. Built the top-down framework — Daily → H4 → H1 → M30 → M5 — as the non-negotiable process." },
               { yr: "Years 5–10", t: "Started teaching. Watched traders make the exact same mistakes repeatedly — built the curriculum to interrupt that pattern." },
-              { yr: "2025–26",    t: "Built Wall Street Academy — 6-phase roadmap, AI trained on every session ever recorded, packaged from scratch." },
+              { yr: "2025–26",    t: "Built Wall Street Academy — 6-phase roadmap, Cue AI trained on every session ever recorded, packaged from scratch." },
             ].map(({ yr, t }) => (
               <div key={yr} style={{ background: "#000", padding: "22px 24px" }}>
                 <div style={{ fontFamily: mono, fontSize: 9, fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(255,255,255,0.25)", marginBottom: 10 }}>{yr}</div>
@@ -372,9 +461,8 @@ export default function InnerCirclePage() {
         </div>
       </section>
 
-      {/* ══ PROOF — COMMUNITY WINS ════════════════════════════════════════════════ */}
+      {/* ══ PROOF ════════════════════════════════════════════════════════════════ */}
       <section id="proof" style={{ ...slide, flexDirection: "column", alignItems: "flex-start", overflow: "hidden", padding: "80px 0" }}>
-        {/* Heading stays in the wrap */}
         <div style={{ maxWidth: 860, margin: "0 auto", padding: "0 48px", width: "100%", position: "relative", zIndex: 1, marginBottom: 36 }}>
           <Eyebrow label="Community wins" />
           <Heading>The receipts.<br /><em style={{ color: acid, fontStyle: "normal" }}>Real accounts. Real money.</em></Heading>
@@ -382,18 +470,11 @@ export default function InnerCirclePage() {
             Every one of these was posted live. Not hand-picked after the fact — documented in real time, same system, same rules.
           </p>
         </div>
-
-        {/* Full-bleed marquee rows */}
         <div style={{ width: "100vw", display: "flex", flexDirection: "column", gap: 10, marginLeft: "calc(-50vw + 50%)" }}>
-          {/* Row 1 — student wins (→) */}
           <WinMarquee images={STUDENT_WIN_IMGS} height={170} />
-          {/* Row 2 — student wins reversed (←) */}
           <WinMarquee images={[...STUDENT_WIN_IMGS].reverse()} reverse height={170} />
-          {/* Row 3 — Cue's documented trades (→) */}
           <WinMarquee images={CUE_WIN_IMGS} height={170} />
         </div>
-
-        {/* Stats bar */}
         <div className="ic-reveal" style={{ maxWidth: 860, margin: "28px auto 0", padding: "0 48px", width: "100%", display: "flex", gap: 40, flexWrap: "wrap" }}>
           {[
             { n: "$500K+", l: "Documented in 5 days" },
@@ -418,7 +499,13 @@ export default function InnerCirclePage() {
           {isPremium && (
             <div className="ic-reveal" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(249,255,60,0.08)", border: "1px solid rgba(249,255,60,0.25)", padding: "8px 16px", marginTop: 20, marginBottom: 4 }}>
               <div style={{ width: 5, height: 5, borderRadius: "50%", background: acid }} />
-              <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: acid }}>3 exclusive additions in 2.0</span>
+              <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: acid }}>4 exclusive additions in 2.0</span>
+            </div>
+          )}
+
+          {isBasic && (
+            <div className="ic-reveal" style={{ fontFamily: body, fontSize: 15, lineHeight: 1.65, color: "rgba(255,255,255,0.35)", maxWidth: 560, margin: "16px 0 4px", borderLeft: "2px solid rgba(255,255,255,0.1)", paddingLeft: 18 }}>
+              Course and AI access only. No live calls or CSM support — upgrade to Inner Circle for the full boot camp.
             </div>
           )}
 
@@ -428,7 +515,7 @@ export default function InnerCirclePage() {
                 <div style={{ fontFamily: mono, fontSize: 8, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: exclusive ? acid : "rgba(255,255,255,0.3)", marginBottom: 9 }}>{tag}</div>
                 <div style={{ fontFamily: display, fontSize: 16, fontWeight: 700, letterSpacing: "-0.015em", color: bone, marginBottom: 7, lineHeight: 1.2 }}>{title}</div>
                 <div style={{ fontFamily: body, fontSize: 13, lineHeight: 1.6, color: exclusive ? "rgba(255,255,255,0.45)" : "rgba(255,255,255,0.3)", marginBottom: 14 }}>{desc}</div>
-                <div style={{ fontFamily: display, fontSize: 28, fontWeight: 800, letterSpacing: "-0.04em", color: exclusive ? "rgba(249,255,60,0.08)" : "rgba(255,255,255,0.04)", lineHeight: 1 }}>{n}</div>
+                <div style={{ fontFamily: display, fontSize: 28, fontWeight: 800, letterSpacing: "-0.04em", color: exclusive ? "rgba(249,255,60,0.25)" : "rgba(255,255,255,0.18)", lineHeight: 1 }}>{n}</div>
               </div>
             ))}
           </div>
@@ -443,7 +530,12 @@ export default function InnerCirclePage() {
           <Heading>Six phases.<br /><em style={{ color: acid, fontStyle: "normal" }}>In this order.</em></Heading>
           {isPremium && (
             <div className="ic-reveal" style={{ fontFamily: body, fontSize: 16, lineHeight: 1.65, color: "rgba(249,255,60,0.65)", maxWidth: 560, margin: "16px 0 8px", borderLeft: "2px solid rgba(249,255,60,0.3)", paddingLeft: 18 }}>
-              In 2.0, Quillan reviews this with you personally on your first call — adjusting emphasis and targets to match where you actually are.
+              In 2.0, Quillan reviews this with you personally on your orientation call — adjusting emphasis and custom targets to match where you actually are.
+            </div>
+          )}
+          {!isBasic && (
+            <div className="ic-reveal" style={{ fontFamily: body, fontSize: 15, lineHeight: 1.65, color: "rgba(255,255,255,0.3)", maxWidth: 560, margin: "16px 0 8px", borderLeft: "2px solid rgba(255,255,255,0.08)", paddingLeft: 18 }}>
+              A structured call follows each phase. You need to complete the modules before the next session — this is what keeps the cohort accountable.
             </div>
           )}
           <div style={{ marginTop: 28 }}>
@@ -463,6 +555,76 @@ export default function InnerCirclePage() {
         </div>
       </section>
 
+      {/* ══ LIVE CALLS ════════════════════════════════════════════════════════════ */}
+      <section id="calls" style={slide}>
+        <Ghost n="08" />
+        <div style={wrap}>
+          <Eyebrow label="Live calls" />
+          {isBasic ? (
+            <>
+              <Heading>90+ sessions.<br /><em style={{ color: acid, fontStyle: "normal" }}>On demand.</em></Heading>
+              <p className="ic-reveal" style={{ fontFamily: body, fontSize: 19, lineHeight: 1.7, color: "rgba(255,255,255,0.42)", maxWidth: 580, margin: "20px 0 40px" }}>
+                No live calls on Premium Group — but you get the full archive of Chart N Chill and CueCAST sessions. Every live trade, every analysis, every breakdown Cue has ever recorded.
+              </p>
+              <div className="ic-reveal" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1, background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                {[
+                  { n: "90+", name: "Chart N Chill",  desc: "Cue live on charts. Real setups, real talk, real decisions. Every session on record." },
+                  { n: "27+", name: "CueCAST",         desc: "Market analysis sessions. How Cue prepares for the week — his actual process." },
+                ].map(({ n, name, desc }) => (
+                  <div key={name} style={{ background: "#000", padding: "36px 32px" }}>
+                    <div style={{ fontFamily: display, fontSize: 56, fontWeight: 800, letterSpacing: "-0.05em", color: "rgba(255,255,255,0.18)", lineHeight: 1, marginBottom: 16 }}>{n}</div>
+                    <div style={{ fontFamily: display, fontSize: 22, fontWeight: 700, letterSpacing: "-0.025em", color: bone, marginBottom: 12 }}>{name}</div>
+                    <div style={{ fontFamily: body, fontSize: 15, lineHeight: 1.7, color: "rgba(255,255,255,0.32)" }}>{desc}</div>
+                  </div>
+                ))}
+              </div>
+              <div className="ic-reveal" style={{ marginTop: 28, fontFamily: body, fontSize: 15, color: "rgba(255,255,255,0.3)", borderLeft: "2px solid rgba(255,255,255,0.08)", paddingLeft: 18 }}>
+                Want live calls? Inner Circle includes 8 structured sessions with Cue.
+              </div>
+            </>
+          ) : (
+            <>
+              <Heading>{isPremium ? "Eight calls." : "Eight calls."}<br /><em style={{ color: acid, fontStyle: "normal" }}>{isPremium ? "Two with you directly." : "Structured, not Q&A."}</em></Heading>
+              <p className="ic-reveal" style={{ fontFamily: body, fontSize: 19, lineHeight: 1.7, color: "rgba(255,255,255,0.42)", maxWidth: 580, margin: "20px 0 12px" }}>
+                {isPremium
+                  ? "Every call is a structured webinar — not chart and chill, not open Q&A. Cue drops sauce no one outside the program gets. Your 2.0 calls are private."
+                  : "Every call is a structured webinar on the phase you just completed. Cue teaches what he's never put in the public material. The last 10 minutes go to questions."}
+              </p>
+              {isPremium && (
+                <div className="ic-reveal" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(249,255,60,0.07)", border: "1px solid rgba(249,255,60,0.2)", padding: "8px 16px", marginBottom: 20 }}>
+                  <div style={{ width: 4, height: 4, borderRadius: "50%", background: acid }} />
+                  <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: acid }}>Acid rows = 2.0 exclusive</span>
+                </div>
+              )}
+              <div className="ic-reveal" style={{ display: "flex", flexDirection: "column", gap: 1, background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.07)", marginTop: isPremium ? 0 : 20 }}>
+                {(isPremium ? CALL_SCHEDULE_PREMIUM : CALL_SCHEDULE_STANDARD).map((call) => {
+                  const isExclusive = isPremium && "exclusive" in call && call.exclusive;
+                  return (
+                    <div key={call.n + call.label} style={{
+                      background: isExclusive ? "rgba(249,255,60,0.04)" : "#000",
+                      borderLeft: isExclusive ? `3px solid ${acid}` : "3px solid transparent",
+                      padding: "16px 20px",
+                      display: "grid",
+                      gridTemplateColumns: "36px 80px 1fr auto",
+                      gap: 16,
+                      alignItems: "center",
+                    }}>
+                      <span style={{ fontFamily: mono, fontSize: 10, fontWeight: 700, color: isExclusive ? acid : "rgba(255,255,255,0.2)" }}>{call.n}</span>
+                      <span style={{ fontFamily: mono, fontSize: 8, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: isExclusive ? acid : "rgba(255,255,255,0.3)", background: isExclusive ? "rgba(249,255,60,0.1)" : "rgba(255,255,255,0.05)", padding: "3px 7px" }}>{call.type}</span>
+                      <div>
+                        <div style={{ fontFamily: display, fontSize: 15, fontWeight: 700, color: isExclusive ? acid : bone, letterSpacing: "-0.015em", marginBottom: 3 }}>{call.label}</div>
+                        <div style={{ fontFamily: body, fontSize: 13, color: "rgba(255,255,255,0.32)", lineHeight: 1.5 }}>{call.note}</div>
+                      </div>
+                      <span style={{ fontFamily: mono, fontSize: 9, color: "rgba(255,255,255,0.2)", whiteSpace: "nowrap", textAlign: "right" }}>{call.when}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
+        </div>
+      </section>
+
       {/* ══ CUE AI — ACID INVERSION ═══════════════════════════════════════════════ */}
       <section id="cue-ai" style={{ ...slide, background: acid, color: "#000", marginLeft: "calc(-50vw + 50%)", marginRight: "calc(-50vw + 50%)", width: "100vw", borderTop: "none" }}>
         <div style={{ maxWidth: 860, margin: "0 auto", padding: "0 48px", width: "100%", position: "relative", zIndex: 1 }}>
@@ -470,7 +632,7 @@ export default function InnerCirclePage() {
           <Heading invert>Nobody has built<br />this for forex.</Heading>
           <p className="ic-reveal" style={{ fontFamily: body, fontSize: 21, lineHeight: 1.7, color: "rgba(0,0,0,0.55)", maxWidth: 620, margin: "24px 0 28px" }}>
             {isPremium
-              ? "Every session. Every Q&A. Every live call ever recorded — trained into an AI that answers in Cue's voice. In 2.0, you also get direct access to Cue between sessions. Your questions don't wait for the next group call."
+              ? "Every session. Every Q&A. Every live call ever recorded — trained into an AI that answers in Cue's voice. In 2.0, you also get priority direct access to Cue between sessions."
               : "Every session. Every Q&A. Every live call Quillan has ever recorded — trained into a single AI that thinks the way he thinks and answers the way he talks on calls."}
           </p>
           <blockquote className="ic-reveal" style={{ borderLeft: "3px solid rgba(0,0,0,0.2)", paddingLeft: 28, fontFamily: display, fontSize: "clamp(20px,2.8vw,30px)", fontWeight: 700, letterSpacing: "-0.025em", lineHeight: 1.3, color: "#000", marginBottom: 32 }}>
@@ -478,10 +640,10 @@ export default function InnerCirclePage() {
           </blockquote>
           <div className="ic-reveal" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 1, background: "rgba(0,0,0,0.12)", border: "1px solid rgba(0,0,0,0.12)" }}>
             {[
-              { title: "Trained on real sessions",      desc: "The actual Q&As, breakdowns, and live content from years of WSA." },
-              { title: "Answers in Cue's voice",        desc: "Direct. If your thinking is wrong, it says so — then gives you the right way." },
-              { title: isPremium ? "Priority access" : "Available 24/7", desc: isPremium ? "2.0 members get more direct access. Not just the AI — Cue himself." : "3am setup question? Ask it. No waiting for the next call." },
-              { title: "Roadmap-aware",                  desc: "Knows the full curriculum. Walks you through any phase or concept." },
+              { title: "Trained on real sessions",  desc: "The actual Q&As, breakdowns, and live content from years of WSA." },
+              { title: "Answers in Cue's voice",     desc: "Direct. If your thinking is wrong, it says so — then gives you the right way." },
+              { title: isPremium ? "Priority access" : "Available 24/7", desc: isPremium ? "2.0 members get more direct access — Cue himself is reachable between sessions." : "3am setup question? Ask it. No waiting for the next call." },
+              { title: "Roadmap-aware",               desc: "Knows the full curriculum. Walks you through any phase or concept." },
             ].map(({ title, desc }) => (
               <div key={title} style={{ background: acid, padding: "24px 20px" }}>
                 <div style={{ fontFamily: display, fontSize: 15, fontWeight: 700, color: "#000", marginBottom: 8 }}>{title}</div>
@@ -492,65 +654,74 @@ export default function InnerCirclePage() {
         </div>
       </section>
 
-      {/* ══ SESSIONS ══════════════════════════════════════════════════════════════ */}
-      <section id="sessions" style={slide}>
-        <Ghost n="09" />
-        <div style={wrap}>
-          <Eyebrow label="Live sessions" />
-          <Heading>Real charts.<br /><em style={{ color: acid, fontStyle: "normal" }}>Real time.</em></Heading>
-          <p className="ic-reveal" style={{ fontFamily: body, fontSize: 19, lineHeight: 1.7, color: "rgba(255,255,255,0.42)", maxWidth: 580, margin: "20px 0 40px" }}>
-            Every live session archived on demand. Go through the core phases first — then use these as the ongoing extension of the system.
-          </p>
-          <div className="ic-reveal" style={{ display: "grid", gridTemplateColumns: isPremium ? "1fr 1fr 1fr" : "1fr 1fr", gap: 1, background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.07)" }}>
-            {[
-              { n: "40+", name: "Chart N Chill",  desc: "Cue live on charts. Real setups, real talk, real decisions. Every session on record, new ones added." },
-              { n: "27+", name: "CueCAST",         desc: "Market analysis sessions. How Cue prepares for the week — his actual process." },
-              ...(isPremium ? [{ n: "2×", name: "Personal Calls",  desc: "Two 1-on-1 calls with Quillan. Session one: custom roadmap setup. Session two: mid-program review and fine-tuning." }] : []),
-            ].map(({ n, name, desc }) => (
-              <div key={name} style={{ background: name === "Personal Calls" ? "rgba(249,255,60,0.04)" : "#000", padding: "36px 32px", borderTop: name === "Personal Calls" ? "1px solid rgba(249,255,60,0.2)" : "none" }}>
-                <div style={{ fontFamily: display, fontSize: 56, fontWeight: 800, letterSpacing: "-0.05em", color: name === "Personal Calls" ? "rgba(249,255,60,0.07)" : "rgba(255,255,255,0.05)", lineHeight: 1, marginBottom: 16 }}>{n}</div>
-                <div style={{ fontFamily: display, fontSize: 22, fontWeight: 700, letterSpacing: "-0.025em", color: name === "Personal Calls" ? acid : bone, marginBottom: 12 }}>{name}</div>
-                <div style={{ fontFamily: body, fontSize: 15, lineHeight: 1.7, color: "rgba(255,255,255,0.32)" }}>{desc}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ══ INVESTMENT ════════════════════════════════════════════════════════════ */}
-      <section id="investment" style={{ ...slide, flexDirection: "column", justifyContent: "center", textAlign: "center" }}>
+      <section id="investment" style={{ ...slide, flexDirection: "column", justifyContent: "center" }}>
         <div aria-hidden style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", fontFamily: display, fontSize: "28vw", fontWeight: 800, color: "rgba(255,255,255,0.015)", lineHeight: 1, pointerEvents: "none" }}>$</div>
-        <div style={{ ...wrap, textAlign: "center" }}>
-          <div className="ic-reveal" style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 24 }}>
-            <span style={{ fontFamily: mono, fontSize: 11, fontWeight: 700, letterSpacing: "0.24em", textTransform: "uppercase", color: acid }}>· {isPremium ? "Inner Circle 2.0" : "Inner Circle"} ·</span>
+        <div style={{ ...wrap }}>
+          <Eyebrow label="Investment" />
+          <Heading>Three tiers.<br /><em style={{ color: acid, fontStyle: "normal" }}>One system.</em></Heading>
+
+          {/* 3-tier comparison */}
+          <div className="ic-reveal" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 1, background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.07)", marginTop: 36 }}>
+            {(["basic", "standard", "premium"] as Tier[]).map((t) => {
+              const isActive = tier === t;
+              return (
+                <div
+                  key={t}
+                  onClick={() => setTier(t)}
+                  style={{
+                    background: isActive ? (t === "basic" ? "rgba(255,255,255,0.03)" : "rgba(249,255,60,0.06)") : "#000",
+                    borderTop: isActive ? `2px solid ${acid}` : "2px solid transparent",
+                    padding: "32px 24px 28px",
+                    cursor: "pointer",
+                    transition: "all 0.2s",
+                  }}
+                >
+                  <div style={{ fontFamily: mono, fontSize: 9, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: isActive ? acid : "rgba(255,255,255,0.25)", marginBottom: 12 }}>{TIER_LABELS[t]}</div>
+                  <div style={{ fontFamily: display, fontSize: "clamp(32px,4vw,48px)", fontWeight: 800, letterSpacing: "-0.05em", color: isActive ? bone : "rgba(255,255,255,0.35)", lineHeight: 1, marginBottom: 20 }}>
+                    {TIER_PRICES[t]}
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {(t === "basic"
+                      ? ["6-Phase Roadmap", "Cue AI", "90+ Session Archive", "Phase Drills", "WSA Discord", "— No live calls —"]
+                      : t === "standard"
+                      ? ["6-Phase Roadmap", "Cue AI", "90+ Session Archive", "8 Group Strategy Calls", "CSM — Filip (1-on-1 chat)", "WSA Discord"]
+                      : ["6-Phase Roadmap", "Cue AI", "90+ Session Archive", "Private Orientation w/ Cue", "6 Group Sessions + Guests", "Private Final Call w/ Cue", "Priority Chat — Cue + Filip"]
+                    ).map((item) => (
+                      <div key={item} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <div style={{ width: 4, height: 4, borderRadius: "50%", background: item.startsWith("—") ? "rgba(255,255,255,0.1)" : (isActive ? acid : "rgba(255,255,255,0.2)"), flexShrink: 0 }} />
+                        <span style={{ fontFamily: body, fontSize: 13, lineHeight: 1.5, color: item.startsWith("—") ? "rgba(255,255,255,0.2)" : (isActive ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.3)"), fontStyle: item.startsWith("—") ? "italic" : "normal" }}>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
-          <div className="ic-reveal" style={{ fontFamily: display, fontSize: "clamp(80px,14vw,140px)", fontWeight: 800, letterSpacing: "-0.06em", lineHeight: 0.9, color: bone, margin: "0 0 36px", transition: "opacity 0.2s" }}>
-            {price}
-          </div>
-
-          <p className="ic-reveal" style={{ fontFamily: body, fontSize: 20, lineHeight: 1.75, color: "rgba(255,255,255,0.42)", maxWidth: 520, margin: "0 auto 16px" }}>
-            {isPremium
-              ? "Everything in the Inner Circle, plus two personal sessions with Quillan where he builds your custom plan and checks in mid-program. This is the closest thing to having him in your corner directly."
-              : "If you make back 1% of your account consistently — monthly — this pays for itself inside a year. The traders who treat this as an expense don't make it."}
-          </p>
-
-          {isPremium && (
-            <div className="ic-reveal" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(249,255,60,0.07)", border: "1px solid rgba(249,255,60,0.2)", padding: "8px 18px", marginBottom: 8 }}>
-              <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: acid }}>Inner Circle ($7,500) + 2 personal calls + custom roadmap + priority access</span>
+          {/* Selected tier detail */}
+          <div className="ic-reveal" style={{ marginTop: 40, padding: "28px 32px", border: "1px solid rgba(249,255,60,0.15)", background: "rgba(249,255,60,0.03)" }}>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 16, marginBottom: 12, flexWrap: "wrap" }}>
+              <span style={{ fontFamily: mono, fontSize: 10, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: acid }}>· {TIER_LABELS[tier]} ·</span>
+              <span style={{ fontFamily: display, fontSize: 40, fontWeight: 800, letterSpacing: "-0.05em", color: bone }}>{price}</span>
             </div>
-          )}
-
-          <div className="ic-reveal" style={{ width: 1, height: 52, background: "rgba(255,255,255,0.07)", margin: "32px auto" }} />
-          <div className="ic-reveal" style={{ fontFamily: mono, fontSize: 10, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.2)", marginBottom: 48 }}>
-            · One-time · Full program access · Cue AI included ·
+            <p style={{ fontFamily: body, fontSize: 17, lineHeight: 1.75, color: "rgba(255,255,255,0.42)", maxWidth: 580, margin: "0 0 20px" }}>
+              {isBasic
+                ? "The complete WSA curriculum and Cue AI access. Self-paced. No live calls — but everything you need to build the foundation on your own terms. Upgrade to Inner Circle when you're ready for the boot camp."
+                : isStandard
+                ? "A 4-month cohort boot camp. 8 structured live sessions with Quillan, CSM accountability from Filip, and everything in the system. If you make back 1% of your account consistently — monthly — this pays for itself inside a year."
+                : "Everything in the Inner Circle — plus private sessions at the start and end of the program with Quillan directly. This is the closest thing to having him in your corner for the full 4 months."}
+            </p>
+            <div style={{ fontFamily: mono, fontSize: 9, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(255,255,255,0.2)" }}>
+              · 4-Month Program · {isBasic ? "Self-Paced" : "Cohort-Based"} · Not Lifetime ·
+            </div>
           </div>
 
-          <div className="ic-reveal" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 24, flexWrap: "wrap" }}>
+          <div className="ic-reveal" style={{ marginTop: 32, display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" }}>
             <Link href="/roadmap" style={{ display: "inline-block", background: acid, color: "#000", fontFamily: mono, fontSize: 12, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", padding: "20px 48px", textDecoration: "none" }}>
               See the roadmap →
             </Link>
-            <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.22)" }}>· Limited spots ·</span>
+            <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.22)" }}>· Limited cohort spots ·</span>
           </div>
         </div>
       </section>
