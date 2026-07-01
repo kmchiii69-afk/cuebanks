@@ -266,33 +266,39 @@ const TOP_DOWN_DOC: DocContent = {
 
 const PHASES: Phase[] = [
   {
-    num: "01", title: "Foundation & Mindset", duration: "Week 1 – 2",
-    tagline: "Your strategy isn't gonna be the basis of your trading success. Risk management will be. Before you touch a chart, you need to understand that.",
-    checkpoint: "You know the rules that keep your account alive. You understand why there is not one single successful trader who uses improper risk management. You're not starting phase two without this locked in.",
+    num: "00", title: "Prepare", duration: "Week 0",
+    tagline: "Before the program officially starts, this is where you set yourself up. The traders who skip this week show up to Week 1 unprepared — don't be that person.",
+    checkpoint: "You've watched the welcome video, your 1-on-1 channel is active, you know your lot sizing and risk parameters, you've examined your own trading fears, and you've sent your first 15 charts for feedback. You're ready.",
     items: [
       {
-        label: "Orientation Call",
-        tag: "Live",
-        note: "Kick-off call with your cohort. Cue walks through the roadmap, sets expectations for the 16 weeks ahead, and answers your first questions. Show up ready — this sets the tone for everything.",
+        label: "Welcome Video",
+        tag: "Coming Soon",
+        note: "Start here. Quillan will walk you through what Wall Street Academy is, what this program is built on, and exactly what to expect over the next 16 weeks. Watch before anything else.",
       },
       {
-        label: "Welcome Video",
-        note: "Start here. Quillan walks you through what Wall Street Academy is, what this program is built on, and exactly what to expect over the next 16 weeks.",
-        videos: [{ id: "1120998383", label: "Welcome" }],
+        label: "Your 1-on-1 Channel",
+        tag: "Action Required",
+        note: "Make sure you have your own 1-on-1 channel. If you don't, open a support ticket and ask for it. This channel is an additional resource alongside the Cue AI to help you on your trading journey — you can ask anything, get feedback on your trades, strategy, and mindset, and receive personal guidance whenever you need it.",
       },
       {
         label: "Introduction to Forex",
         note: "What the market actually is, how it moves, and what it isn't. The foundation is support and resistance — everything else is built on top of that.",
         doc: INTRO_FOREX_DOC,
+        videos: [{ label: "Trading Sessions", href: "https://www.babypips.com/tools/forex-market-hours" }],
       },
       {
         label: "Risk Management 101",
-        note: "Cue usually risks 5–15% per trade, depending on his confidence, the confluence, and the cushion in his account. He always says \"The most confident person in the room will make the most amount of money\"",
+        note: "Cue usually risks 5–15% per trade, depending on his confidence, the confluence, and the cushion in his account. He always says \"The most confident person in the room will make the most amount of money.\"",
         videos: [{ id: "160573172", label: "Risk Management 101" }],
       },
       {
+        label: "Risk Management — Homework",
+        tag: "Homework",
+        note: "Do your own case scenario. Ask yourself: How much are you going to deposit? How much are you willing to risk per trade? What pair do you trade? What is your usual stop loss — and calculate the correct lot size.\n\nCue risks between 10–15% per trade, based on his confidence, account balance, market conditions, and confluence. Risk 5–15% based on your own level of precision, confidence, and consistency. If you are only risking 1%, push yourself — study more, backtest more, journal more, and build up to it.",
+      },
+      {
         label: "The Four Fears + Greed, Revenge & Trading Style",
-        note: "You are the problem at times. Not the broker. The market. You. Know your patterns before they cost you.",
+        note: "You are the problem at times. Not the broker. Not the market. You. Know your patterns before they cost you.",
         videos: [
           { id: "1090913021", label: "The Greed Effect 2.0" },
           { id: "1090918934", label: "Knowing Your Trading Style 2.0" },
@@ -301,14 +307,65 @@ const PHASES: Phase[] = [
         ],
       },
       {
+        label: "Mindset — Examine Yourself",
+        tag: "Homework",
+        note: "Answer these honestly before moving forward:\n\n· What is your biggest fear when you trade?\n· Are you afraid of losing money, missing opportunities, or being wrong?\n· How do you react in each of those situations — and what is the outcome of your reactions usually?\n· Is this how a disciplined trader should react? If not, what can you do to improve your behavior and responses?\n\nAlways reflect on how you can better yourself, become more consistent, and make more rational decisions under pressure.",
+      },
+      {
         label: "Demo vs Live — Understanding the Difference",
         note: "Demo doesn't replicate the emotional weight of real money. This module bridges that gap so your first live account doesn't become a tuition payment.",
         videos: [{ id: "1090929269", label: "Demo vs Live 2.0" }],
       },
       {
-        label: "Phase 1 Group Webinar",
+        label: "Introducing TradeLocker",
+        note: "No MT4 or MT5? No problem. This module walks you through TradeLocker — Cue's preferred alternative platform — and how to get your charts set up correctly from day one.",
+        videos: [{ id: "900590824", label: "Introducing TradeLocker" }],
+      },
+      {
+        label: "Identifying The Trend",
+        note: "Higher high points, higher low points — that's a bullish market. Lower highs, lower lows — that's bearish. Structure is always first.",
+        videos: [{ id: "1162341882", hash: "e9c9f5a402", label: "Identifying The Trend 2.0" }],
+      },
+      {
+        label: "Timeframe Guide",
+        tag: "Tips",
+        note: "What higher timeframe is the cleanest for structure? If you base structure off the H4 timeframe, drop down to M30 and M15 for more detail and base your entries off of them. Use M5 if you need even more precision. If H1 is much cleaner, use M15/M5 for entries. Sometimes M30 or M15 are going to be too noisy — go to M5 or even M1. You always need to adapt to market conditions.\n\n· H4 structure → M30 / M15 entries\n· H1 structure → M15 / M5 entries\n· Daily structure → H1 / M30 entries\n\nMain analysis timeframes: Daily, H4, H1\nEntry timeframes: M30, M15, M5, M1\n\nExample: You are basing your main higher timeframe structure on H1. Don't drop to M30 — there aren't enough candles to see the detail. Go to M15 and you get significantly more candles and more precise price action, which means better entries. Always remember: lower timeframes are only for execution. The higher timeframe defines the direction.",
+      },
+      {
+        label: "Support & Resistance",
+        note: "What forms a support and resistance level? What needs to happen for it to be considered broken or tested? This is the foundation of every setup you will ever take.",
+      },
+      {
+        label: "S&R — Send 15 Charts",
+        tag: "Homework",
+        note: "Mark support and resistance levels on 15 different charts and send them to your 1-on-1 channel for feedback. Then identify where you need to improve and work on it:\n\n· Reading price action — How candles close, why they closed that way, and what buyers and sellers are doing\n· Time frame correlation — How higher and lower timeframes work together to confirm trade direction\n· Market structure — How the market moves in bullish and bearish trends; what to expect and take advantage of\n· Consistency — The ability to repeat good trading habits and achieve profitable results over time\n· Entries/Exits — Finding the right time to enter and exit trades without unnecessary drawdown or leaving profits on the chart\n· Maintaining and scaling trades — Managing open trades effectively and adding to winning positions to maximize profits\n· Risk management — Managing losses and position sizes so you stay profitable even with a low win rate or bad market conditions\n· Top down analysis — Analyzing higher timeframes first, then moving to lower timeframes for execution, so you always know what you are looking for",
+      },
+    ],
+  },
+  {
+    num: "01", title: "Foundation & Mindset", duration: "Week 1 – 2",
+    tagline: "Your strategy isn't gonna be the basis of your trading success. Risk management will be. Before you touch a chart, you need to understand that.",
+    checkpoint: "You know the rules that keep your account alive. You understand why there is not one single successful trader who uses improper risk management. You're not starting phase two without this locked in.",
+    items: [
+      {
+        label: "Orientation — Week 1 Kick-off",
+        tag: "Live",
+        note: "Kick-off call with your cohort. Cue walks through the roadmap, sets expectations for the 16 weeks ahead, and answers your first questions. Show up ready — this sets the tone for everything.",
+      },
+      {
+        label: "Week 1 Webinar — The WSA Framework",
         tag: "Webinar",
-        note: "Live session with Cue — mindset check-in, risk management application, real talk on what separates traders who make it from those who don't. Complete Phase 1 before joining live.",
+        note: "Cue walks the full 16-week roadmap live. What to expect, how to work the system, and the mindset required to see it through.",
+      },
+      {
+        label: "Week 2 Webinar — The Psychology of Losing",
+        tag: "Webinar",
+        note: "The mental patterns that destroy accounts — and how the WSA system interrupts them. What Cue has never put in the public content.",
+      },
+      {
+        label: "Week 3 Webinar — Risk Rules That Keep You Alive",
+        tag: "Webinar",
+        note: "Position sizing, max loss per session, and the compounding math most traders ignore. This is what protects your capital through every phase.",
       },
     ],
   },
@@ -374,11 +431,6 @@ const PHASES: Phase[] = [
             },
           ],
         },
-      },
-      {
-        label: "Introducing TradeLocker",
-        note: "No MT4 or MT5? No problem. This module walks you through TradeLocker — Cue's preferred alternative platform — and how to get your charts set up correctly from day one.",
-        videos: [{ id: "900590824", label: "Introducing TradeLocker" }],
       },
       {
         label: "Chart Practice: 10 Drawn Charts",
@@ -1047,6 +1099,7 @@ function ModuleItem({ item, index, isLast, onPlay, onOpenDoc, onOpenChecklist, o
 // Globe position per section (hero + 6 phases)
 const GLOBE_POS = [
   { left: 78, top: 30, scale: 2.8, opacity: 0.32 }, // hero
+  { left: 20, top: 55, scale: 2.4, opacity: 0.30 }, // prepare
   { left: 88, top: 52, scale: 2.0, opacity: 0.28 }, // phase 01
   { left: 16, top: 50, scale: 2.2, opacity: 0.26 }, // phase 02
   { left: 76, top: 22, scale: 1.8, opacity: 0.25 }, // phase 03

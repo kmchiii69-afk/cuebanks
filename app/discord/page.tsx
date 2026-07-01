@@ -4,7 +4,7 @@ import Script from "next/script";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-export default function IGPage() {
+export default function DiscordPage() {
   const router = useRouter();
 
   useEffect(() => {
@@ -51,7 +51,7 @@ export default function IGPage() {
             textTransform: "uppercase",
           }}
         >
-          · Inner Circle · Now Open ·
+          · Wall Street Academy · Inner Circle ·
         </div>
       </header>
 
@@ -64,42 +64,45 @@ export default function IGPage() {
           textAlign: "left",
         }}
       >
-          <p
-            style={{
-              fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-              fontSize: 18,
-              lineHeight: 1.7,
-              color: "var(--ash)",
-              margin: "0 0 20px",
-              fontWeight: 400,
-            }}
-          >
-            I spent 3 months rebuilding this from scratch. New system. New calls. New everything.
-          </p>
-          <p
-            style={{
-              fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-              fontSize: 18,
-              lineHeight: 1.7,
-              color: "var(--ash)",
-              margin: "0 0 20px",
-              fontWeight: 400,
-            }}
-          >
-            I&rsquo;m not running another trading program. I&rsquo;m trying to change what forex actually looks like. The standard, the people, the results.
-          </p>
-          <p
-            style={{
-              fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-              fontSize: 18,
-              lineHeight: 1.7,
-              color: "var(--bone)",
-              margin: 0,
-              fontWeight: 500,
-            }}
-          >
-            I want to work with killers. Go through this and find out if you&rsquo;re one of them.
-          </p>
+        <p
+          style={{
+            fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+            fontSize: 18,
+            lineHeight: 1.7,
+            color: "var(--ash)",
+            margin: "0 0 20px",
+            fontWeight: 400,
+          }}
+        >
+          You&rsquo;re already in the community. You&rsquo;ve seen what I&rsquo;m building.
+        </p>
+        <p
+          style={{
+            fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+            fontSize: 18,
+            lineHeight: 1.7,
+            color: "var(--ash)",
+            margin: "0 0 20px",
+            fontWeight: 400,
+          }}
+        >
+          I want every single person from Wall Street Academy to win. That&rsquo;s not just something I say.{" "}
+          <span style={{ color: "var(--bone)", fontWeight: 500 }}>
+            That&rsquo;s why I&rsquo;m opening these spots to the community first, with full access to everything we&rsquo;ve built.
+          </span>
+        </p>
+        <p
+          style={{
+            fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+            fontSize: 18,
+            lineHeight: 1.7,
+            color: "var(--bone)",
+            margin: 0,
+            fontWeight: 500,
+          }}
+        >
+          Fill this out and let me know where you&rsquo;re at. I&rsquo;ll tell you exactly what makes sense for you.
+        </p>
       </section>
 
       {/* TYPEFORM EMBED */}
@@ -112,7 +115,7 @@ export default function IGPage() {
             background: "var(--bg-1)",
           }}
         >
-          <div data-tf-live="01KWAVJAM69YPMV554NVRT3Z58" style={{ minHeight: 560 }} />
+          <div data-tf-live="01KWCF1M21WH4PSANSSHFK3MQQ" style={{ minHeight: 560 }} />
           <Script src="//embed.typeform.com/next/embed.js" strategy="afterInteractive" />
         </div>
       </section>

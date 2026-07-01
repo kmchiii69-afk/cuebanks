@@ -4,8 +4,7 @@ import PostHogProvider from "@/components/PostHogProvider";
 import SegMetricsPixel from "@/components/SegMetricsPixel";
 
 export const metadata: Metadata = {
-  title: "Wall Street Academy — Swing Trade One Day A Week",
-  description: "The nine-phase market cycle system used by 7-figure crypto swing traders.",
+  title: "WSA",
 };
 
 export default function RootLayout({

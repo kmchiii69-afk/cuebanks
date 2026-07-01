@@ -18,7 +18,7 @@ export default function LoginPage() {
     emailRef.current?.focus();
     fetch('/api/auth/me').then(r => {
       if (r.ok) r.json().then(u => {
-        router.replace(u.role === 'admin' ? '/admin' : '/portal');
+        router.replace('/portal');
       });
     }).catch(() => {});
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -37,7 +37,7 @@ export default function LoginPage() {
       });
       if (res.ok) {
         const u = await res.json();
-        router.replace(u.role === 'admin' ? '/admin' : '/portal');
+        router.replace('/portal');
       } else {
         const data = await res.json().catch(() => ({}));
         setErrorMsg(data.error || 'Invalid credentials');

@@ -1,12 +1,5 @@
-import type { Metadata } from "next";
-import OfferPage from "./OfferPage";
-
-export const metadata: Metadata = {
-  title: "The WSA Program — Apply | Wall Street Academy",
-  description:
-    "Stop trading alone. Follow a proven roadmap with coaching, accountability, and the WSA Protocol — the framework Cue Banks refined over 13+ years.",
-};
+import { redirect } from 'next/navigation';
 
 export default function Offer() {
-  return <OfferPage />;
+  redirect('/innercircle');
 }

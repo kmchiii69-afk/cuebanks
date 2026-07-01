@@ -166,7 +166,7 @@ const ROADMAP = [
   { m: "Month 03", t: "Refinement", d: "Trade reviews and error correction. We find your leaks and fix them." },
   { m: "Month 04", t: "Mastery", d: "Repeatable process, controlled risk, lasting consistency." },
 ];
-const INCLUDED = ["Full curriculum + pattern library", "The WSA Protocol framework", "Strategy & trade-plan templates", "Weekly group coaching calls", "Trade reviews & direct feedback", "138+ webinar archive", "Private community", "Onboarding & CSM support"];
+const INCLUDED = ["Full curriculum + pattern library", "The WSA Protocol framework", "Strategy & trade-plan templates", "Weekly webinars", "Trade reviews & direct feedback", "138+ webinar archive", "Private community", "Onboarding & CSM support"];
 const BONUSES = [
   { t: "Weekly Group Calls", d: "Live coaching, market breakdowns, Chart N Chill & CueCast.", v: "$1,500" },
   { t: "The 138+ Webinar Archive", d: "A decade of recordings across every market cycle.", v: "$2,000" },
@@ -525,12 +525,12 @@ export default function OfferPage() {
           <Reveal>
             <PricingCard name="WSA Core Program" price="$7,500" term="4 months"
               lead="The full system with group coaching — everything you need to follow the roadmap."
-              features={["Full curriculum + WSA Protocol", "Group coaching calls", "Trade-plan templates", "138+ webinar archive", "Community access"]} />
+              features={["Full curriculum + WSA Protocol", "Weekly webinars", "Trade-plan templates", "138+ webinar archive", "Community access"]} />
           </Reveal>
           <Reveal delay={120}>
             <PricingCard featured name="WSA Inner Circle" price="$15,000" term="4–5 months"
               lead="The fastest path. Everything in Core, plus direct access to Cue."
-              features={["Everything in Core, plus:", "Biweekly 1-on-1 calls with Cue", "Personalized roadmap", "Direct trade reviews", "Priority support"]} />
+              features={["Everything in Core, plus:", "Weekly 1-on-1 webinars with Cue", "Personalized roadmap", "Direct trade reviews", "Priority support"]} />
           </Reveal>
         </div>
       </Slide>

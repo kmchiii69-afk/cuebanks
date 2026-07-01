@@ -26,6 +26,7 @@ export interface Member {
   notes: string;
   created_at: number;
   last_login: number;
+  current_phase: number; // 0 = not started, 1-6 = active phase
 }
 
 export type PublicMember = Omit<Member, 'password_hash'>;

@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
+const PHASE_LABELS = ['—', 'Foundation', 'Price Action', 'Structure', 'Confluence', 'Execution', 'Live'];
+
 interface Member {
   id: string;
   email: string;
@@ -14,6 +16,7 @@ interface Member {
   notes: string;
   created_at: number;
   last_login: number;
+  current_phase: number;
 }
 
 function fmt(ts: number) {
@@ -184,6 +187,7 @@ export default function AdminPage() {
             <span style={{ fontFamily: "'Space Mono', monospace", fontWeight: 700, fontSize: 14, color: '#000' }}>W</span>
           </div>
           <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(249,255,60,0.6)', textTransform: 'uppercase' }}>Admin</span>
+          <a href="/portal" style={{ fontFamily: "'Space Mono', monospace", fontSize: 9, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 5, padding: '4px 10px' }}>← Portal</a>
         </div>
         <button
           onClick={logout} disabled={loggingOut}
@@ -242,7 +246,7 @@ export default function AdminPage() {
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr>
-                  {['Name', 'Email', 'Cohort', 'Role', 'Status', 'Last Login', 'Joined', ''].map(h => (
+                  {['Name', 'Email', 'Cohort', 'Progress', 'Role', 'Status', 'Last Login', 'Joined', ''].map(h => (
                     <th key={h} style={{
                       textAlign: 'left', padding: '8px 14px',
                       fontFamily: "'Space Mono', monospace", fontSize: 9,
@@ -261,6 +265,18 @@ export default function AdminPage() {
                     <td style={{ padding: '13px 14px', fontFamily: "'DM Sans', system-ui", fontSize: 13, color: m.active ? '#fff' : 'rgba(255,255,255,0.3)' }}>{m.name || '—'}</td>
                     <td style={{ padding: '13px 14px', fontFamily: "'DM Sans', system-ui", fontSize: 12, color: 'rgba(255,255,255,0.55)' }}>{m.email}</td>
                     <td style={{ padding: '13px 14px', fontFamily: "'Space Mono', monospace", fontSize: 11, color: m.cohort ? 'rgba(249,255,60,0.6)' : 'rgba(255,255,255,0.2)' }}>{m.cohort || '—'}</td>
+                    <td style={{ padding: '13px 14px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <div style={{ display: 'flex', gap: 3 }}>
+                          {[1,2,3,4,5,6].map(p => (
+                            <div key={p} style={{ width: 7, height: 7, borderRadius: 2, background: (m.current_phase ?? 0) >= p ? '#f9ff3c' : 'rgba(255,255,255,0.08)' }} />
+                          ))}
+                        </div>
+                        <span style={{ fontFamily: "'DM Sans', system-ui", fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>
+                          {(m.current_phase ?? 0) === 0 ? 'Not started' : PHASE_LABELS[m.current_phase ?? 0]}
+                        </span>
+                      </div>
+                    </td>
                     <td style={{ padding: '13px 14px' }}>
                       <span style={{
                         fontFamily: "'Space Mono', monospace", fontSize: 9, fontWeight: 700,

@@ -79,7 +79,7 @@ const ROADMAP = [
   { m: "Month 04", t: "Mastery", d: "Lock in the routine — repeatable process, controlled risk, lasting consistency." },
 ];
 
-const VAULT = ["Full curriculum + pattern library", "The WSA Protocol framework", "Strategy & trade-plan templates", "Weekly group coaching calls", "Trade reviews & direct feedback", "138+ webinar archive", "Private community", "Onboarding & CSM support"];
+const VAULT = ["Full curriculum + pattern library", "The WSA Protocol framework", "Strategy & trade-plan templates", "Weekly webinars", "Trade reviews & direct feedback", "138+ webinar archive", "Private community", "Onboarding & CSM support"];
 
 const PATHS = [
   { tag: "Path 01", t: "Stay where you are", d: "Keep guessing and hope consistency appears. Spend the next few years wondering “what if.”", tone: "bad" },
@@ -319,12 +319,12 @@ export default function OfferTwoPage() {
           <Reveal>
             <PricingCard name="WSA Core Program" price="$7,500" term="4 months"
               lead="The full system with group coaching — everything you need to follow the roadmap and build consistency."
-              features={["Full curriculum + WSA Protocol", "Group coaching calls", "Strategy & trade-plan templates", "138+ webinar archive", "Community access", "Psychology & discipline training"]} />
+              features={["Full curriculum + WSA Protocol", "Weekly webinars", "Strategy & trade-plan templates", "138+ webinar archive", "Community access", "Psychology & discipline training"]} />
           </Reveal>
           <Reveal delay={100}>
             <PricingCard featured name="WSA Inner Circle" price="$15,000" term="4–5 months"
               lead="The fastest path. Everything in Core, plus direct, personalized access to Cue."
-              features={["Everything in Core, plus:", "Biweekly 1-on-1 calls with Cue", "Personalized roadmap", "Direct trade reviews", "Priority support", "Advanced private sessions"]} />
+              features={["Everything in Core, plus:", "Weekly 1-on-1 webinars with Cue", "Personalized roadmap", "Direct trade reviews", "Priority support", "Advanced private sessions"]} />
           </Reveal>
         </div>
       </Slide>
