@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useRef, useEffect, FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import Globe from "@/components/ui/globe";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -1108,8 +1109,23 @@ const GLOBE_POS = [
   { left: 82, top: 28, scale: 3.0, opacity: 0.28 }, // phase 06
 ];
 
+const PROGRESS_PHASES = [
+  { num: '01', title: 'Foundation & Mindset',    duration: 'Week 1–2'   },
+  { num: '02', title: 'Reading Price Action',     duration: 'Week 2–3'   },
+  { num: '03', title: 'Structure + Levels',       duration: 'Week 3–4'   },
+  { num: '04', title: 'The Confluence System',    duration: 'Week 4–7'   },
+  { num: '05', title: 'Advanced Execution',       duration: 'Week 7–10'  },
+  { num: '06', title: 'Live & Consistent',        duration: 'Week 10–16' },
+];
+
+function fmt(ts: number) {
+  if (!ts) return '—';
+  return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
 // ─── Page ──────────────────────────────────────────────────────────────────────
 export default function RoadmapPage() {
+  const router = useRouter();
   const [activeVideo, setActiveVideo] = useState<ModalVideo | null>(null);
   const [activeDoc, setActiveDoc] = useState<DocContent | null>(null);
   const [activeChecklist, setActiveChecklist] = useState<ChecklistDoc | null>(null);
@@ -1120,6 +1136,44 @@ export default function RoadmapPage() {
   const [globeOpacity, setGlobeOpacity] = useState(0.32);
   const phaseRefs = useRef<(HTMLDivElement | null)[]>([]);
   const heroRef = useRef<HTMLElement>(null);
+
+  // ── Auth + member state ──
+  const [member, setMember] = useState<{ email: string; name: string; cohort: string; created_at: number; current_phase: number } | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [savingPhase, setSavingPhase] = useState(false);
+  const [notes, setNotes] = useState('');
+  const [notesSaved, setNotesSaved] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then(r => { if (!r.ok) { router.replace('/login'); return null; } return r.json(); })
+      .then(data => {
+        if (data) {
+          setMember(data);
+          setNotes(localStorage.getItem(`wsa-notes-${data.email}`) || '');
+        }
+      })
+      .catch(() => router.replace('/login'));
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  async function setPhase(phase: number) {
+    if (!member || savingPhase) return;
+    setSavingPhase(true);
+    await fetch('/api/portal/progress', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phase }),
+    });
+    setMember(m => m ? { ...m, current_phase: phase } : m);
+    setSavingPhase(false);
+  }
+
+  function saveNotes() {
+    if (!member) return;
+    localStorage.setItem(`wsa-notes-${member.email}`, notes);
+    setNotesSaved(true);
+    setTimeout(() => setNotesSaved(false), 2000);
+  }
 
   const totalVideos = PHASES.reduce((acc, p) => acc + p.items.reduce((a, i) => a + (i.videos?.length ?? 0), 0), 0);
 
@@ -1180,7 +1234,7 @@ export default function RoadmapPage() {
 
       {/* HEADER */}
       <header style={{ borderBottom: "1px solid rgba(255,255,255,0.07)", padding: "18px 48px", display: "flex", justifyContent: "space-between", alignItems: "center", position: "sticky", top: 0, background: "rgba(0,0,0,0.88)", backdropFilter: "blur(20px)", zIndex: 100 }}>
-        <Link href="/ig" style={{ display: "flex", alignItems: "center", gap: 14, textDecoration: "none" }}>
+        <Link href="/portal" style={{ display: "flex", alignItems: "center", gap: 14, textDecoration: "none" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/wsa/home/1.png" alt="Wall Street Academy" style={{ height: 44, width: 44, borderRadius: "50%", objectFit: "cover" }} />
           <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: 700, color: "var(--bone)", letterSpacing: "0.18em", textTransform: "uppercase" }}>Wall Street Academy</span>
@@ -1195,10 +1249,141 @@ export default function RoadmapPage() {
             </button>
           ))}
         </div>
-        <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: "var(--acid)", letterSpacing: "0.22em", textTransform: "uppercase" }}>
-          · Inner Circle · Roadmap ·
-        </div>
+        {/* Profile avatar → opens progress drawer */}
+        <button
+          onClick={() => setDrawerOpen(true)}
+          title={member?.name || 'My Progress'}
+          style={{
+            width: 38, height: 38, borderRadius: "50%",
+            background: member ? "rgba(249,255,60,0.12)" : "rgba(255,255,255,0.06)",
+            border: `1.5px solid ${member ? "rgba(249,255,60,0.4)" : "rgba(255,255,255,0.14)"}`,
+            color: member ? "var(--acid)" : "var(--muted)",
+            fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: 14,
+            cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+            transition: "all 0.15s", flexShrink: 0,
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = "rgba(249,255,60,0.2)"; e.currentTarget.style.borderColor = "rgba(249,255,60,0.7)"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = member ? "rgba(249,255,60,0.12)" : "rgba(255,255,255,0.06)"; e.currentTarget.style.borderColor = member ? "rgba(249,255,60,0.4)" : "rgba(255,255,255,0.14)"; }}
+        >
+          {member ? member.name.charAt(0).toUpperCase() : "?"}
+        </button>
       </header>
+
+      {/* ── Progress Drawer ───────────────────────────────────────────────────── */}
+      {/* Backdrop */}
+      {drawerOpen && (
+        <div
+          onClick={() => setDrawerOpen(false)}
+          style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 200, backdropFilter: "blur(2px)" }}
+        />
+      )}
+      {/* Panel */}
+      <div style={{
+        position: "fixed", top: 0, right: 0, bottom: 0, width: 340,
+        background: "#0a0c10", borderLeft: "1px solid rgba(255,255,255,0.08)",
+        zIndex: 201, display: "flex", flexDirection: "column",
+        transform: drawerOpen ? "translateX(0)" : "translateX(100%)",
+        transition: "transform 0.3s cubic-bezier(0.32, 0, 0.2, 1)",
+        overflowY: "auto",
+      }}>
+        {/* Drawer header */}
+        <div style={{ padding: "18px 20px", borderBottom: "1px solid rgba(255,255,255,0.07)", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
+          <div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: "var(--acid)", letterSpacing: "0.22em", textTransform: "uppercase", marginBottom: 4 }}>My Progress</div>
+            {member && (
+              <div style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(255,255,255,0.5)" }}>
+                {member.cohort ? `Cohort ${member.cohort}` : 'WSA Member'} · Joined {fmt(member.created_at)}
+              </div>
+            )}
+          </div>
+          <button onClick={() => setDrawerOpen(false)} style={{ background: "none", border: "none", color: "var(--muted)", cursor: "pointer", fontSize: 20, lineHeight: 1, padding: "0 2px", transition: "color 0.15s" }}
+            onMouseEnter={e => { e.currentTarget.style.color = "var(--bone)"; }}
+            onMouseLeave={e => { e.currentTarget.style.color = "var(--muted)"; }}>✕</button>
+        </div>
+
+        {/* Progress bar */}
+        <div style={{ padding: "20px 20px 8px", flexShrink: 0 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "rgba(255,255,255,0.3)", letterSpacing: "0.2em", textTransform: "uppercase" }}>16-Week Curriculum</span>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "rgba(255,255,255,0.25)", letterSpacing: "0.1em" }}>
+              {(member?.current_phase ?? 0) === 0 ? 'Not started' : (member?.current_phase ?? 0) >= 6 ? 'Complete' : `Phase ${member?.current_phase} of 6`}
+            </span>
+          </div>
+          <div style={{ height: 3, background: "rgba(255,255,255,0.07)", borderRadius: 2, overflow: "hidden" }}>
+            <div style={{ height: "100%", width: `${((member?.current_phase ?? 0) / 6) * 100}%`, background: "var(--acid)", borderRadius: 2, transition: "width 0.4s ease" }} />
+          </div>
+        </div>
+
+        {/* Phase list */}
+        <div style={{ padding: "8px 20px 4px", display: "flex", flexDirection: "column", gap: 3, flexShrink: 0 }}>
+          {PROGRESS_PHASES.map((ph, i) => {
+            const phaseNum = i + 1;
+            const isActive = (member?.current_phase ?? 0) === phaseNum;
+            const isDone   = (member?.current_phase ?? 0) > phaseNum;
+            return (
+              <div
+                key={ph.num}
+                onClick={() => setPhase(isActive ? 0 : phaseNum)}
+                style={{
+                  background: isActive ? "rgba(249,255,60,0.06)" : isDone ? "rgba(34,197,94,0.04)" : "rgba(255,255,255,0.02)",
+                  border: `1px solid ${isActive ? "rgba(249,255,60,0.25)" : isDone ? "rgba(34,197,94,0.15)" : "rgba(255,255,255,0.05)"}`,
+                  borderRadius: 7, padding: "11px 14px",
+                  display: "flex", alignItems: "center", justifyContent: "space-between",
+                  cursor: "pointer", transition: "all 0.15s",
+                }}
+                onMouseEnter={e => { if (!isActive) (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.12)"; }}
+                onMouseLeave={e => { if (!isActive) (e.currentTarget as HTMLElement).style.borderColor = isDone ? "rgba(34,197,94,0.15)" : "rgba(255,255,255,0.05)"; }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: isActive ? "var(--acid)" : isDone ? "#22c55e" : "rgba(255,255,255,0.2)", letterSpacing: "0.1em", flexShrink: 0, width: 18 }}>
+                    {isDone ? "✓" : ph.num}
+                  </span>
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 500, color: isActive ? "#fff" : isDone ? "rgba(255,255,255,0.55)" : "rgba(255,255,255,0.45)" }}>{ph.title}</span>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  {isActive && <span style={{ fontFamily: "var(--font-mono)", fontSize: 8, color: "var(--acid)", letterSpacing: "0.12em", textTransform: "uppercase" }}>Current</span>}
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 8, color: "rgba(255,255,255,0.2)", letterSpacing: "0.06em", flexShrink: 0 }}>{ph.duration}</span>
+                </div>
+              </div>
+            );
+          })}
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(255,255,255,0.2)", margin: "6px 0 0", textAlign: "center" }}>
+            Tap a phase to mark as current
+          </p>
+        </div>
+
+        {/* Divider */}
+        <div style={{ height: 1, background: "rgba(255,255,255,0.07)", margin: "16px 20px", flexShrink: 0 }} />
+
+        {/* Notes */}
+        <div style={{ padding: "0 20px 24px", flex: 1, display: "flex", flexDirection: "column", gap: 10 }}>
+          <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.3)", letterSpacing: "0.22em", textTransform: "uppercase" }}>Notes & Feedback</div>
+          <textarea
+            value={notes}
+            onChange={e => setNotes(e.target.value)}
+            placeholder="Questions, feedback, what you're working on..."
+            style={{
+              flex: 1, minHeight: 140, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: 8, padding: "12px 14px", color: "var(--bone)", fontFamily: "var(--font-body)",
+              fontSize: 13, lineHeight: 1.65, resize: "none", outline: "none", transition: "border-color 0.15s",
+            }}
+            onFocus={e => { e.currentTarget.style.borderColor = "rgba(249,255,60,0.25)"; }}
+            onBlur={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; }}
+          />
+          <button
+            onClick={saveNotes}
+            style={{
+              background: notesSaved ? "rgba(34,197,94,0.12)" : "rgba(249,255,60,0.08)",
+              border: `1px solid ${notesSaved ? "rgba(34,197,94,0.3)" : "rgba(249,255,60,0.2)"}`,
+              borderRadius: 7, padding: "10px 16px",
+              fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase",
+              color: notesSaved ? "#22c55e" : "var(--acid)", cursor: "pointer", transition: "all 0.2s",
+            }}
+          >
+            {notesSaved ? "✓ Saved" : "Save Notes"}
+          </button>
+        </div>
+      </div>
 
       {/* HERO */}
       <section ref={heroRef} style={{ maxWidth: 860, margin: "0 auto", padding: "96px 48px 24px", textAlign: "center", position: "relative", zIndex: 1 }}>
