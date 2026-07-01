@@ -85,25 +85,25 @@ export default function BookConfirmPage() {
       </section>
 
       {/* VIDEO */}
-      <section style={{ maxWidth: 860, margin: "0 auto", padding: "0 24px 56px" }}>
+      <section style={{ maxWidth: 420, margin: "0 auto", padding: "0 24px 56px" }}>
         <div
           style={{
             border: "1px solid var(--line)",
             borderTop: "2px solid var(--acid)",
             background: "var(--bg-1)",
             position: "relative",
-            paddingBottom: "56.25%",
+            paddingBottom: "177.78%",
             overflow: "hidden",
           }}
         >
           <iframe
             ref={iframeRef}
-            src="https://player.vimeo.com/video/1205827279?badge=0&autopause=0&autoplay=0&api=1&player_id=vimeo-confirm&app_id=58479"
+            src="https://player.vimeo.com/video/1205827279?title=0&byline=0&portrait=0&badge=0&autopause=0&autoplay=0&api=1&player_id=vimeo-confirm&app_id=58479"
             frameBorder="0"
-            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
             referrerPolicy="strict-origin-when-cross-origin"
             style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
-            title="pre-call overview"
+            title="cue post booking"
           />
           {!playing && (
             <button
