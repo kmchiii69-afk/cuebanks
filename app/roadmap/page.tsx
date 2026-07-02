@@ -101,42 +101,41 @@ const INTRO_FOREX_DOC: DocContent = {
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const CNC: Video[] = [
-  { id: "1201290210", label: "6/14/26" }, { id: "1197879523", label: "5/31/26" },
-  { id: "1193112745", label: "5/17/26" }, { id: "1182848562", label: "4/12/26" },
-  { id: "1175798431", label: "3/1/26" },  { id: "1173868687", label: "3/15/26" },
-  { id: "1155829854", label: "1/18/26" }, { id: "1151494574", label: "1/4/26" },
-  { id: "1148543829", label: "12/21/25" },{ id: "1146446807", label: "12/14/25" },
-  { id: "1135200815", label: "11/9/25" }, { id: "1133013682", label: "11/2/25" },
-  { id: "1128727690", label: "10/19/25" },{ id: "1120700415", label: "9/21/25" },
-  { id: "1116601308", label: "9/7/25" },  { id: "1114762699", label: "8/31/25" },
-  { id: "1108943478", label: "8/10/25" }, { id: "1106944714", label: "8/3/25" },
-  { id: "1101101876", label: "7/13/25" }, { id: "1099239519", label: "7/6/25" },
-  { id: "1097412063", label: "6/29/25" }, { id: "1095497142", label: "6/22/25" },
-  { id: "1088773116", label: "5/25/25" }, { id: "1085559828", label: "5/18/25" },
-  { id: "1081375136", label: "5/5/25" },  { id: "1079236967", label: "4/27/25" },
-  { id: "1077278344", label: "4/20/25" }, { id: "1075342024", label: "4/13/25" },
-  { id: "1073067677", label: "4/6/25" },  { id: "1070911359", label: "3/30/25" },
-  { id: "1062031860", label: "3/2/25" },  { id: "1057675113", label: "2/16/25" },
-  { id: "1050770984", label: "1/26/25" }, { id: "1028430547", label: "11/10/24" },
-  { id: "1026578614", label: "11/4/24" }, { id: "1024574724", label: "10/28/24" },
-  { id: "1019458261", label: "10/13/24" },{ id: "1012499868", label: "9/15/24" },
-  { id: "1000235936", label: "8/18/24" }, { id: "993518415",  label: "7/28/24" },
+  { id: "1201290210", hash: "9363f5a5de", label: "6/14/26" },
+  { id: "1197879523", hash: "b311ea99d1", label: "5/31/26" },
+  { id: "1193112745", hash: "3863d9f697", label: "5/17/26" },
+  { id: "1175798431", hash: "35eaed7df2", label: "3/1/26" },
+  { id: "1173868687", hash: "98ec2906f4", label: "3/15/26" },
+  { id: "1155829854", hash: "ff02517ce5", label: "1/18/26" },
+  { id: "1148543829", label: "12/21/25" },
+  { id: "1146446717", hash: "62f2b40525", label: "12/14/25" },
+  { id: "1135200815", label: "11/9/25" },
+  { id: "1133013682", label: "11/2/25" },
+  { id: "1128727713", hash: "fbf97c074f", label: "10/19/25" },
+  { id: "1114762699", hash: "a850701f27", label: "8/31/25" },
 ];
 
 const CUECASTS: Video[] = [
-  { id: "1203318818", label: "6/21/26" }, { id: "1195220470", label: "5/24/26" },
-  { id: "1191014940", label: "5/10/26" }, { id: "1188924684", label: "5/3/26" },
-  { id: "1184668500", label: "4/19/26" }, { id: "1177156977", label: "3/25/26" },
-  { id: "1176203834", label: "3/23/26" }, { id: "1163147705", label: "2/9/26" },
-  { id: "1158257286", label: "1/25/26" }, { id: "1153452357", label: "1/11/26" },
-  { id: "1149962357", label: "12/28/25" },{ id: "1147535291", label: "12/17/25" },
-  { id: "1144396697", label: "12/7/25" }, { id: "1137540915", label: "11/16/25" },
-  { id: "1130752380", label: "10/26/25" },{ id: "1126709097", label: "10/12/25" },
-  { id: "1124703573", label: "10/5/25" }, { id: "1122730757", label: "9/28/25" },
-  { id: "1118629053", label: "9/14/25" }, { id: "1112787551", label: "8/24/25" },
-  { id: "1110811593", label: "8/17/25" }, { id: "1097719191", label: "6/30/25" },
-  { id: "1093588206", label: "6/15/25" }, { id: "1091708517", label: "6/9/25" },
-  { id: "1089858154", label: "6/2/25" },  { id: "1089713979", label: "6/2/25 B" },
+  { id: "1203318818", hash: "b8aac0cc6e", label: "6/21/26" },
+  { id: "1195220470", hash: "274d018a3f", label: "5/24/26" },
+  { id: "1191014940", hash: "a1cddec6bf", label: "5/10/26" },
+  { id: "1188924684", hash: "139016c27f", label: "5/3/26" },
+  { id: "1184668500", hash: "cb68200777", label: "4/19/26" },
+  { id: "1177156977", hash: "9e81602352", label: "3/25/26" },
+  { id: "1176203834", label: "3/23/26" },
+  { id: "1163147705", hash: "765d97af81", label: "2/9/26" },
+  { id: "1158257286", hash: "1e3fd6a142", label: "1/25/26" },
+  { id: "1153452357", hash: "77525bb14c", label: "1/11/26" },
+  { id: "1149962357", hash: "e1e8134fdf", label: "12/28/25" },
+  { id: "1147535291", hash: "2d0e20e65f", label: "12/17/25" },
+  { id: "1144396697", hash: "ad268fe005", label: "12/7/25" },
+  { id: "1137540915", hash: "443c707268", label: "11/16/25" },
+  { id: "1130752380", hash: "1dc6370c93", label: "10/26/25" },
+  { id: "1126709097", hash: "f28e7bd37f", label: "10/12/25" },
+  { id: "1124703573", hash: "9638d6e4c4", label: "10/5/25" },
+  { id: "1122730757", hash: "555709566d", label: "9/28/25" },
+  { id: "1120700415", label: "9/21/25" },
+  { id: "1118628945", hash: "d79595cfac", label: "9/14/25" },
   { id: "1068805247", label: "3/24/25" },
 ];
 
@@ -265,21 +264,95 @@ const TOP_DOWN_DOC: DocContent = {
   ],
 };
 
+// ─── Additional Docs ──────────────────────────────────────────────────────────
+const BACKTEST_DOC: DocContent = {
+  title: "Backtest Your Pair",
+  sections: [
+    {
+      heading: "How to Backtest",
+      paras: [
+        "Go back no more than 5 months and start with the higher time frames (HTFs), either H4 or H1. Begin with a top-down analysis: identify the market structure on the HTFs, mark support and resistance levels, draw Fibonacci, identify exhaustion zones, and look for confluence areas. Check where the moving averages (MAs) are positioned and whether they align with the structure.",
+        "Then move down to the lower time frames (LTFs), depending on the chosen approach (for example, H4 → M30 → M15 or H1 → M15 → M5), and look for potential entries, scale-in opportunities, and exits. Check which higher time frame (HTF) provides the clearest market structure. Do not prioritize or force yourself to always use the same time frame — adapt to current market conditions and choose the one that offers the best analysis.",
+        "Always remember to adapt to the market conditions. Every situation is different. Sometimes analyzing the H4 and then moving directly to M30 will not provide enough detail, so you may need to use M15 and M5 instead. Likewise, you cannot always rely on moving averages — if they are inconsistent, cutting through the candles and not clearly respecting the structure, use other technical tools instead.",
+        "Draw trendlines or counter-trendlines when they are valid, but never force them onto the chart.",
+      ],
+    },
+  ],
+};
+
+const SELF_EVAL_DOC: DocContent = {
+  title: "Trader Self-Reevaluation Phase",
+  sections: [
+    {
+      heading: "Objective",
+      paras: ["The main goal of this phase is for a trader to step back and honestly re-evaluate himself — to understand current performance, mindset, and progress since starting, and to identify what must change going forward."],
+    },
+    {
+      heading: "Instructions",
+      paras: ["Write a structured self-reflection covering the points below. Be honest and specific — this is about clarity, not perfection."],
+    },
+    {
+      heading: "1 — Current State & Progress",
+      paras: ["Describe where you are currently as a trader. What results are you getting, and how has your approach, mindset, or discipline changed since you started?"],
+    },
+    {
+      heading: "2 — Core Strengths & Weak Points",
+      paras: ["Identify your strongest qualities that help you in trading, and your main weaknesses that consistently hurt your performance. Focus on what truly impacts your results, not general traits."],
+    },
+    {
+      heading: "3 — Recurring Patterns",
+      paras: ["What patterns do you notice in your trading behavior? This can include mistakes you repeat, emotional reactions, timing issues, overtrading, or anything that shows up consistently in both winning and losing periods."],
+    },
+    {
+      heading: "4 — Main Problem & Root Cause",
+      paras: ["What is the single biggest issue currently limiting your progress? Go deeper than the surface-level problem and explain the real cause behind it."],
+    },
+    {
+      heading: "5 — Direction Moving Forward",
+      paras: ["Based on your reflection, what needs to change immediately? Define what you will stop doing, what you will improve, and what your main focus should be in the next phase."],
+    },
+    {
+      heading: "Note",
+      paras: ["This is not a checklist exercise. The goal is to force clarity and self-awareness so you can accurately see what is holding you back and what needs to be fixed before moving forward."],
+    },
+  ],
+};
+
+const IMPROVE_DOC: DocContent = {
+  title: "Identify Where You Need to Improve",
+  sections: [
+    {
+      heading: "Focus Areas",
+      bullets: [
+        "Reading price action — Understanding how candles close, why they closed that way, and what you can expect to happen afterwards",
+        "Time frame correlation — Understanding how higher and lower time frames work together to confirm trade direction",
+        "Market structure — Understanding how the market moves in bullish and bearish trends. What to expect and how to take advantage of it",
+        "Consistency — The ability to repeat good trading habits and achieve profitable results over time",
+        "Entries/Exits — Finding the right time to enter and exit trades without unnecessary drawdown, getting stopped out, or leaving profits on the chart",
+        "Maintaining the trade and scaling in — Managing open trades effectively and adding to winning positions to maximize profits",
+        "Risk management — Managing losses and position sizes so you stay profitable even with a low win rate or bad market conditions",
+        "Top down analysis — Analyzing higher time frames first then moving to lower time frames for execution, so you always know what you are looking for",
+      ],
+    },
+  ],
+};
+
 const PHASES: Phase[] = [
+  // ── PREPARE ──────────────────────────────────────────────────────────────────
   {
     num: "00", title: "Prepare", duration: "Week 0",
     tagline: "Before the program officially starts, this is where you set yourself up. The traders who skip this week show up to Week 1 unprepared — don't be that person.",
-    checkpoint: "You've watched the welcome video, your 1-on-1 channel is active, you know your lot sizing and risk parameters, you've examined your own trading fears, and you've sent your first 15 charts for feedback. You're ready.",
+    checkpoint: "You've watched the welcome video, your 1-on-1 channel is active, you know your lot sizing and risk parameters, and you've examined your own trading fears. You're ready.",
     items: [
       {
         label: "Welcome Video",
         tag: "Coming Soon",
-        note: "Start here. Quillan will walk you through what Wall Street Academy is, what this program is built on, and exactly what to expect over the next 16 weeks. Watch before anything else.",
+        note: "Start here. Quillan will walk you through what Wall Street Academy is, what this program is built on, and exactly what to expect. Watch before anything else.",
       },
       {
-        label: "Your 1-on-1 Channel",
+        label: "Read This",
         tag: "Action Required",
-        note: "Make sure you have your own 1-on-1 channel. If you don't, open a support ticket and ask for it. This channel is an additional resource alongside the Cue AI to help you on your trading journey — you can ask anything, get feedback on your trades, strategy, and mindset, and receive personal guidance whenever you need it.",
+        note: "Make sure you have your own 1-on-1 channel. If you don't, open a support ticket and ask for it. This channel is an additional resource alongside the Cue AI to help you on your trading journey. You can ask anything, get feedback on your trades, strategy, mindset, and receive personal guidance whenever you need it.\n\nCue is going to host 1 webinar per week. You need to have completed your phases — if you haven't, you cannot be on the webinar. We need to hold you accountable. That's the only way you're going to see progress and improvement. Don't cut corners.",
       },
       {
         label: "Introduction to Forex",
@@ -295,7 +368,7 @@ const PHASES: Phase[] = [
       {
         label: "Risk Management — Homework",
         tag: "Homework",
-        note: "Do your own case scenario. Ask yourself: How much are you going to deposit? How much are you willing to risk per trade? What pair do you trade? What is your usual stop loss — and calculate the correct lot size.\n\nCue risks between 10–15% per trade, based on his confidence, account balance, market conditions, and confluence. Risk 5–15% based on your own level of precision, confidence, and consistency. If you are only risking 1%, push yourself — study more, backtest more, journal more, and build up to it.",
+        note: "Do your own case scenario and create a breakdown similar to the one shown in the video above. Ask yourself:\n\n· How much are you going to deposit?\n· How much are you willing to risk per trade?\n· Which pair do you trade?\n· What is your usual stop loss (SL)?\n· Based on these factors, calculate your appropriate lot size.\n\nCue typically risks between 10% and 15% per trade, but that depends on his confidence, account balance, market conditions, confluences, and overall setup quality. Your risk should be based on your own level of precision, confidence, and consistency — whether that is 5%, 10%, or 15%.\n\nIf you are only risking 1% per trade, focus on improving your edge: study more, backtest more, keep a detailed journal, and build the confidence and consistency needed before increasing your risk.\n\nAs Cue always says: \"The most confident person in the room will make the most amount of money.\"",
       },
       {
         label: "The Four Fears + Greed, Revenge & Trading Style",
@@ -308,97 +381,53 @@ const PHASES: Phase[] = [
         ],
       },
       {
-        label: "Mindset — Examine Yourself",
+        label: "Homework — Examine Yourself",
         tag: "Homework",
-        note: "Answer these honestly before moving forward:\n\n· What is your biggest fear when you trade?\n· Are you afraid of losing money, missing opportunities, or being wrong?\n· How do you react in each of those situations — and what is the outcome of your reactions usually?\n· Is this how a disciplined trader should react? If not, what can you do to improve your behavior and responses?\n\nAlways reflect on how you can better yourself, become more consistent, and make more rational decisions under pressure.",
+        note: "What is your biggest fear when you trade? Are you afraid of losing money, missing opportunities, or being wrong? How do you react in each of these situations and what is the outcome of your reactions usually?\n\nAsk yourself whether this is how you should react as a disciplined trader. If not, think about what you can do to improve your behavior and responses. Always reflect on how you can better yourself, become more consistent, and make more rational trading decisions.",
       },
+    ],
+  },
+
+  // ── SET ───────────────────────────────────────────────────────────────────────
+  {
+    num: "SET", title: "Set", duration: "Week 1 – 2",
+    tagline: "The fundamentals are the foundation. Support, resistance, Fibonacci, structure, trendlines — master these tools before you try to combine them.",
+    checkpoint: "You can identify trend, mark S&R, draw Fibonacci, understand market structure, and draw clean trendlines. You've sent your homework for feedback. The fundamentals are locked in.",
+    items: [
       {
-        label: "Demo vs Live — Understanding the Difference",
+        label: "Demo vs Live",
         note: "Demo doesn't replicate the emotional weight of real money. This module bridges that gap so your first live account doesn't become a tuition payment.",
         videos: [{ id: "1090929269", label: "Demo vs Live 2.0" }],
       },
       {
-        label: "Introducing TradeLocker",
+        label: "Introduction to TradeLocker",
         note: "No MT4 or MT5? No problem. This module walks you through TradeLocker — Cue's preferred alternative platform — and how to get your charts set up correctly from day one.",
         videos: [{ id: "900590824", label: "Introducing TradeLocker" }],
       },
       {
-        label: "Identifying The Trend",
+        label: "Identifying the Trend",
         note: "Higher high points, higher low points — that's a bullish market. Lower highs, lower lows — that's bearish. Structure is always first.",
         videos: [{ id: "1162341882", hash: "e9c9f5a402", label: "Identifying The Trend 2.0" }],
       },
       {
-        label: "Timeframe Guide",
+        label: "Cue's Tips",
         tag: "Tips",
-        note: "What higher timeframe is the cleanest for structure? If you base structure off the H4 timeframe, drop down to M30 and M15 for more detail and base your entries off of them. Use M5 if you need even more precision. If H1 is much cleaner, use M15/M5 for entries. Sometimes M30 or M15 are going to be too noisy — go to M5 or even M1. You always need to adapt to market conditions.\n\n· H4 structure → M30 / M15 entries\n· H1 structure → M15 / M5 entries\n· Daily structure → H1 / M30 entries\n\nMain analysis timeframes: Daily, H4, H1\nEntry timeframes: M30, M15, M5, M1\n\nExample: You are basing your main higher timeframe structure on H1. Don't drop to M30 — there aren't enough candles to see the detail. Go to M15 and you get significantly more candles and more precise price action, which means better entries. Always remember: lower timeframes are only for execution. The higher timeframe defines the direction.",
+        note: "What higher timeframe is the cleanest for structure?\n\nIf you base your structure on the H4 timeframe, drop down to M30 and M15 for more details and base your entries on them. Use M5 if you need even more precision.\n\nIf H1 is much cleaner, use M15 and M5 for details and entries.\n\nSometimes M30 or M15 are going to be too noisy — go down to M5 or even M1.\n\nIt always depends. You need to adapt to market conditions.\n\n· DAILY / H1 / M30\n· H4 / M30 / M15\n· H1 / M15 / M5\n\nMain analysis TFs: Daily, H4, H1\nEntry TFs: M30, M15, M5, M1\n\nExample: I am basing my HTF structure on H1. I'm not going to drop to M30 — there aren't enough candles. If I go to M15 I get significantly more candles and more detailed price action, which helps me get better entries. Always understand that lower timeframes are only for execution and fine-tuning — the higher timeframe defines the main market direction.\n\nStudy, backtest, apply on the chart and review afterwards / journal.",
       },
       {
         label: "Support & Resistance",
         note: "What forms a support and resistance level? What needs to happen for it to be considered broken or tested? This is the foundation of every setup you will ever take.",
-      },
-      {
-        label: "S&R — Send 15 Charts",
-        tag: "Homework",
-        note: "Mark support and resistance levels on 15 different charts and send them to your 1-on-1 channel for feedback. Then identify where you need to improve and work on it:\n\n· Reading price action — How candles close, why they closed that way, and what buyers and sellers are doing\n· Time frame correlation — How higher and lower timeframes work together to confirm trade direction\n· Market structure — How the market moves in bullish and bearish trends; what to expect and take advantage of\n· Consistency — The ability to repeat good trading habits and achieve profitable results over time\n· Entries/Exits — Finding the right time to enter and exit trades without unnecessary drawdown or leaving profits on the chart\n· Maintaining and scaling trades — Managing open trades effectively and adding to winning positions to maximize profits\n· Risk management — Managing losses and position sizes so you stay profitable even with a low win rate or bad market conditions\n· Top down analysis — Analyzing higher timeframes first, then moving to lower timeframes for execution, so you always know what you are looking for",
-      },
-    ],
-  },
-  {
-    num: "01", title: "Foundation & Mindset", duration: "Week 1 – 2",
-    tagline: "Your strategy isn't gonna be the basis of your trading success. Risk management will be. Before you touch a chart, you need to understand that.",
-    checkpoint: "You know the rules that keep your account alive. You understand why there is not one single successful trader who uses improper risk management. You're not starting phase two without this locked in.",
-    items: [
-      {
-        label: "Orientation — Week 1 Kick-off",
-        tag: "Live",
-        note: "Kick-off call with your cohort. Cue walks through the roadmap, sets expectations for the 16 weeks ahead, and answers your first questions. Show up ready — this sets the tone for everything.",
-      },
-      {
-        label: "Week 1 Webinar — The WSA Framework",
-        tag: "Webinar",
-        note: "Cue walks the full 16-week roadmap live. What to expect, how to work the system, and the mindset required to see it through.",
-      },
-      {
-        label: "Week 2 Webinar — The Psychology of Losing",
-        tag: "Webinar",
-        note: "The mental patterns that destroy accounts — and how the WSA system interrupts them. What Cue has never put in the public content.",
-      },
-      {
-        label: "Week 3 Webinar — Risk Rules That Keep You Alive",
-        tag: "Webinar",
-        note: "Position sizing, max loss per session, and the compounding math most traders ignore. This is what protects your capital through every phase.",
-      },
-    ],
-  },
-  {
-    num: "02", title: "Reading Price Action", duration: "Week 2 – 3",
-    tagline: "If the market is above the MAs, focus on buys. If it's under the MAs, focus on sells. Learn to see what the market is actually showing you — and flow with it.",
-    checkpoint: "You can look at any chart and tell the trend, mark your S&R levels, and draw trendlines clean. You know what's noise and what's a real move. Charts don't lie to you anymore.",
-    items: [
-      {
-        label: "Identifying The Trend",
-        note: "Higher high points, higher low points — that's a bullish market. Lower highs, lower lows — that's bearish. Structure is always first.",
-        videos: [
-          { id: "1162341882", hash: "e9c9f5a402", label: "Identifying The Trend 2.0" },
-        ],
-      },
-      {
-        label: "Support & Resistance",
-        note: "What forms a support and resistance? What needs to happen to be considered broken or tested?",
-      },
-      {
-        label: "Drawing Trendlines 2.0",
-        note: "If you can't walk in it, it's invalid. Most traders draw them wrong. Learn where to anchor, when they break, and exactly what that means for the next move.",
-        videos: [
-          { label: "Drawing Trendlines 2.0", href: "https://whop.com/joined/wallstreetacademy/wsa-main-course-2TNeKSURFqVkEA/app/courses/cors_1trKXs59xiIvElIFjnBxKB/lessons/lesn_mNneTFBWDICUR/" },
-        ],
         images: [
-          "/images/gbpjpy-tl-1.png",
-          "/images/gbpjpy-tl-2.png",
-          "/images/gbpjpy-tl-3.png",
-          "/images/gbpjpy-tl-4.png",
-          "/images/gbpjpy-tl-5.png",
+          "/images/sr-1.png",
+          "/images/sr-2.png",
+          "/images/sr-3.png",
+          "/images/sr-4.png",
         ],
+      },
+      {
+        label: "S&R — Homework",
+        tag: "Homework",
+        note: "Send 10 or more examples of how you would identify and place support and resistance levels in your 1-on-1 chat. Make sure to include if support is broken or tested.\n\nIt's important to get the fundamentals right. This will give both you and us the feedback we need to understand what areas require improvement and where we should focus our work moving forward.\n\nIf you have any questions, send a message in the 1-on-1 chat. If you want feedback, you will get it.",
       },
       {
         label: "Additional Information",
@@ -434,115 +463,143 @@ const PHASES: Phase[] = [
         },
       },
       {
-        label: "Chart Practice: 10 Drawn Charts",
-        tag: "Practice",
-        note: "Draw 10 charts with trend direction, S&R, and trendlines marked. This is how you build the eye. You can't skip the reps — submit before moving to Phase 3.",
+        label: "Market Structure 1.0 + 2.0",
+        note: "The structure of every move — what breaks it, what confirms it, and what it tells you about the next setup. This is the foundation everything else sits on.",
+        videos: [
+          { id: "208979674", label: "Market Structure 2.0" },
+          { id: "157785913", label: "Market Structure 1.0" },
+        ],
       },
       {
-        label: "Phase 2 Group Webinar",
-        tag: "Webinar",
-        note: "Live session with Cue — trend identification on live charts, S&R walkthroughs, and trendline review. Cue breaks down exactly what he sees and what he ignores. Complete Phase 2 before joining live.",
-      },
-    ],
-  },
-  {
-    num: "03", title: "Structure + Levels", duration: "Week 3 – 4",
-    tagline: "Regardless of what the MAs are doing, always ask yourself — what is structure doing? This phase is where you learn to read the blueprint of every move before it happens.",
-    checkpoint: "You can map market structure clean on any pair. You can draw a fib from point A to point B and identify where price is most likely to react — 38.2%, 23.6%, the green zone. Entries stop being guesses.",
-    items: [
-      {
-        label: "Using Fibonacci (1.0 + 2.0)",
+        label: "Using Fibonacci 1.0 + 2.0",
         note: "Point A to point B — 38.2% is your first higher-low opportunity, 23.6% is where it gets sloppy. Know which levels to trust and which ones to wait through.",
         videos: [
           { id: "214333836", label: "Fibonacci 2.0" },
           { id: "148814763", label: "Fibonacci 1.0" },
         ],
         images: [
-          "/images/fib-1.png",
-          "/images/fib-2.png",
-          "/images/fib-3.png",
+          "/images/fib-radar-1.png",
+          "/images/fib-radar-2.png",
         ],
       },
       {
-        label: "Market Structure 2.0 + 1.0",
-        note: "The structure of every move — what breaks it, what confirms it, and what it tells you about the next setup. This is the foundation everything else sits on.",
-        videos: [
-          { label: "Market Structure", href: "https://whop.com/joined/wallstreetacademy/wsa-main-course-2TNeKSURFqVkEA/app/courses/cors_vmTT897DEjuNRmvIfiqAE/lessons/lesn_5l2MC05iQ0JI6ctCNtXpB/" },
+        label: "Fibonacci Tool Settings and Chart Examples",
+        note: "How to configure the Fibonacci tool correctly and chart examples showing how to draw it cleanly from swing to swing.",
+        images: [
+          "/images/fib-tool-1.png",
+          "/images/fib-tool-2.png",
+          "/images/fib-tool-3.png",
         ],
       },
       {
-        label: "Top Down Analysis — Cue's Exact Flow",
-        note: "H4 for 30% of your time, M5 for 60%, H1 or M30 for the last 10%. Top down every single session before you touch a lower timeframe entry.",
-        doc: TOP_DOWN_DOC,
+        label: "Fibonacci — Homework",
+        tag: "Homework",
+        note: "Send 5 charts where you mark HLs, HHs, LLs, LHs.",
+        images: ["/images/fib-hw-1.png"],
       },
       {
-        label: "Major Market Patterns",
-        note: "The patterns that repeat across every market. Double tops, double bottoms, head & shoulders, wedges, triangles, pennants — know the shape before the market prints the confirmation candle.",
+        label: "Drawing Trendlines",
+        note: "Always draw trendlines from wick to wick. If you can't walk in it, it's invalid. If that line is too steep, it's forced — it's gonna break, guaranteed waste of time. You want a nice angle.",
+        images: ["/images/gbpjpy-candle.png"],
       },
       {
-        label: "Fibonacci Drill: 20 Historical Moves",
-        tag: "Practice",
-        note: "Pull 20 historical moves and map the fib on each one. Find where price reacted. This repetition is what builds the eye — you cannot shortcut this.",
-      },
-      {
-        label: "Phase 3 Group Webinar",
-        tag: "Webinar",
-        note: "Live session with Cue — Fibonacci application on live charts, top-down analysis walkthrough, market structure identification. Cue shows you exactly how he reads structure before entering. Complete Phase 3 before joining live.",
+        label: "Trendlines — Homework",
+        tag: "Homework",
+        note: "Draw 10 trendlines and 10 counter trendlines as shown above.",
+        images: [
+          "/images/tl-hw-1.png",
+          "/images/tl-hw-2.png",
+          "/images/tl-hw-3.png",
+        ],
       },
     ],
   },
+
+  // ── EXECUTE ───────────────────────────────────────────────────────────────────
   {
-    num: "04", title: "The Confluence System", duration: "Week 4 – 7",
-    tagline: "When it shows up that smooth — structure clean, MAs below the market, 38.2% respected, everything aligned — you have to take advantage of it. This is the system.",
-    checkpoint: "You can identify a full confluence setup: structure first, MAs confirm direction, fib level respected, candle close confirms the entry. You stop entering on feeling. You enter on evidence.",
+    num: "EXE", title: "Execute", duration: "Week 3 – 4",
+    tagline: "Confluence Series is a set of videos where Cue shows you how to combine all technical analysis concepts and adapt them to different market conditions. It also brings together and builds on everything you have learned previously.",
+    checkpoint: "You understand how all technical analysis concepts combine into one system. You can identify a confluence setup. You're ready to launch.",
     items: [
+      {
+        label: "Confluence XXX",
+        note: "The full system in motion — live charts, real setups, structure clean, MAs below the market, 38.2% respected, price acting like butter. Note: there is no audio from 1h 11m to 1h 34m due to a video issue. Sound resumes at 1h 34m.",
+        videos: [{ id: "351940671", label: "Confluence XXX" }],
+      },
+      {
+        label: "Confluence 30.0",
+        note: "Deep-end confluence application. After watching, share what you have learned in the Discord.",
+        videos: [{ id: "680498239", label: "Confluence 30.0" }],
+      },
       {
         label: "66 and Friends",
         note: "Cue's advanced confluence framework. When you see 66 set up on a chart, you already know what's about to happen. This is the system within the system.",
         videos: [{ id: "901447438", label: "66 and Friends" }],
       },
       {
-        label: "Confluence XXX + Confluence 30.0",
-        note: "The deep end. Live charts, real setups, the full system in motion. High MAs smooth below, 38.2% respected, price acting like butter.",
-        videos: [
-          { id: "351940671", label: "Confluence XXX" },
-          { id: "680498239", label: "Confluence 30.0" },
-        ],
+        label: "Chart N Chill",
+        note: "Live chart session alongside the confluence material.",
+        videos: [{ id: "993518415", label: "7/28/24" }],
       },
       {
-        label: "The Process — Maintaining a Live Trade",
-        note: "Never have urgency for the market to go in your favor — that's how you close prematurely. This is entry to exit: how Cue manages a trade in real time, tick by tick.",
-        videos: [{ id: "218319570", label: "The Process" }],
+        label: "Confluence Tick By Tick",
+        note: "Unfiltered real-time execution. Tick by tick — every candle, every close, every moment the market makes a new move. This is how the professional thinks.",
+        videos: [{ id: "1042367807", label: "Tick by Tick" }],
       },
       {
-        label: "Confluence Tick By Tick + Confluence RAW",
-        note: "Unfiltered real-time execution. Tick by tick — that means every candle, every close, every moment the market makes a new move. This is how the professional thinks.",
-        videos: [
-          { id: "1042367807", label: "Tick by Tick" },
-          { id: "1149579397", label: "Confluence RAW" },
-        ],
-      },
-      {
-        label: "50 Setup Drill",
-        tag: "Practice",
-        note: "Mark confluence zones on 50 historical setups — entry, stop, target. Then ask yourself: was structure first? Did the MAs confirm? Was the candle close there? That's the checklist.",
-      },
-      {
-        label: "Phase 4 Group Webinar",
-        tag: "Webinar",
-        note: "Live session with Cue — the full confluence system on live charts, 66 identification, and real setup critique. Cue breaks down what qualifies and what doesn't. Complete Phase 4 before joining live.",
+        label: "Chart N Chill",
+        note: "Live chart session.",
+        videos: [{ id: "1000235936", label: "8/18/24" }],
       },
     ],
   },
+
+  // ── PHASE 1 ───────────────────────────────────────────────────────────────────
   {
-    num: "05", title: "Advanced Execution", duration: "Week 7 – 10",
-    tagline: "Stop being afraid to up your lot size when the risk is tight and the setup is clean. This phase layers in the tools that sharpen your entries and filter the trash.",
-    checkpoint: "You have the full stack. You can identify patterns, recognize execution mistakes before they happen, and your mindset is built to hold through volatility and stay patient.",
+    num: "01", title: "Phase 1 — Launch", duration: "Week 5 +",
+    tagline: "The curriculum lands here. Study the material, execute in real time, review what you did wrong, and build the habit of reviewing every session.",
+    checkpoint: "You're analyzing charts, applying the full system, and reviewing your sessions. You know what to improve. The fundamentals are becoming second nature.",
     items: [
+      {
+        label: "Chart N Chill",
+        note: "Live chart sessions — study these alongside the phase material.",
+        videos: [
+          { id: "1012499868", label: "9/15/24" },
+          { id: "1019458261", label: "10/13/24" },
+          { id: "1024574724", label: "10/28/24" },
+        ],
+      },
+      {
+        label: "Top Down Analysis — Cue's Exact Flow",
+        note: "H4 for 30% of your time, M5 for 60%, H1 or M30 for the last 10%. Run through these steps every session before you touch a lower timeframe entry.",
+        doc: TOP_DOWN_DOC,
+      },
+      {
+        label: "Yes & No Trade Checklist",
+        note: "Run this before every trade. Know when to pull the trigger and when to step away from the charts.",
+        images: [
+          "/images/checklist-no.png",
+          "/images/checklist-yes.png",
+        ],
+      },
+      {
+        label: "Identify Where You Need to Improve",
+        note: "Be honest about where your weak points are. This is how you direct your practice time instead of just watching more videos.",
+        doc: IMPROVE_DOC,
+      },
       {
         label: "Common Technical F**k Ups",
         note: "Treat the charts like a piece of art. Precision, precision, precision. This is Cue's breakdown of the exact mistakes he sees most — the ones that are easily fixed once you see them.",
         videos: [{ id: "1135918376", label: "Common Technical Mistakes" }],
+      },
+      {
+        label: "Chart N Chill",
+        note: "Live chart sessions.",
+        videos: [
+          { id: "1026578614", label: "11/4/24" },
+          { id: "1057675113", label: "2/16/25" },
+          { id: "1062031860", label: "3/2/25" },
+        ],
       },
       {
         label: "Post Course Mindset",
@@ -556,40 +613,140 @@ const PHASES: Phase[] = [
           { id: "300094193", label: "Part 6" },
         ],
       },
+    ],
+  },
+
+  // ── PHASE 2 ───────────────────────────────────────────────────────────────────
+  {
+    num: "02", title: "Phase 2", duration: "Ongoing",
+    tagline: "Backtest everything. Confluence RAW shows you unfiltered decision-making in real time. This is where reps turn into edge.",
+    checkpoint: "You're backtesting consistently and logging your trades. The edge is getting clearer.",
+    items: [
       {
-        label: "Phase 5 Group Webinar",
-        tag: "Webinar",
-        note: "Live session with Cue — advanced execution breakdown, technical mistake review on real charts, and mindset deep dive. This is where the sharper details get locked in. Complete Phase 5 before joining live.",
+        label: "Confluence RAW",
+        note: "Unfiltered, uncut confluence application. Real-time decision-making without the polish — this is how Cue actually trades.",
+        videos: [{ id: "1149579397", label: "Confluence RAW" }],
+      },
+      {
+        label: "Cue Cast",
+        note: "Live market analysis session.",
+        videos: [{ id: "1068805247", label: "3/24/25" }],
+      },
+      {
+        label: "Chart N Chill",
+        note: "Live chart sessions.",
+        videos: [
+          { id: "1073067677", label: "4/6/25" },
+          { id: "1075342024", label: "4/13/25" },
+          { id: "1077278344", label: "4/20/25" },
+        ],
+      },
+      {
+        label: "Backtest Your Pair",
+        tag: "Homework",
+        note: "Go back no more than 5 months on your chosen pair. Start with HTF top-down analysis, mark S&R, draw Fibonacci, identify exhaustion zones and confluence areas. Then drop to LTFs for entries. Always adapt to current market conditions.",
+        doc: BACKTEST_DOC,
+      },
+      {
+        label: "Chart N Chill",
+        note: "Live chart session.",
+        videos: [{ id: "1079236967", label: "4/27/25" }],
       },
     ],
   },
+
+  // ── PHASE 3 ───────────────────────────────────────────────────────────────────
   {
-    num: "06", title: "Live & Consistent", duration: "Week 10 – 16",
-    tagline: "All I need is 20 or 30 pips a day. The real money is here. This phase is where you stop watching and start compounding.",
-    checkpoint: "You're posting setups, getting reviewed, journaling every trade. After every loss you're writing down what you did wrong and what you could do better. The majority wins is all that matters — and you're building toward that.",
+    num: "03", title: "Phase 3", duration: "Ongoing",
+    tagline: "The main goal of this phase is to see where you need the most focus — where you need to improve, what's holding you back, what changed since you started.",
+    checkpoint: "You've completed a full honest self-evaluation. You know exactly where you are, what's holding you back, and what needs to change.",
     items: [
       {
-        label: "No Trade Checklist",
-        note: "Before you click — run this first. If 2 or more boxes are checked, step away from the charts. The market will be there tomorrow. Your account might not be if you force it.",
-        checklist: NO_TRADE_CHECKLIST,
+        label: "Homework — Trader Self-Reevaluation",
+        tag: "Homework",
+        note: "Step back and honestly re-evaluate yourself. Understand your current performance, mindset, and progress since starting. Identify what must change going forward.",
+        doc: SELF_EVAL_DOC,
       },
       {
-        label: "Trade Ready Checklist",
-        note: "Every piece of your confluence stack — confirmed and documented. When all six sections check out, the setup is real. If anything's missing, wait for a better one.",
-        checklist: TRADE_READY_CHECKLIST,
-      },
-      { label: `Chart N Chill — ${CNC.length} Sessions`, note: "Every Chart N Chill session on demand. When you have a question, the answer is probably already recorded here. Most recent first.", videos: CNC },
-      { label: `CueCAST — ${CUECASTS.length} Sessions`, note: "Cue's live market analysis sessions. Real time, real charts, real decisions — this is how the professional thinks through a session.", videos: CUECASTS },
-      { label: "30-Day Live Trading Journal", tag: "Practice", note: "Track every trade: entry, stop, target, outcome, and notes. Review it weekly. This data is what makes you better — not more videos. The journal is the system." },
-      {
-        label: "Phase 6 Group Webinar",
-        tag: "Webinar",
-        note: "Live session with Cue — live trading review, journal critique, and setup analysis. Real accountability on what's working and what needs adjusting. Complete Phase 6 before joining live.",
+        label: "Chart N Chill",
+        note: "Live chart sessions.",
+        videos: [
+          { id: "1081375136", hash: "cca8a4dfdc", label: "5/5/25" },
+          { id: "1085559828", label: "5/18/25" },
+          { id: "1088773116", label: "5/25/25" },
+        ],
       },
       {
-        label: "Final Call — Progress & Wins",
-        tag: "Live",
-        note: "The closing call. You and your cohort present your growth — wins, lessons, account progress. Cue reviews where you are and maps the path forward. This is the graduation.",
+        label: "Study, Trade, Review + Journal, Backtest, Repeat",
+        note: "Use Cue AI and your 1-on-1 chat for feedback. You need feedback and repetition. There is no shortcut — this is the process.",
+      },
+    ],
+  },
+
+  // ── PHASE 4 ───────────────────────────────────────────────────────────────────
+  {
+    num: "04", title: "Phase 4", duration: "Ongoing",
+    tagline: "Advanced Cue Cast deep dives and Chart N Chill live analysis. This is where professional-level thinking gets locked in.",
+    checkpoint: "Deep in the curriculum. Advanced sessions reviewed, live analysis absorbed. Your reading of the market is sharper.",
+    items: [
+      {
+        label: "Cue Cast",
+        note: "Live market analysis sessions.",
+        videos: [
+          { id: "1089713979", hash: "9e305bfb82", label: "6/2/25 B" },
+          { id: "1089858154", hash: "b07ae65236", label: "6/2/25" },
+          { id: "1093588206", hash: "6400ebc70c", label: "6/15/25" },
+        ],
+      },
+      {
+        label: "Chart N Chill",
+        note: "Live chart sessions.",
+        videos: [
+          { id: "1095497142", label: "6/22/25" },
+          { id: "1097412063", label: "6/29/25" },
+        ],
+      },
+      {
+        label: "Cue Cast",
+        note: "Live market analysis session.",
+        videos: [{ id: "1097719191", hash: "164ecad44f", label: "6/30/25" }],
+      },
+      {
+        label: "Chart N Chill",
+        note: "Live chart sessions.",
+        videos: [
+          { id: "1099239519", label: "7/6/25" },
+          { id: "1101101876", label: "7/13/25" },
+          { id: "1106944714", hash: "20f9223044", label: "8/3/25" },
+          { id: "1108943478", label: "8/10/25" },
+        ],
+      },
+      {
+        label: "Cue Cast",
+        note: "Live market analysis sessions.",
+        videos: [
+          { id: "1110811593", hash: "4f6fcd1aa4", label: "8/17/25" },
+          { id: "1112787551", hash: "99d5e68566", label: "8/24/25" },
+        ],
+      },
+    ],
+  },
+
+  // ── BONUS ─────────────────────────────────────────────────────────────────────
+  {
+    num: "★", title: "Bonus", duration: "Ongoing",
+    tagline: "Every Chart N Chill and CueCAST session on demand. When you have a question, the answer is probably already recorded here. Most recent first.",
+    checkpoint: "Keep watching. Keep reviewing. Keep improving.",
+    items: [
+      {
+        label: `Chart N Chill — ${CNC.length} Sessions`,
+        note: "Every Chart N Chill session on demand. Most recent first.",
+        videos: CNC,
+      },
+      {
+        label: `CueCAST — ${CUECASTS.length} Sessions`,
+        note: "Cue's live market analysis sessions. Real time, real charts, real decisions — this is how the professional thinks through a session.",
+        videos: CUECASTS,
       },
     ],
   },
@@ -1097,25 +1254,27 @@ function ModuleItem({ item, index, isLast, onPlay, onOpenDoc, onOpenChecklist, o
   );
 }
 
-// Globe position per section (hero + 6 phases)
+// Globe position per section (hero + 8 phases)
 const GLOBE_POS = [
   { left: 78, top: 30, scale: 2.8, opacity: 0.32 }, // hero
-  { left: 20, top: 55, scale: 2.4, opacity: 0.30 }, // prepare
-  { left: 88, top: 52, scale: 2.0, opacity: 0.28 }, // phase 01
-  { left: 16, top: 50, scale: 2.2, opacity: 0.26 }, // phase 02
-  { left: 76, top: 22, scale: 1.8, opacity: 0.25 }, // phase 03
-  { left: 72, top: 44, scale: 2.6, opacity: 0.30 }, // phase 04
-  { left: 15, top: 42, scale: 2.0, opacity: 0.26 }, // phase 05
-  { left: 82, top: 28, scale: 3.0, opacity: 0.28 }, // phase 06
+  { left: 20, top: 55, scale: 2.4, opacity: 0.30 }, // prepare (00)
+  { left: 88, top: 52, scale: 2.0, opacity: 0.28 }, // set
+  { left: 16, top: 50, scale: 2.2, opacity: 0.26 }, // execute
+  { left: 76, top: 22, scale: 1.8, opacity: 0.25 }, // phase 01
+  { left: 72, top: 44, scale: 2.6, opacity: 0.30 }, // phase 02
+  { left: 15, top: 42, scale: 2.0, opacity: 0.26 }, // phase 03
+  { left: 82, top: 28, scale: 3.0, opacity: 0.28 }, // phase 04
+  { left: 60, top: 65, scale: 2.2, opacity: 0.26 }, // bonus
 ];
 
 const PROGRESS_PHASES = [
-  { num: '01', title: 'Foundation & Mindset',    duration: 'Week 1–2'   },
-  { num: '02', title: 'Reading Price Action',     duration: 'Week 2–3'   },
-  { num: '03', title: 'Structure + Levels',       duration: 'Week 3–4'   },
-  { num: '04', title: 'The Confluence System',    duration: 'Week 4–7'   },
-  { num: '05', title: 'Advanced Execution',       duration: 'Week 7–10'  },
-  { num: '06', title: 'Live & Consistent',        duration: 'Week 10–16' },
+  { num: 'SET', title: 'Set',               duration: 'Week 1–2' },
+  { num: 'EXE', title: 'Execute',           duration: 'Week 3–4' },
+  { num: '01',  title: 'Phase 1 — Launch', duration: 'Week 5+'  },
+  { num: '02',  title: 'Phase 2',           duration: 'Ongoing'  },
+  { num: '03',  title: 'Phase 3',           duration: 'Ongoing'  },
+  { num: '04',  title: 'Phase 4',           duration: 'Ongoing'  },
+  { num: '★',   title: 'Bonus',             duration: 'Ongoing'  },
 ];
 
 function fmt(ts: number) {
@@ -1306,11 +1465,11 @@ export default function RoadmapPage() {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "rgba(255,255,255,0.3)", letterSpacing: "0.2em", textTransform: "uppercase" }}>16-Week Curriculum</span>
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "rgba(255,255,255,0.25)", letterSpacing: "0.1em" }}>
-              {(member?.current_phase ?? 0) === 0 ? 'Not started' : (member?.current_phase ?? 0) >= 6 ? 'Complete' : `Phase ${member?.current_phase} of 6`}
+              {(member?.current_phase ?? 0) === 0 ? 'Not started' : (member?.current_phase ?? 0) >= 7 ? 'Complete' : `Phase ${member?.current_phase} of 7`}
             </span>
           </div>
           <div style={{ height: 3, background: "rgba(255,255,255,0.07)", borderRadius: 2, overflow: "hidden" }}>
-            <div style={{ height: "100%", width: `${((member?.current_phase ?? 0) / 6) * 100}%`, background: "var(--acid)", borderRadius: 2, transition: "width 0.4s ease" }} />
+            <div style={{ height: "100%", width: `${((member?.current_phase ?? 0) / 7) * 100}%`, background: "var(--acid)", borderRadius: 2, transition: "width 0.4s ease" }} />
           </div>
         </div>
 
@@ -1398,7 +1557,7 @@ export default function RoadmapPage() {
           {/* Stats row */}
           <div style={{ display: "inline-flex", gap: 0, border: "1px solid rgba(255,255,255,0.07)", overflow: "hidden", marginBottom: 80, borderRadius: 12 }}>
             {[
-              { n: "6", label: "Phases" },
+              { n: "8", label: "Phases" },
               { n: "16", label: "Weeks" },
               { n: String(totalVideos) + "+", label: "Videos" },
               { n: `${CNC.length + CUECASTS.length}`, label: "Live Sessions" },
