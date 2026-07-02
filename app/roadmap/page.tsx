@@ -346,8 +346,8 @@ const PHASES: Phase[] = [
     items: [
       {
         label: "Welcome Video",
-        tag: "Coming Soon",
         note: "Start here. Quillan will walk you through what Wall Street Academy is, what this program is built on, and exactly what to expect. Watch before anything else.",
+        videos: [{ id: "1205968513", label: "Welcome" }],
       },
       {
         label: "Read This",
