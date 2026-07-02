@@ -1632,7 +1632,7 @@ export default function RoadmapPage() {
               { label: `${totalVideos}+ Videos`, desc: "Every module, webinar, and live session — all on demand." },
               { label: `${CNC.length} Chart N Chill`, desc: "Every Chart N Chill on record. The answer is probably already in here." },
               { label: `${CUECASTS.length} CueCAST Sessions`, desc: "Cue's live market analysis — real time, real charts." },
-              { label: "Monthly Group Q&A", desc: "4 live calls with Cue across the 4 months. Bring your charts." },
+              { label: "16 Weekly Webinars", desc: "1 live webinar per week with Cue across 16 weeks. Bring your charts." },
               { label: "Structured Drills", desc: "Practice between phases is required. This is a training program, not a library." },
               { label: "Cue AI — On Demand", desc: "Ask Cue anything, anytime. Trained on WSA content, answers in his voice." },
             ].map((s, i) => (
