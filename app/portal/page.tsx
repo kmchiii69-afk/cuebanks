@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Globe from '@/components/ui/globe';
 
 interface Member {
   email: string;
@@ -132,7 +133,7 @@ export default function PortalPage() {
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', background: '#040608', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ minHeight: '100vh', background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ ...M, fontSize: 11, color: 'rgba(249,255,60,0.4)', letterSpacing: '0.2em' }}>LOADING</div>
       </div>
     );
@@ -144,13 +145,17 @@ export default function PortalPage() {
   const londonNyOverlap = openSessions[0] && openSessions[1];
 
   return (
-    <div style={{ minHeight: '100vh', background: '#040608', color: '#fff', position: 'relative' }}>
-      {/* Grid bg */}
+    <div style={{ minHeight: '100vh', background: '#000', color: '#fff', position: 'relative' }}>
+      {/* Space atmosphere */}
+      <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse 100% 70% at 65% 28%, rgba(6,10,20,1) 0%, rgba(0,0,0,1) 65%)' }} />
+
+      {/* Earth Globe */}
       <div style={{
-        position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0,
-        backgroundImage: 'linear-gradient(rgba(249,255,60,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(249,255,60,0.015) 1px, transparent 1px)',
-        backgroundSize: '52px 52px',
-      }} />
+        position: 'fixed', top: 0, left: 0, zIndex: 0, pointerEvents: 'none', opacity: 0.32,
+        transform: 'translate3d(78vw, 30vh, 0) translate3d(-50%, -50%, 0) scale3d(2.8, 2.8, 1)',
+      }}>
+        <Globe size={250} />
+      </div>
 
       {/* ── NAV ─────────────────────────────────────────────────────── */}
       <nav style={{
