@@ -34,18 +34,14 @@ interface Webinar {
 }
 
 const PHASES = [
-  { num: 'PREP', title: 'Prepare', duration: 'Week 0–1' },
-  { num: 'SET', title: 'Set',     duration: 'Week 1–3' },
-  { num: 'EXE', title: 'Execute', duration: 'Week 4'   },
-  { num: '01',  title: 'Phase 1', duration: 'Week 5'   },
-  { num: '02',  title: 'Phase 2', duration: 'Week 6–7' },
-  { num: '03',  title: 'Phase 3', duration: 'Week 7–10'},
-  { num: '04',  title: 'Phase 4', duration: 'Week 11–14'},
-  { num: '★',   title: 'Bonus',   duration: 'Week 14–21'},
-];
-  { num: '03',  title: 'Phase 3', duration: 'Ongoing'  },
-  { num: '04',  title: 'Phase 4', duration: 'Ongoing'  },
-  { num: '★',   title: 'Bonus',   duration: 'Ongoing'  },
+  { num: 'PREP', title: 'Prepare', duration: 'Week 1'     },
+  { num: 'SET',  title: 'Set',     duration: 'Week 2–3'   },
+  { num: 'EXE',  title: 'Execute', duration: 'Week 4'     },
+  { num: '01',   title: 'Phase 1', duration: 'Week 5'     },
+  { num: '02',   title: 'Phase 2', duration: 'Week 6–7'   },
+  { num: '03',   title: 'Phase 3', duration: 'Week 7–10'  },
+  { num: '04',   title: 'Phase 4', duration: 'Week 11–14' },
+  { num: '★',    title: 'Bonus',   duration: 'Week 14–21' },
 ];
 
 const SESSIONS = [

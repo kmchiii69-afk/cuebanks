@@ -340,7 +340,7 @@ const IMPROVE_DOC: DocContent = {
 const PHASES: Phase[] = [
   // ── PREPARE ──────────────────────────────────────────────────────────────────
   {
-    num: "00", title: "Prepare", duration: "Week 0",
+    num: "00", title: "Prepare", duration: "Week 1",
     tagline: "Before the program officially starts, this is where you set yourself up. The traders who skip this week show up to Week 1 unprepared — don't be that person.",
     checkpoint: "You've watched the welcome video, your 1-on-1 channel is active, you know your lot sizing and risk parameters, and you've examined your own trading fears. You're ready.",
     items: [
@@ -390,7 +390,7 @@ const PHASES: Phase[] = [
 
   // ── SET ───────────────────────────────────────────────────────────────────────
   {
-    num: "SET", title: "Set", duration: "Week 1 – 2",
+    num: "SET", title: "Set", duration: "Week 2 – 3",
     tagline: "The fundamentals are the foundation. Support, resistance, Fibonacci, structure, trendlines — master these tools before you try to combine them.",
     checkpoint: "You can identify trend, mark S&R, draw Fibonacci, understand market structure, and draw clean trendlines. You've sent your homework for feedback. The fundamentals are locked in.",
     items: [
@@ -407,7 +407,6 @@ const PHASES: Phase[] = [
       {
         label: "Identifying the Trend",
         note: "Higher high points, higher low points — that's a bullish market. Lower highs, lower lows — that's bearish. Structure is always first.",
-        videos: [{ id: "1162341882", hash: "e9c9f5a402", label: "Identifying The Trend 2.0" }],
       },
       {
         label: "Cue's Tips",
@@ -417,12 +416,6 @@ const PHASES: Phase[] = [
       {
         label: "Support & Resistance",
         note: "What forms a support and resistance level? What needs to happen for it to be considered broken or tested? This is the foundation of every setup you will ever take.",
-        images: [
-          "/images/sr-1.png",
-          "/images/sr-2.png",
-          "/images/sr-3.png",
-          "/images/sr-4.png",
-        ],
       },
       {
         label: "S&R — Homework",
@@ -471,61 +464,63 @@ const PHASES: Phase[] = [
         ],
       },
       {
+        label: "Market Structure Homework",
+        tag: "Homework",
+        note: "Send 5 charts where you mark HLs, HHs, LLs, LHs in your 1-on-1 chat.",
+      },
+      {
         label: "Using Fibonacci 1.0 + 2.0",
         note: "Point A to point B — 38.2% is your first higher-low opportunity, 23.6% is where it gets sloppy. Know which levels to trust and which ones to wait through.",
         videos: [
           { id: "214333836", label: "Fibonacci 2.0" },
           { id: "148814763", label: "Fibonacci 1.0" },
         ],
-        images: [
-          "/images/fib-radar-1.png",
-          "/images/fib-radar-2.png",
-        ],
       },
       {
         label: "Fibonacci Tool Settings and Chart Examples",
-        note: "How to configure the Fibonacci tool correctly and chart examples showing how to draw it cleanly from swing to swing.",
+        note: "How to configure the Fibonacci tool correctly in your charting platform. Follow these exact settings so your retracement levels match what Cue uses.",
         images: [
-          "/images/fib-tool-1.png",
-          "/images/fib-tool-2.png",
-          "/images/fib-tool-3.png",
+          "/images/fib-1.png",
+          "/images/fib-2.png",
+          "/images/fib-3.png",
         ],
       },
       {
         label: "Fibonacci — Homework",
         tag: "Homework",
-        note: "Send 5 charts where you mark HLs, HHs, LLs, LHs.",
-        images: ["/images/fib-hw-1.png"],
+        note: "Draw Fibonacci retracements on 5 charts from swing high to swing low (and reverse). Make sure the levels are clean and correctly drawn. Send your charts in the 1-on-1 chat.",
       },
       {
         label: "Drawing Trendlines",
         note: "Always draw trendlines from wick to wick. If you can't walk in it, it's invalid. If that line is too steep, it's forced — it's gonna break, guaranteed waste of time. You want a nice angle.",
-        images: ["/images/gbpjpy-candle.png"],
+        videos: [{ id: "1162341882", hash: "e9c9f5a402", label: "Drawing Trendlines" }],
+        images: ["/images/gbpjpy-tl-1.png"],
       },
       {
         label: "Trendlines — Homework",
         tag: "Homework",
         note: "Draw 10 trendlines and 10 counter trendlines as shown above.",
         images: [
-          "/images/tl-hw-1.png",
-          "/images/tl-hw-2.png",
-          "/images/tl-hw-3.png",
+          "/images/gbpjpy-tl-2.png",
+          "/images/gbpjpy-tl-3.png",
+          "/images/gbpjpy-tl-4.png",
+          "/images/gbpjpy-tl-5.png",
         ],
+      },
+      {
+        label: "Confluence XXX",
+        note: "The full system in motion — live charts, real setups, structure clean, MAs below the market, 38.2% respected, price acting like butter. Note: there is no audio from 1h 11m to 1h 34m due to a video issue. Sound resumes at 1h 34m.",
+        videos: [{ id: "351940671", label: "Confluence XXX" }],
       },
     ],
   },
 
   // ── EXECUTE ───────────────────────────────────────────────────────────────────
   {
-    num: "EXE", title: "Execute", duration: "Week 3 – 4",
+    num: "EXE", title: "Execute", duration: "Week 4",
     tagline: "Confluence Series is a set of videos where Cue shows you how to combine all technical analysis concepts and adapt them to different market conditions. It also brings together and builds on everything you have learned previously.",
     checkpoint: "You understand how all technical analysis concepts combine into one system. You can identify a confluence setup. You're ready to launch.",
     items: [
-      {
-        label: "Confluence XXX",
-        note: "The full system in motion — live charts, real setups, structure clean, MAs below the market, 38.2% respected, price acting like butter. Note: there is no audio from 1h 11m to 1h 34m due to a video issue. Sound resumes at 1h 34m.",
-        videos: [{ id: "351940671", label: "Confluence XXX" }],
-      },
       {
         label: "Confluence 30.0",
         note: "Deep-end confluence application. After watching, share what you have learned in the Discord.",
@@ -556,7 +551,7 @@ const PHASES: Phase[] = [
 
   // ── PHASE 1 ───────────────────────────────────────────────────────────────────
   {
-    num: "01", title: "Phase 1 — Launch", duration: "Week 5 +",
+    num: "01", title: "Phase 1 — Launch", duration: "Week 5",
     tagline: "The curriculum lands here. Study the material, execute in real time, review what you did wrong, and build the habit of reviewing every session.",
     checkpoint: "You're analyzing charts, applying the full system, and reviewing your sessions. You know what to improve. The fundamentals are becoming second nature.",
     items: [
@@ -577,10 +572,7 @@ const PHASES: Phase[] = [
       {
         label: "Yes & No Trade Checklist",
         note: "Run this before every trade. Know when to pull the trigger and when to step away from the charts.",
-        images: [
-          "/images/checklist-no.png",
-          "/images/checklist-yes.png",
-        ],
+        checklist: NO_TRADE_CHECKLIST,
       },
       {
         label: "Identify Where You Need to Improve",
@@ -618,7 +610,7 @@ const PHASES: Phase[] = [
 
   // ── PHASE 2 ───────────────────────────────────────────────────────────────────
   {
-    num: "02", title: "Phase 2", duration: "Ongoing",
+    num: "02", title: "Phase 2", duration: "Week 6 – 7",
     tagline: "Backtest everything. Confluence RAW shows you unfiltered decision-making in real time. This is where reps turn into edge.",
     checkpoint: "You're backtesting consistently and logging your trades. The edge is getting clearer.",
     items: [
@@ -657,7 +649,7 @@ const PHASES: Phase[] = [
 
   // ── PHASE 3 ───────────────────────────────────────────────────────────────────
   {
-    num: "03", title: "Phase 3", duration: "Ongoing",
+    num: "03", title: "Phase 3", duration: "Week 7 – 10",
     tagline: "The main goal of this phase is to see where you need the most focus — where you need to improve, what's holding you back, what changed since you started.",
     checkpoint: "You've completed a full honest self-evaluation. You know exactly where you are, what's holding you back, and what needs to change.",
     items: [
@@ -685,7 +677,7 @@ const PHASES: Phase[] = [
 
   // ── PHASE 4 ───────────────────────────────────────────────────────────────────
   {
-    num: "04", title: "Phase 4", duration: "Ongoing",
+    num: "04", title: "Phase 4", duration: "Week 11 – 14",
     tagline: "Advanced Cue Cast deep dives and Chart N Chill live analysis. This is where professional-level thinking gets locked in.",
     checkpoint: "Deep in the curriculum. Advanced sessions reviewed, live analysis absorbed. Your reading of the market is sharper.",
     items: [
@@ -734,7 +726,7 @@ const PHASES: Phase[] = [
 
   // ── BONUS ─────────────────────────────────────────────────────────────────────
   {
-    num: "★", title: "Bonus", duration: "Ongoing",
+    num: "★", title: "Bonus", duration: "Week 14 – 21",
     tagline: "Every Chart N Chill and CueCAST session on demand. When you have a question, the answer is probably already recorded here. Most recent first.",
     checkpoint: "Keep watching. Keep reviewing. Keep improving.",
     items: [
@@ -1268,13 +1260,13 @@ const GLOBE_POS = [
 ];
 
 const PROGRESS_PHASES = [
-  { num: 'SET', title: 'Set',               duration: 'Week 1–2' },
-  { num: 'EXE', title: 'Execute',           duration: 'Week 3–4' },
-  { num: '01',  title: 'Phase 1 — Launch', duration: 'Week 5+'  },
-  { num: '02',  title: 'Phase 2',           duration: 'Ongoing'  },
-  { num: '03',  title: 'Phase 3',           duration: 'Ongoing'  },
-  { num: '04',  title: 'Phase 4',           duration: 'Ongoing'  },
-  { num: '★',   title: 'Bonus',             duration: 'Ongoing'  },
+  { num: 'SET', title: 'Set',               duration: 'Week 2–3'   },
+  { num: 'EXE', title: 'Execute',           duration: 'Week 4'     },
+  { num: '01',  title: 'Phase 1 — Launch', duration: 'Week 5'     },
+  { num: '02',  title: 'Phase 2',           duration: 'Week 6–7'   },
+  { num: '03',  title: 'Phase 3',           duration: 'Week 7–10'  },
+  { num: '04',  title: 'Phase 4',           duration: 'Week 11–14' },
+  { num: '★',   title: 'Bonus',             duration: 'Week 14–21' },
 ];
 
 function fmt(ts: number) {
