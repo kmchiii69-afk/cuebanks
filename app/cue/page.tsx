@@ -19,10 +19,24 @@ export default function CuePage() {
   const [input, setInput]       = useState("");
   const [streaming, setStreaming] = useState(false);
   const [focused, setFocused]   = useState(false);
+  const [historyLoaded, setHistoryLoaded] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const hasMessages = messages.length > 0;
+
+  // Load chat history on mount
+  useEffect(() => {
+    fetch('/api/chat-history')
+      .then(r => r.ok ? r.json() : [])
+      .then((rows: Array<{ role: string; content: string }>) => {
+        if (Array.isArray(rows) && rows.length > 0) {
+          setMessages(rows.map(r => ({ role: r.role === 'assistant' ? 'assistant' : 'user', content: r.content })));
+        }
+      })
+      .catch(() => {})
+      .finally(() => setHistoryLoaded(true));
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -61,10 +75,12 @@ export default function CuePage() {
 
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
+      let assistantContent = "";
       while (true) {
         const { value, done } = await reader.read();
         if (done) break;
         const chunk = decoder.decode(value, { stream: true });
+        assistantContent += chunk;
         setMessages((prev) => {
           const copy = [...prev];
           copy[copy.length - 1] = {
@@ -73,6 +89,14 @@ export default function CuePage() {
           };
           return copy;
         });
+      }
+      // Save exchange to history (fire-and-forget)
+      if (assistantContent) {
+        fetch('/api/chat-history', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: [userMsg, { role: 'assistant', content: assistantContent }] }),
+        }).catch(() => {});
       }
     } catch {
       setMessages((prev) => {
@@ -167,14 +191,21 @@ export default function CuePage() {
           </div>
         </Link>
 
-        <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8 }}>
-          <span
-            className="pulse"
-            style={{ width: 5, height: 5, background: "#22c55e", borderRadius: "50%", display: "inline-block" }}
-          />
-          <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "#22c55e", letterSpacing: "0.18em", textTransform: "uppercase", fontWeight: 700 }}>
-            Online
-          </span>
+        <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 16 }}>
+          {historyLoaded && messages.length > 0 && (
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 8, color: "rgba(255,255,255,0.22)", letterSpacing: "0.14em", textTransform: "uppercase" }}>
+              {messages.filter(m => m.role === 'user').length} questions in history
+            </span>
+          )}
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span
+              className="pulse"
+              style={{ width: 5, height: 5, background: "#22c55e", borderRadius: "50%", display: "inline-block" }}
+            />
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "#22c55e", letterSpacing: "0.18em", textTransform: "uppercase", fontWeight: 700 }}>
+              Online
+            </span>
+          </div>
         </div>
       </header>
 

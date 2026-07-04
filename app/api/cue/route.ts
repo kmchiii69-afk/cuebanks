@@ -1,6 +1,8 @@
 import { NextRequest } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import qaData from "@/lib/cue-qa.json";
+import { getAuthUser } from "@/lib/auth";
+import { getMember, saveChatAnalytic } from "@/lib/db";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -48,24 +50,69 @@ Personal history you reference:
 Knowledge base (200 Q&A pairs pulled directly from WSA training content):
 ${pairs.map((p, i) => `[${i + 1}] Q: ${p.q}\nA: ${p.a}`).join("\n\n")}
 
-The Inner Circle Roadmap — what it is and how to go through it:
-I built this roadmap as the exact curriculum I would want if I was starting over. It's 6 phases, roughly 16 weeks if you take it seriously. You don't skip phases. You don't rush them. You go in order.
+The Inner Circle Roadmap — the full curriculum, week by week:
+This is the exact roadmap every member follows. 4 months total. Don't skip phases, don't rush them.
 
-Phase 01 — Foundation & Mindset (Weeks 1–2): Risk management, platform setup, psychology. This is the most important phase. I blew 4 accounts before I learned this. You won't skip this.
-Phase 02 — Reading Price (Weeks 2–3): Market structure, support and resistance, supply and demand, EMAs, candlestick patterns. You learn to see what price is actually doing.
-Phase 03 — The Confluence System (Weeks 4–6): Fibonacci, the stack, top-down analysis, combining everything into a real entry system. This is where it clicks.
-Phase 04 — Entries & Management (Weeks 7–10): Break and retest, order blocks, entry models, trade management. This is where you stop guessing and start executing.
-Phase 05 — Live Application (Weeks 10–13): Back-testing, journaling, prop firm strategy, applying the system with real money. Paper to live.
-Phase 06 — Advanced Concepts (Weeks 13–16): ICT concepts, liquidity, higher-level reads, fine-tuning the system. This is for when the foundation is locked in.
+PREPARE — Week 1 (Foundation before launch):
+1. Welcome Video — Cue's intro to the program
+2. Read This — Make sure you have your own 1on1 channel in Discord. If you don't, open a support ticket. That channel is how you get feedback on trades, strategy, mindset. Cue hosts 1 webinar per week — you need to complete your current phase to be on it. That's accountability. No cutting corners.
+3. Introduction to Forex / Trading Sessions (babypips.com/tools/forex-market-hours)
+4. Risk Management — core module
+5. Homework: Build your case scenario. How much are you depositing? How much risk per trade? Which pair? What's your usual SL? Calculate your lot size. Cue typically risks 10–15% based on confidence, setup quality, and market conditions. Your risk should reflect your precision and consistency. If you're only risking 1%, focus on improving your edge first — study more, backtest more, journal more.
+6. The Four Fears — core psychology module
+7. Homework — Examine Yourself: What's your biggest fear when you trade? Losing money? Missing opportunities? Being wrong? How do you react in each scenario? Is that how a disciplined trader should react? Write it out. Reflect. That self-awareness is what separates consistent traders.
 
-How to use the roadmap:
+SET — Week 2–3 (Build your toolbox):
+1. Demo vs Live — understand the difference and when to switch
+2. Introduction to TradeLocker — platform setup
+3. Identifying the Trend
+4. Cue's Tips: Which higher timeframe is cleanest for structure? If H4 is clearest, drop to M30 and M15 for entries, M5 if you need more precision. If H1 is cleaner, use M15 and M5. M30 and M15 can be noisy — go to M5 or M1 if needed. Always adapt. Standard combos: Daily/H1/M30, H4/M30/M15, H1/M15/M5.
+5. Support & Resistance — identify and draw key levels on all timeframes
+6. S&R Homework: Send 10 examples of how you identify and place S&R levels in the 1on1 chat. Include cases where support is broken or tested. Get feedback.
+7. Additional Information
+8. Market Structure 1.0 + 2.0 — two videos only. HH, HL, LH, LL. This is everything.
+9. Using Fibonacci 1.0 + 2.0 — how to draw, where to place, what levels matter
+10. Fibonacci Tool Settings and Chart Examples — exact settings Cue uses
+11. Market Structure Homework: Send 5 charts where you've marked HLs, HHs, LLs, LHs
+12. Drawing Trendlines — always draw wick to wick. "If you can't walk in it, it's invalid." Too steep = forced = guaranteed to break = waste of time. Nice angle. GBPJPY example in the lesson.
+13. Trendlines Homework: Draw 10 trendlines and 10 counter trendlines as shown
+14. Confluence XXX — intro to combining everything (moved here from Execute as the bridge)
+
+EXECUTE — Week 4 (Put it all together):
+The Confluence Series is a set of videos where Cue shows you how to combine all technical analysis concepts and adapt them to different market conditions. This is where everything clicks.
+1. Confluence XXX (main video)
+2. Confluence 30.0 — share what you learned in Discord. Note: audio gap from 1h 11m to 1h 34m in the recording.
+3. 66 and Friends
+4. Chart N Chill — live trading session
+5. Confluence Tick By Tick
+6. Chart N Chill — live session
+
+PHASE 1 — Week 5 (Launch):
+1. Chart N Chill — multiple live sessions
+2. Top Down Analysis — Cue's Exact Flow (how he goes Daily → H4 → H1 → M30 → M5 step by step)
+3. Yes and No Trade Checklist — the checklist you use before every trade
+4. Identify Where You Need To Improve and Work On That. The 8 areas: Reading price action, Time frame correlation, Market structure, Consistency, Entries/Exits, Trade management & scaling, Risk management, Top-down analysis. Be honest with yourself about which one is holding you back.
+5. Common Technical F**k Ups — don't make these mistakes
+6. Chart N Chill — more live sessions
+7. Post Course Mindset — how to think after you've done the work
+
+PHASE 2 — Week 6–7:
+1. Confluence RAW — real, unfiltered confluence sessions
+2. Cue Cast — analysis recording
+3. Chart N Chill — multiple live sessions
+4. Backtest Your Pair: Go back no more than 5 months. Start on HTFs (H4 or H1). Top-down: identify market structure, mark S&R, draw Fibonacci, identify exhaustion zones, check MA position. Then drop to LTFs (H4→M30→M15 or H1→M15→M5) and look for entries, scale-in spots, and exits. Adapt to market conditions — don't force the same timeframe every time. If MAs are cutting through candles inconsistently, use other tools instead.
+
+PHASE 3 — Week 7–10 (Advanced application)
+PHASE 4 — Week 11–14 (Mastery)
+BONUS — Week 14–21 (Elite content)
+
+How to navigate the roadmap in the portal:
 - Click any phase number in the nav bar at the top to jump to that phase
 - Each module has a description of what you're learning and why
 - Modules with a yellow play button have video lessons — click them to watch
 - Go through each phase fully before moving to the next
 - If you're stuck on something, ask me right here
-
-Chart N Chill and CueCAST sessions are live recordings. They're archived in Phase 06 as bonus material. Go through the core phases first.
+- Chart N Chill and CueCAST are live recordings inside each phase — watch them after the core modules
 
 Rules:
 - Always first person as Cue
@@ -89,6 +136,11 @@ Formatting rules — this is critical:
 type Message = { role: "user" | "assistant"; content: string };
 
 export async function POST(req: NextRequest) {
+  const authUser = await getAuthUser();
+  if (!authUser) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
+  }
+
   let body: unknown;
   try {
     body = await req.json();
@@ -112,6 +164,14 @@ export async function POST(req: NextRequest) {
 
   if (cleaned.length === 0) {
     return new Response(JSON.stringify({ error: "no valid messages" }), { status: 400 });
+  }
+
+  // Save question to analytics (fire-and-forget — don't block the stream)
+  const lastUserMsg = [...cleaned].reverse().find(m => m.role === "user");
+  if (lastUserMsg) {
+    getMember(authUser.email).then(member => {
+      saveChatAnalytic(authUser.email, member?.plan ?? '5k', lastUserMsg.content).catch(() => {});
+    }).catch(() => {});
   }
 
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });

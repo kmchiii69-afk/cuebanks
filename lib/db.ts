@@ -14,6 +14,8 @@ export function db() {
 
 const TABLE = 'wsa_members';
 
+export type Plan = '5k' | '7.5k' | '15k';
+
 export interface Member {
   id: string;
   email: string;
@@ -26,7 +28,11 @@ export interface Member {
   notes: string;
   created_at: number;
   last_login: number;
-  current_phase: number; // 0 = not started, 1-6 = active phase
+  current_phase: number;
+  plan: Plan;
+  expires_at: string | null; // ISO timestamp, null = no expiry (admins)
+  goal: string;
+  onboarded: boolean;
 }
 
 export type PublicMember = Omit<Member, 'password_hash'>;
@@ -63,10 +69,14 @@ export async function createMember(input: {
   name?: string;
   role?: 'member' | 'admin';
   cohort?: string;
+  plan?: Plan;
 }): Promise<Member> {
   const email = input.email.toLowerCase().trim();
   const password_hash = await bcrypt.hash(input.password, 12);
   const now = Date.now();
+  const isAdmin = input.role === 'admin';
+  // 4 months from now for members; no expiry for admins
+  const expiresAt = isAdmin ? null : new Date(Date.now() + 4 * 30 * 24 * 60 * 60 * 1000).toISOString();
   const record = {
     email,
     password_hash,
@@ -78,6 +88,10 @@ export async function createMember(input: {
     notes: '',
     created_at: now,
     last_login: 0,
+    plan: isAdmin ? '5k' : (input.plan || '5k'),
+    expires_at: expiresAt,
+    goal: '',
+    onboarded: false,
   };
   const { data, error } = await db().from(TABLE).insert(record).select().single();
   if (error) throw error;
@@ -108,6 +122,7 @@ export async function updatePassword(email: string, newPassword: string): Promis
 export async function validateCredentials(email: string, password: string): Promise<Member | null> {
   const member = await getMember(email);
   if (!member || !member.active) return null;
+  if (member.role !== 'admin' && member.expires_at && new Date(member.expires_at) < new Date()) return null;
   const valid = await bcrypt.compare(password, member.password_hash);
   return valid ? member : null;
 }
@@ -190,4 +205,68 @@ export async function updateWebinar(
 
 export async function deleteWebinar(id: string): Promise<void> {
   await db().from(WEBINARS_TABLE).delete().eq('id', id);
+}
+
+// ─── Chat History ─────────────────────────────────────────────────────────────
+
+const CHAT_HISTORY_TABLE = 'wsa_chat_history';
+const CHAT_ANALYTICS_TABLE = 'wsa_chat_analytics';
+
+export interface ChatHistoryMessage {
+  id: string;
+  member_email: string;
+  role: 'user' | 'assistant';
+  content: string;
+  created_at: string;
+}
+
+export async function getChatHistory(email: string, limit = 100): Promise<ChatHistoryMessage[]> {
+  const { data } = await db()
+    .from(CHAT_HISTORY_TABLE)
+    .select('id, member_email, role, content, created_at')
+    .eq('member_email', email.toLowerCase().trim())
+    .order('created_at', { ascending: true })
+    .limit(limit);
+  return (data ?? []) as ChatHistoryMessage[];
+}
+
+export async function saveChatMessages(
+  email: string,
+  messages: Array<{ role: 'user' | 'assistant'; content: string }>
+): Promise<void> {
+  const rows = messages.map(m => ({
+    member_email: email.toLowerCase().trim(),
+    role: m.role,
+    content: m.content,
+  }));
+  await db().from(CHAT_HISTORY_TABLE).insert(rows);
+}
+
+export async function saveChatAnalytic(email: string, plan: string, question: string): Promise<void> {
+  await db().from(CHAT_ANALYTICS_TABLE).insert({
+    member_email: email.toLowerCase().trim(),
+    plan,
+    question,
+  });
+}
+
+// ─── Analytics (admin) ────────────────────────────────────────────────────────
+
+export interface AnalyticRow {
+  id: string;
+  member_email: string;
+  plan: string;
+  question: string;
+  created_at: string;
+}
+
+export async function getChatAnalytics(plan?: string): Promise<AnalyticRow[]> {
+  let q = db()
+    .from(CHAT_ANALYTICS_TABLE)
+    .select('id, member_email, plan, question, created_at')
+    .order('created_at', { ascending: false })
+    .limit(1000);
+  if (plan && plan !== 'all') q = q.eq('plan', plan);
+  const { data } = await q;
+  return (data ?? []) as AnalyticRow[];
 }

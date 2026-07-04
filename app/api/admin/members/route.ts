@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthUser } from '@/lib/auth';
-import { getAllMembers, createMember, memberExists } from '@/lib/db';
+import { getAllMembers, createMember, memberExists, Plan } from '@/lib/db';
 
 async function requireAdmin() {
   const auth = await getAuthUser();
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
   const auth = await requireAdmin();
   if (!auth) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
-  const { email, password, name, role, cohort } = await req.json();
+  const { email, password, name, role, cohort, plan } = await req.json();
   if (!email || !password) {
     return NextResponse.json({ error: 'Email and password required' }, { status: 400 });
   }
@@ -27,7 +27,9 @@ export async function POST(req: NextRequest) {
   const exists = await memberExists(email);
   if (exists) return NextResponse.json({ error: 'Member already exists' }, { status: 409 });
 
-  const member = await createMember({ email, password, name, role, cohort });
+  const validPlans: Plan[] = ['5k', '7.5k', '15k'];
+  const memberPlan: Plan = validPlans.includes(plan) ? plan : '5k';
+  const member = await createMember({ email, password, name, role, cohort, plan: memberPlan });
   const { password_hash: _, ...safe } = member;
   return NextResponse.json(safe, { status: 201 });
 }

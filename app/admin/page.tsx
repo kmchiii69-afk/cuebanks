@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 
 const PHASE_LABELS = ['—', 'Set', 'Execute', 'Phase 1', 'Phase 2', 'Phase 3', 'Phase 4', 'Bonus'];
 
+type Plan = '5k' | '7.5k' | '15k';
+
 interface Member {
   id: string;
   email: string;
@@ -17,6 +19,9 @@ interface Member {
   created_at: number;
   last_login: number;
   current_phase: number;
+  plan: Plan;
+  expires_at: string | null;
+  goal: string;
 }
 
 interface Webinar {
@@ -77,7 +82,7 @@ const D = "'Sora', system-ui, sans-serif";
 
 export default function AdminPage() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<'members' | 'webinars'>('members');
+  const [activeTab, setActiveTab] = useState<'members' | 'webinars' | 'analytics'>('members');
 
   // ── Members ──
   const [members, setMembers] = useState<Member[]>([]);
@@ -92,6 +97,7 @@ export default function AdminPage() {
   const [addPassword, setAddPassword] = useState('');
   const [addCohort, setAddCohort] = useState('');
   const [addRole, setAddRole] = useState<'member' | 'admin'>('member');
+  const [addPlan, setAddPlan] = useState<Plan>('5k');
   const [addLoading, setAddLoading] = useState(false);
   const [addError, setAddError] = useState('');
 
@@ -100,7 +106,14 @@ export default function AdminPage() {
   const [editNotes, setEditNotes] = useState('');
   const [editPassword, setEditPassword] = useState('');
   const [editActive, setEditActive] = useState(true);
+  const [editPlan, setEditPlan] = useState<Plan>('5k');
   const [editLoading, setEditLoading] = useState(false);
+
+  // Analytics
+  interface AnalyticRow { id: string; member_email: string; plan: string; question: string; created_at: string; }
+  const [analytics, setAnalytics] = useState<AnalyticRow[]>([]);
+  const [analyticsLoading, setAnalyticsLoading] = useState(false);
+  const [analyticsPlan, setAnalyticsPlan] = useState('all');
 
   // ── Webinars ──
   const [webinars, setWebinars] = useState<Webinar[]>([]);
@@ -122,7 +135,7 @@ export default function AdminPage() {
       .then(r => { if (!r.ok) { router.replace('/login'); return null; } return r.json(); })
       .then(u => {
         if (u && u.role !== 'admin') { router.replace('/portal'); return; }
-        if (u) { loadMembers(); loadWebinars(); }
+        if (u) { loadMembers(); loadWebinars(); loadAnalytics('all'); }
       })
       .catch(() => router.replace('/login'));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -141,6 +154,13 @@ export default function AdminPage() {
     setWebinarsLoading(false);
   }
 
+  async function loadAnalytics(plan: string) {
+    setAnalyticsLoading(true);
+    const res = await fetch(`/api/admin/analytics?plan=${plan}`);
+    if (res.ok) setAnalytics(await res.json());
+    setAnalyticsLoading(false);
+  }
+
   async function logout() {
     setLoggingOut(true);
     await fetch('/api/auth/logout', { method: 'POST' });
@@ -154,11 +174,11 @@ export default function AdminPage() {
     const res = await fetch('/api/admin/members', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: addEmail, password: addPassword, name: addName, cohort: addCohort, role: addRole }),
+      body: JSON.stringify({ email: addEmail, password: addPassword, name: addName, cohort: addCohort, role: addRole, plan: addPlan }),
     });
     if (res.ok) {
       setShowAdd(false);
-      setAddEmail(''); setAddName(''); setAddPassword(''); setAddCohort(''); setAddRole('member');
+      setAddEmail(''); setAddName(''); setAddPassword(''); setAddCohort(''); setAddRole('member'); setAddPlan('5k');
       loadMembers();
     } else {
       const d = await res.json().catch(() => ({}));
@@ -170,12 +190,13 @@ export default function AdminPage() {
   function openEdit(m: Member) {
     setSelected(m); setEditName(m.name); setEditCohort(m.cohort);
     setEditNotes(m.notes); setEditPassword(''); setEditActive(m.active);
+    setEditPlan(m.plan ?? '5k');
   }
 
   async function saveEdit() {
     if (!selected) return;
     setEditLoading(true);
-    const body: Record<string, unknown> = { name: editName, cohort: editCohort, notes: editNotes, active: editActive };
+    const body: Record<string, unknown> = { name: editName, cohort: editCohort, notes: editNotes, active: editActive, plan: editPlan };
     if (editPassword) body.password = editPassword;
     await fetch(`/api/admin/members/${encodeURIComponent(selected.email)}`, {
       method: 'PATCH',
@@ -272,15 +293,15 @@ export default function AdminPage() {
 
         {/* Tab nav */}
         <div style={{ display: 'flex', gap: 6, marginBottom: 28 }}>
-          {(['members', 'webinars'] as const).map(tab => (
-            <button key={tab} onClick={() => setActiveTab(tab)} style={{
+          {(['members', 'webinars', 'analytics'] as const).map(tab => (
+            <button key={tab} onClick={() => { setActiveTab(tab); if (tab === 'analytics') loadAnalytics(analyticsPlan); }} style={{
               background: activeTab === tab ? 'rgba(249,255,60,0.1)' : 'transparent',
               border: `1px solid ${activeTab === tab ? 'rgba(249,255,60,0.35)' : 'rgba(255,255,255,0.1)'}`,
               borderRadius: 7, padding: '8px 20px', fontFamily: M, fontSize: 9, fontWeight: 700,
               letterSpacing: '0.18em', textTransform: 'uppercase',
               color: activeTab === tab ? '#f9ff3c' : 'rgba(255,255,255,0.35)', cursor: 'pointer', transition: 'all 0.15s',
             }}>
-              {tab === 'members' ? `Members · ${members.length}` : `Webinars · ${webinars.length}`}
+              {tab === 'members' ? `Members · ${members.length}` : tab === 'webinars' ? `Webinars · ${webinars.length}` : 'Analytics'}
             </button>
           ))}
         </div>
@@ -308,7 +329,7 @@ export default function AdminPage() {
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                   <thead>
                     <tr>
-                      {['Name', 'Email', 'Cohort', 'Progress', 'Role', 'Status', 'Last Login', 'Joined', ''].map(h => (
+                      {['Name', 'Email', 'Plan', 'Expires', 'Progress', 'Role', 'Status', 'Last Login', 'Joined', ''].map(h => (
                         <th key={h} style={{ textAlign: 'left', padding: '8px 14px', fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.22)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>{h}</th>
                       ))}
                     </tr>
@@ -320,7 +341,12 @@ export default function AdminPage() {
                         onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; }}>
                         <td style={{ padding: '12px 14px', fontFamily: S, fontSize: 13, color: m.active ? '#fff' : 'rgba(255,255,255,0.28)' }}>{m.name || '—'}</td>
                         <td style={{ padding: '12px 14px', fontFamily: S, fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>{m.email}</td>
-                        <td style={{ padding: '12px 14px', fontFamily: M, fontSize: 11, color: m.cohort ? 'rgba(249,255,60,0.6)' : 'rgba(255,255,255,0.18)' }}>{m.cohort || '—'}</td>
+                        <td style={{ padding: '12px 14px' }}>
+                          <span style={{ fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: m.plan === '15k' ? '#f9ff3c' : m.plan === '7.5k' ? '#f97316' : 'rgba(255,255,255,0.4)', background: m.plan === '15k' ? 'rgba(249,255,60,0.08)' : m.plan === '7.5k' ? 'rgba(249,115,22,0.08)' : 'rgba(255,255,255,0.04)', padding: '3px 8px', borderRadius: 4 }}>{m.plan || '5k'}</span>
+                        </td>
+                        <td style={{ padding: '12px 14px', fontFamily: M, fontSize: 10, color: m.expires_at && new Date(m.expires_at) < new Date() ? '#ef4444' : 'rgba(255,255,255,0.3)' }}>
+                          {m.expires_at ? new Date(m.expires_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
+                        </td>
                         <td style={{ padding: '12px 14px' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                             <div style={{ display: 'flex', gap: 2 }}>
@@ -349,7 +375,7 @@ export default function AdminPage() {
                       </tr>
                     ))}
                     {filtered.length === 0 && (
-                      <tr><td colSpan={9} style={{ padding: '40px 14px', textAlign: 'center', fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.2)' }}>No members found</td></tr>
+                      <tr><td colSpan={10} style={{ padding: '40px 14px', textAlign: 'center', fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.2)' }}>No members found</td></tr>
                     )}
                   </tbody>
                 </table>
@@ -472,6 +498,48 @@ export default function AdminPage() {
             )}
           </>
         )}
+        {/* ── ANALYTICS TAB ────────────────────────────────────── */}
+        {activeTab === 'analytics' && (
+          <>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
+              <div>
+                <h1 style={{ fontFamily: D, fontSize: 22, fontWeight: 700, letterSpacing: '-0.02em', margin: '0 0 3px' }}>Cue AI Analytics</h1>
+                <p style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.3)', margin: 0 }}>Questions members have asked, filtered by plan tier</p>
+              </div>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                {(['all', '5k', '7.5k', '15k'] as const).map(p => (
+                  <button key={p} onClick={() => { setAnalyticsPlan(p); loadAnalytics(p); }} style={{ background: analyticsPlan === p ? 'rgba(249,255,60,0.1)' : 'transparent', border: `1px solid ${analyticsPlan === p ? 'rgba(249,255,60,0.35)' : 'rgba(255,255,255,0.1)'}`, borderRadius: 7, padding: '6px 16px', fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: analyticsPlan === p ? '#f9ff3c' : 'rgba(255,255,255,0.35)', cursor: 'pointer' }}>
+                    {p === 'all' ? 'All' : p}
+                  </button>
+                ))}
+              </div>
+            </div>
+            {analyticsLoading ? (
+              <div style={{ textAlign: 'center', padding: '60px 0', fontFamily: M, fontSize: 11, color: 'rgba(249,255,60,0.4)', letterSpacing: '0.2em' }}>LOADING</div>
+            ) : analytics.length === 0 ? (
+              <div style={{ padding: '40px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10, textAlign: 'center', fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.25)' }}>
+                No questions logged yet. Questions appear here after members use Cue AI.
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '80px 180px 1fr 110px', gap: 14, padding: '8px 14px', borderBottom: '1px solid rgba(255,255,255,0.06)', marginBottom: 2 }}>
+                  {['Plan', 'Member', 'Question', 'Date'].map(h => (
+                    <span key={h} style={{ fontFamily: M, fontSize: 8, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.22)' }}>{h}</span>
+                  ))}
+                </div>
+                {analytics.map((row, i) => (
+                  <div key={row.id} style={{ display: 'grid', gridTemplateColumns: '80px 180px 1fr 110px', gap: 14, padding: '11px 14px', borderBottom: '1px solid rgba(255,255,255,0.04)', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)', alignItems: 'flex-start' }}>
+                    <span style={{ fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: row.plan === '15k' ? '#f9ff3c' : row.plan === '7.5k' ? '#f97316' : 'rgba(255,255,255,0.4)', background: row.plan === '15k' ? 'rgba(249,255,60,0.07)' : row.plan === '7.5k' ? 'rgba(249,115,22,0.07)' : 'rgba(255,255,255,0.04)', padding: '3px 8px', borderRadius: 4, display: 'inline-block' }}>{row.plan}</span>
+                    <span style={{ fontFamily: S, fontSize: 11, color: 'rgba(255,255,255,0.4)', wordBreak: 'break-word' }}>{row.member_email}</span>
+                    <span style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.75)', lineHeight: 1.5, wordBreak: 'break-word' }}>{row.question}</span>
+                    <span style={{ fontFamily: M, fontSize: 9, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.04em' }}>{new Date(row.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                  </div>
+                ))}
+                <div style={{ padding: '10px 14px', fontFamily: M, fontSize: 9, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.1em' }}>{analytics.length} questions shown · max 1000</div>
+              </div>
+            )}
+          </>
+        )}
       </main>
 
       {/* ── Add Member Modal ── */}
@@ -487,6 +555,11 @@ export default function AdminPage() {
               <select value={addRole} onChange={e => setAddRole(e.target.value as 'member' | 'admin')} style={{ ...F, appearance: 'none' as const }}>
                 <option value="member">Member</option>
                 <option value="admin">Admin</option>
+              </select>
+              <select value={addPlan} onChange={e => setAddPlan(e.target.value as Plan)} style={{ ...F, appearance: 'none' as const }}>
+                <option value="5k">5K — Roadmap + Cue AI</option>
+                <option value="7.5k">7.5K — + Group Calls & Webinars</option>
+                <option value="15k">15K — + 1-on-1 with Cue</option>
               </select>
             </div>
             {addError && <p style={{ fontFamily: M, fontSize: 10, color: '#ef4444', marginTop: 10, letterSpacing: '0.06em' }}>{addError}</p>}
@@ -513,6 +586,11 @@ export default function AdminPage() {
               <input placeholder="Cohort" value={editCohort} onChange={e => setEditCohort(e.target.value)} style={F} onFocus={FO} onBlur={FB} />
               <input placeholder="Notes (internal)" value={editNotes} onChange={e => setEditNotes(e.target.value)} style={F} onFocus={FO} onBlur={FB} />
               <input placeholder="New password (leave blank to keep)" type="password" value={editPassword} onChange={e => setEditPassword(e.target.value)} style={F} onFocus={FO} onBlur={FB} />
+              <select value={editPlan} onChange={e => setEditPlan(e.target.value as Plan)} style={{ ...F, appearance: 'none' as const }}>
+                <option value="5k">5K — Roadmap + Cue AI</option>
+                <option value="7.5k">7.5K — + Group Calls & Webinars</option>
+                <option value="15k">15K — + 1-on-1 with Cue</option>
+              </select>
               <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
                 <input type="checkbox" checked={editActive} onChange={e => setEditActive(e.target.checked)} style={{ accentColor: '#f9ff3c', width: 14, height: 14 }} />
                 <span style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.55)' }}>Active (can log in)</span>

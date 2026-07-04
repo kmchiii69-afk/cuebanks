@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Globe from '@/components/ui/globe';
 
+type Plan = '5k' | '7.5k' | '15k';
+
 interface Member {
   email: string;
   name: string;
@@ -11,6 +13,10 @@ interface Member {
   cohort: string;
   created_at: number;
   current_phase: number;
+  plan: Plan;
+  expires_at: string | null;
+  goal: string;
+  onboarded: boolean;
 }
 
 interface CalEvent {
@@ -115,16 +121,37 @@ export default function PortalPage() {
   const [notes, setNotes] = useState('');
   const [notesSaved, setNotesSaved] = useState(false);
 
+  // Onboarding
+  const [onboarding, setOnboarding] = useState(false);
+  const [onboardStep, setOnboardStep] = useState<0 | 1 | 2>(0); // 0=video, 1=goal, 2=tour
+  const [goalText, setGoalText] = useState('');
+  const [savingGoal, setSavingGoal] = useState(false);
+  const [tourStep, setTourStep] = useState(0);
+
+  const TOUR_STEPS = [
+    { title: 'Your Roadmap', icon: '📍', desc: 'The full WSA curriculum is on the Roadmap page. Follow each phase in order. Click any phase to track your progress.' },
+    { title: 'Ask Cue Anything', icon: '⚡', desc: 'Cue AI is your personal trading mentor. Ask about confluence, entries, risk, mindset — any time, day or night. Your full conversation history is saved.' },
+    { title: 'Weekly Calls', icon: '📡', desc: 'Your live group calls with Cue show up in the portal automatically. Join links and recordings land here every week.' },
+    { title: 'Pre-Session Checklist', icon: '✅', desc: 'Before you touch the charts, run through the checklist. It resets every midnight. Build the habit. The checklist is the discipline.' },
+  ];
+
   // Auth
   useEffect(() => {
     fetch('/api/auth/me')
       .then(r => { if (!r.ok) { router.replace('/login'); return null; } return r.json(); })
       .then(data => {
         if (!data) return;
+        // Expiry check (non-admins only)
+        if (data.role !== 'admin' && data.expires_at && new Date(data.expires_at) < new Date()) {
+          router.replace('/login?expired=1');
+          return;
+        }
         setMember(data);
         const ck = localStorage.getItem(`wsa-ck-${data.email}-${todayKey()}`);
         setChecklist(ck ? JSON.parse(ck) : {});
         setNotes(localStorage.getItem(`wsa-notes-${data.email}`) || '');
+        // Show onboarding if member hasn't set a goal yet
+        if (!data.onboarded || !data.goal) setOnboarding(true);
         setLoading(false);
       })
       .catch(() => router.replace('/login'));
@@ -194,6 +221,23 @@ export default function PortalPage() {
     localStorage.setItem(`wsa-notes-${member.email}`, notes);
     setNotesSaved(true);
     setTimeout(() => setNotesSaved(false), 2000);
+  }
+
+  async function submitGoal() {
+    if (!goalText.trim()) return;
+    setSavingGoal(true);
+    await fetch('/api/portal/goal', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ goal: goalText.trim() }),
+    });
+    setMember(m => m ? { ...m, goal: goalText.trim(), onboarded: true } : m);
+    setSavingGoal(false);
+    setOnboardStep(2);
+  }
+
+  function finishOnboarding() {
+    setOnboarding(false);
   }
 
   if (loading) return (
@@ -281,6 +325,15 @@ export default function PortalPage() {
       </nav>
 
       <main style={{ position: 'relative', zIndex: 1, maxWidth: 1120, margin: '0 auto', padding: '36px 24px 80px' }}>
+
+        {/* ── GOAL BANNER ───────────────────────────────────── */}
+        {member?.goal && (
+          <div style={{ marginBottom: 14, background: 'rgba(249,255,60,0.04)', border: '1px solid rgba(249,255,60,0.15)', borderRadius: 10, padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 14 }}>
+            <span style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(249,255,60,0.5)', flexShrink: 0 }}>MY GOAL</span>
+            <span style={{ ...S, fontSize: 13, color: 'rgba(255,255,255,0.7)', lineHeight: 1.4, flex: 1 }}>{member.goal}</span>
+            <span style={{ ...M, fontSize: 8, color: 'rgba(255,255,255,0.18)', flexShrink: 0, letterSpacing: '0.1em' }}>4 months</span>
+          </div>
+        )}
 
         {/* ── ROW 1: Welcome + Sessions ─────────────────────── */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 330px', gap: 14, marginBottom: 14 }}>
@@ -426,8 +479,8 @@ export default function PortalPage() {
           </div>
         </div>
 
-        {/* ── ROW 4: Weekly Calls ──────────────────────────── */}
-        {(nextCall || pastRecordings.length > 0) && (
+        {/* ── ROW 4: Weekly Calls — 7.5k and 15k only ─────── */}
+        {member?.plan !== '5k' && (nextCall || pastRecordings.length > 0) && (
           <div style={{ display: 'grid', gridTemplateColumns: nextCall ? '1fr 1fr' : '1fr', gap: 14, marginBottom: 14 }}>
 
             {/* Next Upcoming Call */}
@@ -607,6 +660,94 @@ export default function PortalPage() {
         </div>
 
       </main>
+
+      {/* ── ONBOARDING OVERLAY ──────────────────────────────── */}
+      {onboarding && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(0,0,0,0.96)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+
+          {/* Step 0: Welcome Video */}
+          {onboardStep === 0 && (
+            <div style={{ width: '100%', maxWidth: 860, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 28 }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(249,255,60,0.5)', textTransform: 'uppercase', marginBottom: 10 }}>Wall Street Academy · Welcome</div>
+                <h2 style={{ ...D, fontSize: 28, fontWeight: 700, letterSpacing: '-0.03em', color: '#fff', margin: 0 }}>A message from Cue.</h2>
+              </div>
+              <div style={{ width: '100%', borderRadius: 12, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)', background: '#000', aspectRatio: '16/9', position: 'relative' }}>
+                <iframe
+                  src="https://player.vimeo.com/video/1205968513?title=0&byline=0&portrait=0&badge=0&autopause=0"
+                  style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }}
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+              <div style={{ display: 'flex', gap: 12 }}>
+                <button onClick={() => setOnboardStep(1)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 8, padding: '10px 22px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', cursor: 'pointer' }}>Skip video</button>
+                <button onClick={() => setOnboardStep(1)} style={{ background: '#f9ff3c', border: 'none', borderRadius: 8, padding: '10px 28px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#000', cursor: 'pointer' }}>{"I'm Ready →"}</button>
+              </div>
+            </div>
+          )}
+
+          {/* Step 1: Goal Form */}
+          {onboardStep === 1 && (
+            <div style={{ width: '100%', maxWidth: 560, display: 'flex', flexDirection: 'column', gap: 24 }}>
+              <div>
+                <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(249,255,60,0.5)', textTransform: 'uppercase', marginBottom: 10 }}>Step 1 of 2 · Set Your Goal</div>
+                <h2 style={{ ...D, fontSize: 26, fontWeight: 700, letterSpacing: '-0.03em', color: '#fff', margin: '0 0 8px' }}>What do you want to achieve in 4 months?</h2>
+                <p style={{ ...S, fontSize: 14, color: 'rgba(255,255,255,0.38)', margin: 0, lineHeight: 1.55 }}>Be specific. This goal lives on your portal so you see it every time you log in. It&apos;s your why.</p>
+              </div>
+              <textarea
+                value={goalText}
+                onChange={e => setGoalText(e.target.value)}
+                placeholder="e.g. Pass a $100K prop challenge by trading only A+ setups with 2% risk per trade..."
+                rows={4}
+                style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, padding: '16px', color: '#fff', ...S, fontSize: 14, lineHeight: 1.6, resize: 'vertical', outline: 'none', boxSizing: 'border-box', fontFamily: "'DM Sans', system-ui, sans-serif" }}
+                onFocus={e => { e.currentTarget.style.borderColor = 'rgba(249,255,60,0.35)'; }}
+                onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; }}
+              />
+              <div style={{ display: 'flex', gap: 12 }}>
+                <button onClick={() => setOnboardStep(0)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '10px 18px', ...M, fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', cursor: 'pointer' }}>← Back</button>
+                <button
+                  onClick={submitGoal}
+                  disabled={savingGoal || !goalText.trim()}
+                  style={{ flex: 1, background: savingGoal || !goalText.trim() ? 'rgba(249,255,60,0.15)' : '#f9ff3c', border: 'none', borderRadius: 8, padding: '12px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: savingGoal || !goalText.trim() ? 'rgba(249,255,60,0.4)' : '#000', cursor: savingGoal || !goalText.trim() ? 'not-allowed' : 'pointer' }}
+                >
+                  {savingGoal ? 'Saving...' : 'Lock In My Goal →'}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Step 2: App Tour */}
+          {onboardStep === 2 && (
+            <div style={{ width: '100%', maxWidth: 520, display: 'flex', flexDirection: 'column', gap: 24 }}>
+              <div>
+                <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(249,255,60,0.5)', textTransform: 'uppercase', marginBottom: 10 }}>Step 2 of 2 · Quick Tour</div>
+                <h2 style={{ ...D, fontSize: 24, fontWeight: 700, letterSpacing: '-0.03em', color: '#fff', margin: '0 0 4px' }}>{TOUR_STEPS[tourStep].icon} {TOUR_STEPS[tourStep].title}</h2>
+              </div>
+
+              {/* Tour dots */}
+              <div style={{ display: 'flex', gap: 6 }}>
+                {TOUR_STEPS.map((_, i) => (
+                  <div key={i} style={{ height: 3, flex: 1, borderRadius: 2, background: i <= tourStep ? '#f9ff3c' : 'rgba(255,255,255,0.1)', transition: 'background 0.2s' }} />
+                ))}
+              </div>
+
+              <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, padding: '22px 22px' }}>
+                <p style={{ ...S, fontSize: 15, color: 'rgba(255,255,255,0.75)', margin: 0, lineHeight: 1.65 }}>{TOUR_STEPS[tourStep].desc}</p>
+              </div>
+
+              <div style={{ display: 'flex', gap: 10 }}>
+                <button onClick={finishOnboarding} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '10px 18px', ...M, fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', cursor: 'pointer' }}>Skip tour</button>
+                {tourStep < TOUR_STEPS.length - 1 ? (
+                  <button onClick={() => setTourStep(t => t + 1)} style={{ flex: 1, background: 'rgba(249,255,60,0.08)', border: '1px solid rgba(249,255,60,0.25)', borderRadius: 8, padding: '10px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#f9ff3c', cursor: 'pointer' }}>Next →</button>
+                ) : (
+                  <button onClick={finishOnboarding} style={{ flex: 1, background: '#f9ff3c', border: 'none', borderRadius: 8, padding: '10px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#000', cursor: 'pointer' }}>{"Let's Trade →"}</button>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
