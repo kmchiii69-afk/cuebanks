@@ -23,11 +23,26 @@ interface CalEvent {
   actual: string;
 }
 
+interface Webinar {
+  id: string;
+  title: string;
+  description: string;
+  scheduled_at: string;
+  join_link: string;
+  recording_url: string;
+  is_published: boolean;
+}
+
 const PHASES = [
-  { num: 'SET', title: 'Set',     duration: 'Week 1–2' },
-  { num: 'EXE', title: 'Execute', duration: 'Week 3–4' },
-  { num: '01',  title: 'Phase 1', duration: 'Week 5+'  },
-  { num: '02',  title: 'Phase 2', duration: 'Ongoing'  },
+  { num: 'PREP', title: 'Prepare', duration: 'Week 0–1' },
+  { num: 'SET', title: 'Set',     duration: 'Week 1–3' },
+  { num: 'EXE', title: 'Execute', duration: 'Week 4'   },
+  { num: '01',  title: 'Phase 1', duration: 'Week 5'   },
+  { num: '02',  title: 'Phase 2', duration: 'Week 6–7' },
+  { num: '03',  title: 'Phase 3', duration: 'Week 7–10'},
+  { num: '04',  title: 'Phase 4', duration: 'Week 11–14'},
+  { num: '★',   title: 'Bonus',   duration: 'Week 14–21'},
+];
   { num: '03',  title: 'Phase 3', duration: 'Ongoing'  },
   { num: '04',  title: 'Phase 4', duration: 'Ongoing'  },
   { num: '★',   title: 'Bonus',   duration: 'Ongoing'  },
@@ -98,6 +113,8 @@ export default function PortalPage() {
   const [calEvents, setCalEvents] = useState<CalEvent[]>([]);
   const [calLoading, setCalLoading] = useState(true);
 
+  const [webinars, setWebinars] = useState<Webinar[]>([]);
+
   const [checklist, setChecklist] = useState<Record<string, boolean>>({});
   const [notes, setNotes] = useState('');
   const [notesSaved, setNotesSaved] = useState(false);
@@ -128,6 +145,14 @@ export default function PortalPage() {
     tick();
     const id = setInterval(tick, 30000);
     return () => clearInterval(id);
+  }, []);
+
+  // Webinars
+  useEffect(() => {
+    fetch('/api/webinars')
+      .then(r => r.json())
+      .then(data => setWebinars(Array.isArray(data) ? data : []))
+      .catch(() => setWebinars([]));
   }, []);
 
   // Economic calendar
@@ -187,6 +212,30 @@ export default function PortalPage() {
   const overlap = openSessions[0] && openSessions[1]; // London + NY
   const checkDone = CHECKLIST.filter(c => checklist[c.id]).length;
   const highToday = calEvents.filter(e => e.impact === 'High').length;
+
+  const nowTs = new Date();
+  const upcomingCalls = webinars
+    .filter(w => new Date(w.scheduled_at) > nowTs)
+    .sort((a, b) => new Date(a.scheduled_at).getTime() - new Date(b.scheduled_at).getTime());
+  const pastRecordings = webinars
+    .filter(w => new Date(w.scheduled_at) <= nowTs && w.recording_url)
+    .sort((a, b) => new Date(b.scheduled_at).getTime() - new Date(a.scheduled_at).getTime())
+    .slice(0, 8);
+  const nextCall = upcomingCalls[0] ?? null;
+
+  function fmtCallDate(iso: string) {
+    const d = new Date(iso);
+    const diffDays = Math.floor((d.getTime() - nowTs.getTime()) / 86400000);
+    const timeStr = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
+    const dateStr = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    if (diffDays === 0) return `Today · ${timeStr}`;
+    if (diffDays === 1) return `Tomorrow · ${timeStr}`;
+    return `${dateStr} · ${timeStr} · in ${diffDays}d`;
+  }
+
+  function fmtRecDate(iso: string) {
+    return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
 
   return (
     <div style={{ minHeight: '100vh', background: '#000', color: '#fff', position: 'relative' }}>
@@ -253,11 +302,11 @@ export default function PortalPage() {
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 7 }}>
               <span style={{ ...M, fontSize: 8, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.22)', textTransform: 'uppercase' }}>Curriculum Progress</span>
               <span style={{ ...M, fontSize: 8, color: 'rgba(255,255,255,0.2)' }}>
-                {phase === 0 ? 'Not started' : phase >= 7 ? 'Complete ✓' : `Phase ${phase} of 7`}
+                {phase === 0 ? 'Not started' : phase >= 8 ? 'Complete ✓' : `Phase ${phase} of 8`}
               </span>
             </div>
             <div style={{ height: 3, background: 'rgba(255,255,255,0.07)', borderRadius: 2, marginBottom: 18, overflow: 'hidden' }}>
-              <div style={{ height: '100%', width: `${(phase / 7) * 100}%`, background: 'linear-gradient(90deg, #f9ff3c, #d4f700)', borderRadius: 2, transition: 'width 0.5s ease' }} />
+              <div style={{ height: '100%', width: `${(phase / 8) * 100}%`, background: 'linear-gradient(90deg, #f9ff3c, #d4f700)', borderRadius: 2, transition: 'width 0.5s ease' }} />
             </div>
 
             {/* Today at a glance */}
@@ -324,7 +373,7 @@ export default function PortalPage() {
             </div>
             <div style={{ flex: 1 }}>
               <div style={{ ...D, fontSize: 15, fontWeight: 700, color: '#f9ff3c', marginBottom: 2 }}>Course Roadmap</div>
-              <div style={{ ...S, fontSize: 12, color: 'rgba(255,255,255,0.38)' }}>{phase === 0 ? 'Start here — Week 0, Prepare' : phase >= 7 ? 'All phases complete' : `Phase ${phase} of 7 active`}</div>
+              <div style={{ ...S, fontSize: 12, color: 'rgba(255,255,255,0.38)' }}>{phase === 0 ? 'Start here — Week 0, Prepare' : phase >= 8 ? 'All phases complete' : `Phase ${phase} of 8 active`}</div>
             </div>
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 6.5h8M8 3.5l3 3-3 3" stroke="rgba(249,255,60,0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </a>
@@ -363,7 +412,7 @@ export default function PortalPage() {
             <span style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.22)', textTransform: 'uppercase' }}>Phase Tracker · Click to Mark</span>
             <a href="/roadmap" style={{ ...M, fontSize: 8, letterSpacing: '0.14em', color: 'rgba(249,255,60,0.45)', textDecoration: 'none', textTransform: 'uppercase' }}>Open Roadmap →</a>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', gap: 5 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8,1fr)', gap: 5 }}>
             {PHASES.map((ph, i) => {
               const pn = i + 1;
               const active = phase === pn;
@@ -381,7 +430,59 @@ export default function PortalPage() {
           </div>
         </div>
 
-        {/* ── ROW 4: Economic Calendar + Checklist + Notes ─── */}
+        {/* ── ROW 4: Weekly Calls ──────────────────────────── */}
+        {(nextCall || pastRecordings.length > 0) && (
+          <div style={{ display: 'grid', gridTemplateColumns: nextCall ? '1fr 1fr' : '1fr', gap: 14, marginBottom: 14 }}>
+
+            {/* Next Upcoming Call */}
+            {nextCall && (
+              <div style={{ background: 'rgba(249,255,60,0.04)', border: '1px solid rgba(249,255,60,0.2)', borderRadius: 12, padding: '20px 22px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
+                  <div style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(249,255,60,0.55)', textTransform: 'uppercase' }}>Next Live Call</div>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 6px #22c55e80' }} />
+                    <span style={{ ...M, fontSize: 8, color: '#22c55e', letterSpacing: '0.1em' }}>UPCOMING</span>
+                  </span>
+                </div>
+                <div style={{ ...D, fontSize: 17, fontWeight: 700, color: '#fff', marginBottom: 6, lineHeight: 1.3 }}>{nextCall.title}</div>
+                {nextCall.description && <div style={{ ...S, fontSize: 12, color: 'rgba(255,255,255,0.38)', marginBottom: 10, lineHeight: 1.5 }}>{nextCall.description}</div>}
+                <div style={{ ...M, fontSize: 10, color: 'rgba(249,255,60,0.7)', marginBottom: 14, letterSpacing: '0.04em' }}>{fmtCallDate(nextCall.scheduled_at)}</div>
+                {nextCall.join_link ? (
+                  <a href={nextCall.join_link} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#f9ff3c', borderRadius: 7, padding: '9px 18px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#000', textDecoration: 'none', transition: 'opacity 0.15s' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = '0.85'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1'; }}>
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#000" strokeWidth="1.3"/><path d="M4.5 4.5l3 1.5-3 1.5V4.5z" fill="#000"/></svg>
+                    Join Call
+                  </a>
+                ) : (
+                  <div style={{ ...M, fontSize: 9, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.12em' }}>Join link coming soon</div>
+                )}
+              </div>
+            )}
+
+            {/* Recordings */}
+            {pastRecordings.length > 0 && (
+              <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '20px 20px' }}>
+                <div style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginBottom: 14 }}>Call Recordings</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+                  {pastRecordings.map((w, i) => (
+                    <div key={w.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '9px 0', borderBottom: i < pastRecordings.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                      <span style={{ ...M, fontSize: 9, color: 'rgba(255,255,255,0.25)', flexShrink: 0, letterSpacing: '0.04em', minWidth: 70 }}>{fmtRecDate(w.scheduled_at)}</span>
+                      <span style={{ ...S, fontSize: 12, color: 'rgba(255,255,255,0.65)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{w.title}</span>
+                      <a href={w.recording_url} target="_blank" rel="noopener noreferrer" style={{ ...M, fontSize: 8, color: 'rgba(249,255,60,0.6)', letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', flexShrink: 0, transition: 'color 0.15s' }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#f9ff3c'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(249,255,60,0.6)'; }}>
+                        Watch →
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── ROW 5: Economic Calendar + Checklist + Notes ─── */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 14 }}>
 
           {/* Economic Calendar */}

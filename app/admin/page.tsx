@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-const PHASE_LABELS = ['—', 'Foundation', 'Price Action', 'Structure', 'Confluence', 'Execution', 'Live'];
+const PHASE_LABELS = ['—', 'Set', 'Execute', 'Phase 1', 'Phase 2', 'Phase 3', 'Phase 4', 'Bonus'];
 
 interface Member {
   id: string;
@@ -19,9 +19,33 @@ interface Member {
   current_phase: number;
 }
 
+interface Webinar {
+  id: string;
+  title: string;
+  description: string;
+  scheduled_at: string;
+  join_link: string;
+  recording_url: string;
+  is_published: boolean;
+  created_at: string;
+  created_by: string;
+}
+
 function fmt(ts: number) {
   if (!ts) return '—';
   return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function fmtIso(iso: string) {
+  if (!iso) return '—';
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
+}
+
+function toLocalInput(iso: string) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
 function timeAgo(ts: number) {
@@ -35,7 +59,7 @@ function timeAgo(ts: number) {
   return `${Math.floor(days / 30)}mo ago`;
 }
 
-const FIELD_STYLE: React.CSSProperties = {
+const F: React.CSSProperties = {
   width: '100%', height: 40,
   background: 'rgba(255,255,255,0.04)',
   border: '1px solid rgba(255,255,255,0.1)',
@@ -45,17 +69,24 @@ const FIELD_STYLE: React.CSSProperties = {
   outline: 'none', boxSizing: 'border-box',
   transition: 'border-color 0.15s',
 };
+const FO = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => { e.currentTarget.style.borderColor = 'rgba(249,255,60,0.35)'; };
+const FB = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; };
+const M = "'Space Mono', monospace";
+const S = "'DM Sans', system-ui, sans-serif";
+const D = "'Sora', system-ui, sans-serif";
 
 export default function AdminPage() {
   const router = useRouter();
+  const [activeTab, setActiveTab] = useState<'members' | 'webinars'>('members');
+
+  // ── Members ──
   const [members, setMembers] = useState<Member[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [membersLoading, setMembersLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [showAdd, setShowAdd] = useState(false);
   const [selected, setSelected] = useState<Member | null>(null);
   const [loggingOut, setLoggingOut] = useState(false);
 
-  // Add member form
   const [addEmail, setAddEmail] = useState('');
   const [addName, setAddName] = useState('');
   const [addPassword, setAddPassword] = useState('');
@@ -64,7 +95,6 @@ export default function AdminPage() {
   const [addLoading, setAddLoading] = useState(false);
   const [addError, setAddError] = useState('');
 
-  // Edit member form
   const [editName, setEditName] = useState('');
   const [editCohort, setEditCohort] = useState('');
   const [editNotes, setEditNotes] = useState('');
@@ -72,24 +102,43 @@ export default function AdminPage() {
   const [editActive, setEditActive] = useState(true);
   const [editLoading, setEditLoading] = useState(false);
 
+  // ── Webinars ──
+  const [webinars, setWebinars] = useState<Webinar[]>([]);
+  const [webinarsLoading, setWebinarsLoading] = useState(false);
+  const [showWebinarModal, setShowWebinarModal] = useState(false);
+  const [editingWebinar, setEditingWebinar] = useState<Webinar | null>(null);
+  const [wSaving, setWSaving] = useState(false);
+  const [wError, setWError] = useState('');
+
+  const [wTitle, setWTitle] = useState('');
+  const [wDescription, setWDescription] = useState('');
+  const [wScheduledAt, setWScheduledAt] = useState('');
+  const [wJoinLink, setWJoinLink] = useState('');
+  const [wRecordingUrl, setWRecordingUrl] = useState('');
+  const [wPublished, setWPublished] = useState(true);
+
   useEffect(() => {
     fetch('/api/auth/me')
-      .then(r => {
-        if (!r.ok) { router.replace('/login'); return null; }
-        return r.json();
-      })
+      .then(r => { if (!r.ok) { router.replace('/login'); return null; } return r.json(); })
       .then(u => {
         if (u && u.role !== 'admin') { router.replace('/portal'); return; }
-        if (u) loadMembers();
+        if (u) { loadMembers(); loadWebinars(); }
       })
       .catch(() => router.replace('/login'));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function loadMembers() {
-    setLoading(true);
+    setMembersLoading(true);
     const res = await fetch('/api/admin/members');
     if (res.ok) setMembers(await res.json());
-    setLoading(false);
+    setMembersLoading(false);
+  }
+
+  async function loadWebinars() {
+    setWebinarsLoading(true);
+    const res = await fetch('/api/admin/webinars');
+    if (res.ok) setWebinars(await res.json());
+    setWebinarsLoading(false);
   }
 
   async function logout() {
@@ -98,10 +147,10 @@ export default function AdminPage() {
     router.replace('/login');
   }
 
+  // ── Member actions ──
   async function addMember() {
     if (!addEmail || !addPassword) return;
-    setAddLoading(true);
-    setAddError('');
+    setAddLoading(true); setAddError('');
     const res = await fetch('/api/admin/members', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -119,23 +168,14 @@ export default function AdminPage() {
   }
 
   function openEdit(m: Member) {
-    setSelected(m);
-    setEditName(m.name);
-    setEditCohort(m.cohort);
-    setEditNotes(m.notes);
-    setEditPassword('');
-    setEditActive(m.active);
+    setSelected(m); setEditName(m.name); setEditCohort(m.cohort);
+    setEditNotes(m.notes); setEditPassword(''); setEditActive(m.active);
   }
 
   async function saveEdit() {
     if (!selected) return;
     setEditLoading(true);
-    const body: Record<string, unknown> = {
-      name: editName,
-      cohort: editCohort,
-      notes: editNotes,
-      active: editActive,
-    };
+    const body: Record<string, unknown> = { name: editName, cohort: editCohort, notes: editNotes, active: editActive };
     if (editPassword) body.password = editPassword;
     await fetch(`/api/admin/members/${encodeURIComponent(selected.email)}`, {
       method: 'PATCH',
@@ -147,208 +187,312 @@ export default function AdminPage() {
     setEditLoading(false);
   }
 
+  // ── Webinar actions ──
+  function openNewWebinar() {
+    setEditingWebinar(null);
+    setWTitle(''); setWDescription(''); setWScheduledAt('');
+    setWJoinLink(''); setWRecordingUrl(''); setWPublished(true);
+    setWError('');
+    setShowWebinarModal(true);
+  }
+
+  function openEditWebinar(w: Webinar) {
+    setEditingWebinar(w);
+    setWTitle(w.title); setWDescription(w.description);
+    setWScheduledAt(toLocalInput(w.scheduled_at));
+    setWJoinLink(w.join_link); setWRecordingUrl(w.recording_url);
+    setWPublished(w.is_published);
+    setWError('');
+    setShowWebinarModal(true);
+  }
+
+  async function saveWebinar() {
+    if (!wTitle.trim() || !wScheduledAt) { setWError('Title and date/time are required'); return; }
+    setWSaving(true); setWError('');
+    const body = {
+      title: wTitle.trim(),
+      description: wDescription.trim(),
+      scheduled_at: new Date(wScheduledAt).toISOString(),
+      join_link: wJoinLink.trim(),
+      recording_url: wRecordingUrl.trim(),
+      is_published: wPublished,
+    };
+    const url = editingWebinar ? `/api/admin/webinars/${editingWebinar.id}` : '/api/admin/webinars';
+    const method = editingWebinar ? 'PATCH' : 'POST';
+    const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    if (res.ok) {
+      setShowWebinarModal(false);
+      loadWebinars();
+    } else {
+      const d = await res.json().catch(() => ({}));
+      setWError(d.error || 'Failed to save');
+    }
+    setWSaving(false);
+  }
+
+  async function removeWebinar(id: string) {
+    if (!confirm('Delete this webinar? This cannot be undone.')) return;
+    await fetch(`/api/admin/webinars/${id}`, { method: 'DELETE' });
+    loadWebinars();
+  }
+
   const filtered = members.filter(m =>
     m.email.includes(search.toLowerCase()) ||
     m.name.toLowerCase().includes(search.toLowerCase()) ||
     m.cohort.toLowerCase().includes(search.toLowerCase())
   );
 
-  const panelStyle: React.CSSProperties = {
-    position: 'fixed', inset: 0, zIndex: 100,
-    background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
-    display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24,
-  };
+  const now = new Date();
+  const upcoming = webinars.filter(w => new Date(w.scheduled_at) > now).sort((a, b) => new Date(a.scheduled_at).getTime() - new Date(b.scheduled_at).getTime());
+  const past = webinars.filter(w => new Date(w.scheduled_at) <= now).sort((a, b) => new Date(b.scheduled_at).getTime() - new Date(a.scheduled_at).getTime());
 
-  const cardStyle: React.CSSProperties = {
-    background: '#0c1018', border: '1px solid rgba(255,255,255,0.1)',
-    borderTop: '2px solid #f9ff3c',
-    borderRadius: 10, padding: 28,
-    width: '100%', maxWidth: 460,
-  };
+  const panelStyle: React.CSSProperties = { position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(0,0,0,0.88)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 };
+  const cardStyle: React.CSSProperties = { background: '#0c1018', border: '1px solid rgba(255,255,255,0.1)', borderTop: '2px solid #f9ff3c', borderRadius: 10, padding: 28, width: '100%', maxWidth: 480 };
 
   return (
     <div style={{ minHeight: '100vh', background: '#000', color: '#fff' }}>
-      <div style={{
-        position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0,
-        backgroundImage: 'linear-gradient(rgba(249,255,60,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(249,255,60,0.015) 1px, transparent 1px)',
-        backgroundSize: '48px 48px',
-      }} />
+      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, backgroundImage: 'linear-gradient(rgba(249,255,60,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(249,255,60,0.015) 1px, transparent 1px)', backgroundSize: '48px 48px' }} />
 
       {/* Nav */}
-      <nav style={{
-        position: 'sticky', top: 0, zIndex: 50,
-        background: 'rgba(0,0,0,0.92)', backdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(255,255,255,0.06)',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '0 32px', height: 60,
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ width: 32, height: 32, borderRadius: 8, background: '#f9ff3c', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ fontFamily: "'Space Mono', monospace", fontWeight: 700, fontSize: 14, color: '#000' }}>W</span>
-          </div>
-          <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(249,255,60,0.6)', textTransform: 'uppercase' }}>Admin</span>
-          <a href="/portal" style={{ fontFamily: "'Space Mono', monospace", fontSize: 9, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 5, padding: '4px 10px' }}>← Portal</a>
+      <nav style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(0,0,0,0.92)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 32px', height: 60 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/wsa/home/1.png" alt="WSA" style={{ height: 36, width: 36, borderRadius: '50%', objectFit: 'cover', border: '1px solid rgba(255,255,255,0.12)' }} />
+          <span style={{ fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(249,255,60,0.65)', textTransform: 'uppercase' }}>Admin</span>
+          <a href="/portal" style={{ fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.32)', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 5, padding: '4px 10px' }}>← Portal</a>
         </div>
-        <button
-          onClick={logout} disabled={loggingOut}
-          style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 6, padding: '6px 14px', fontFamily: "'Space Mono', monospace", fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', cursor: 'pointer', transition: 'all 0.15s' }}
+        <button onClick={logout} disabled={loggingOut} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 6, padding: '6px 14px', fontFamily: M, fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.32)', cursor: 'pointer', transition: 'all 0.15s' }}
           onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.25)'; e.currentTarget.style.color = 'rgba(255,255,255,0.7)'; }}
-          onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = 'rgba(255,255,255,0.35)'; }}
-        >
+          onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = 'rgba(255,255,255,0.32)'; }}>
           {loggingOut ? '...' : 'Sign out'}
         </button>
       </nav>
 
-      <main style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '40px 24px 80px' }}>
-        {/* Header row */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32, flexWrap: 'wrap', gap: 12 }}>
-          <div>
-            <h1 style={{ fontFamily: "'Sora', system-ui", fontSize: 24, fontWeight: 700, letterSpacing: '-0.02em', margin: '0 0 4px' }}>Members</h1>
-            <p style={{ fontFamily: "'DM Sans', system-ui", fontSize: 13, color: 'rgba(255,255,255,0.35)', margin: 0 }}>
-              {members.length} total · {members.filter(m => m.active).length} active
-            </p>
-          </div>
-          <button
-            onClick={() => setShowAdd(true)}
-            style={{
-              background: '#f9ff3c', border: 'none', borderRadius: 8,
-              padding: '10px 20px',
-              fontFamily: "'Space Mono', monospace", fontSize: 10,
-              fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase',
-              color: '#000', cursor: 'pointer', transition: 'opacity 0.15s',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.opacity = '0.85'; }}
-            onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
-          >
-            + Add Member
-          </button>
+      <main style={{ position: 'relative', zIndex: 1, maxWidth: 1120, margin: '0 auto', padding: '32px 24px 80px' }}>
+
+        {/* Tab nav */}
+        <div style={{ display: 'flex', gap: 6, marginBottom: 28 }}>
+          {(['members', 'webinars'] as const).map(tab => (
+            <button key={tab} onClick={() => setActiveTab(tab)} style={{
+              background: activeTab === tab ? 'rgba(249,255,60,0.1)' : 'transparent',
+              border: `1px solid ${activeTab === tab ? 'rgba(249,255,60,0.35)' : 'rgba(255,255,255,0.1)'}`,
+              borderRadius: 7, padding: '8px 20px', fontFamily: M, fontSize: 9, fontWeight: 700,
+              letterSpacing: '0.18em', textTransform: 'uppercase',
+              color: activeTab === tab ? '#f9ff3c' : 'rgba(255,255,255,0.35)', cursor: 'pointer', transition: 'all 0.15s',
+            }}>
+              {tab === 'members' ? `Members · ${members.length}` : `Webinars · ${webinars.length}`}
+            </button>
+          ))}
         </div>
 
-        {/* Search */}
-        <input
-          type="text"
-          placeholder="Search by email, name or cohort…"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          style={{
-            ...FIELD_STYLE, marginBottom: 16, height: 42,
-            paddingLeft: 16, fontSize: 13,
-          }}
-          onFocus={e => { e.currentTarget.style.borderColor = 'rgba(249,255,60,0.3)'; }}
-          onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
-        />
+        {/* ── MEMBERS TAB ──────────────────────────────────────────── */}
+        {activeTab === 'members' && (
+          <>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
+              <div>
+                <h1 style={{ fontFamily: D, fontSize: 22, fontWeight: 700, letterSpacing: '-0.02em', margin: '0 0 3px' }}>Members</h1>
+                <p style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.3)', margin: 0 }}>{members.length} total · {members.filter(m => m.active).length} active</p>
+              </div>
+              <button onClick={() => setShowAdd(true)} style={{ background: '#f9ff3c', border: 'none', borderRadius: 8, padding: '10px 20px', fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#000', cursor: 'pointer' }}
+                onMouseEnter={e => { e.currentTarget.style.opacity = '0.85'; }} onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}>
+                + Add Member
+              </button>
+            </div>
 
-        {/* Table */}
-        {loading ? (
-          <div style={{ textAlign: 'center', padding: '60px 0', fontFamily: "'Space Mono', monospace", fontSize: 11, color: 'rgba(249,255,60,0.4)', letterSpacing: '0.2em' }}>LOADING</div>
-        ) : (
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr>
-                  {['Name', 'Email', 'Cohort', 'Progress', 'Role', 'Status', 'Last Login', 'Joined', ''].map(h => (
-                    <th key={h} style={{
-                      textAlign: 'left', padding: '8px 14px',
-                      fontFamily: "'Space Mono', monospace", fontSize: 9,
-                      fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase',
-                      color: 'rgba(255,255,255,0.25)',
-                      borderBottom: '1px solid rgba(255,255,255,0.06)',
-                    }}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map(m => (
-                  <tr key={m.email} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', transition: 'background 0.1s' }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.02)'; }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; }}>
-                    <td style={{ padding: '13px 14px', fontFamily: "'DM Sans', system-ui", fontSize: 13, color: m.active ? '#fff' : 'rgba(255,255,255,0.3)' }}>{m.name || '—'}</td>
-                    <td style={{ padding: '13px 14px', fontFamily: "'DM Sans', system-ui", fontSize: 12, color: 'rgba(255,255,255,0.55)' }}>{m.email}</td>
-                    <td style={{ padding: '13px 14px', fontFamily: "'Space Mono', monospace", fontSize: 11, color: m.cohort ? 'rgba(249,255,60,0.6)' : 'rgba(255,255,255,0.2)' }}>{m.cohort || '—'}</td>
-                    <td style={{ padding: '13px 14px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <div style={{ display: 'flex', gap: 3 }}>
-                          {[1,2,3,4,5,6].map(p => (
-                            <div key={p} style={{ width: 7, height: 7, borderRadius: 2, background: (m.current_phase ?? 0) >= p ? '#f9ff3c' : 'rgba(255,255,255,0.08)' }} />
-                          ))}
+            <input type="text" placeholder="Search by email, name or cohort…" value={search} onChange={e => setSearch(e.target.value)} style={{ ...F, marginBottom: 14, height: 42, paddingLeft: 16 }} onFocus={FO} onBlur={FB} />
+
+            {membersLoading ? (
+              <div style={{ textAlign: 'center', padding: '60px 0', fontFamily: M, fontSize: 11, color: 'rgba(249,255,60,0.4)', letterSpacing: '0.2em' }}>LOADING</div>
+            ) : (
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                  <thead>
+                    <tr>
+                      {['Name', 'Email', 'Cohort', 'Progress', 'Role', 'Status', 'Last Login', 'Joined', ''].map(h => (
+                        <th key={h} style={{ textAlign: 'left', padding: '8px 14px', fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.22)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filtered.map(m => (
+                      <tr key={m.email} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', transition: 'background 0.1s' }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.02)'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; }}>
+                        <td style={{ padding: '12px 14px', fontFamily: S, fontSize: 13, color: m.active ? '#fff' : 'rgba(255,255,255,0.28)' }}>{m.name || '—'}</td>
+                        <td style={{ padding: '12px 14px', fontFamily: S, fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>{m.email}</td>
+                        <td style={{ padding: '12px 14px', fontFamily: M, fontSize: 11, color: m.cohort ? 'rgba(249,255,60,0.6)' : 'rgba(255,255,255,0.18)' }}>{m.cohort || '—'}</td>
+                        <td style={{ padding: '12px 14px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <div style={{ display: 'flex', gap: 2 }}>
+                              {[1,2,3,4,5,6,7].map(p => (
+                                <div key={p} style={{ width: 7, height: 7, borderRadius: 2, background: (m.current_phase ?? 0) >= p ? '#f9ff3c' : 'rgba(255,255,255,0.07)' }} />
+                              ))}
+                            </div>
+                            <span style={{ fontFamily: S, fontSize: 11, color: 'rgba(255,255,255,0.32)' }}>
+                              {(m.current_phase ?? 0) === 0 ? 'Not started' : PHASE_LABELS[m.current_phase ?? 0] ?? `P${m.current_phase}`}
+                            </span>
+                          </div>
+                        </td>
+                        <td style={{ padding: '12px 14px' }}>
+                          <span style={{ fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: m.role === 'admin' ? '#f9ff3c' : 'rgba(255,255,255,0.32)', background: m.role === 'admin' ? 'rgba(249,255,60,0.08)' : 'transparent', padding: m.role === 'admin' ? '3px 7px' : '0', borderRadius: 4 }}>{m.role}</span>
+                        </td>
+                        <td style={{ padding: '12px 14px' }}>
+                          <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: m.active ? '#22c55e' : '#ef4444', boxShadow: m.active ? '0 0 6px rgba(34,197,94,0.5)' : 'none' }} />
+                        </td>
+                        <td style={{ padding: '12px 14px', fontFamily: S, fontSize: 12, color: 'rgba(255,255,255,0.32)' }}>{timeAgo(m.last_login)}</td>
+                        <td style={{ padding: '12px 14px', fontFamily: S, fontSize: 12, color: 'rgba(255,255,255,0.22)' }}>{fmt(m.created_at)}</td>
+                        <td style={{ padding: '12px 14px' }}>
+                          <button onClick={() => openEdit(m)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 5, padding: '5px 12px', fontFamily: M, fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.32)', cursor: 'pointer', transition: 'all 0.15s' }}
+                            onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(249,255,60,0.35)'; e.currentTarget.style.color = '#f9ff3c'; }}
+                            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = 'rgba(255,255,255,0.32)'; }}>Edit</button>
+                        </td>
+                      </tr>
+                    ))}
+                    {filtered.length === 0 && (
+                      <tr><td colSpan={9} style={{ padding: '40px 14px', textAlign: 'center', fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.2)' }}>No members found</td></tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* ── WEBINARS TAB ─────────────────────────────────────────── */}
+        {activeTab === 'webinars' && (
+          <>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
+              <div>
+                <h1 style={{ fontFamily: D, fontSize: 22, fontWeight: 700, letterSpacing: '-0.02em', margin: '0 0 3px' }}>Webinars & Recordings</h1>
+                <p style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.3)', margin: 0 }}>Schedule calls · add recordings after · auto-populates to member portal</p>
+              </div>
+              <button onClick={openNewWebinar} style={{ background: '#f9ff3c', border: 'none', borderRadius: 8, padding: '10px 20px', fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#000', cursor: 'pointer' }}
+                onMouseEnter={e => { e.currentTarget.style.opacity = '0.85'; }} onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}>
+                + Schedule Call
+              </button>
+            </div>
+
+            {webinarsLoading ? (
+              <div style={{ textAlign: 'center', padding: '60px 0', fontFamily: M, fontSize: 11, color: 'rgba(249,255,60,0.4)', letterSpacing: '0.2em' }}>LOADING</div>
+            ) : (
+              <>
+                {/* Upcoming */}
+                <div style={{ marginBottom: 32 }}>
+                  <div style={{ fontFamily: M, fontSize: 8, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(249,255,60,0.5)', textTransform: 'uppercase', marginBottom: 12 }}>
+                    Upcoming · {upcoming.length}
+                  </div>
+                  {upcoming.length === 0 ? (
+                    <div style={{ padding: '20px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10, fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>
+                      No upcoming calls scheduled. Click "+ Schedule Call" to add one.
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                      {upcoming.map(w => (
+                        <div key={w.id} style={{ display: 'grid', gridTemplateColumns: '170px 1fr 100px 100px auto', gap: 14, alignItems: 'center', background: 'rgba(249,255,60,0.03)', border: '1px solid rgba(249,255,60,0.12)', borderRadius: 9, padding: '13px 16px' }}>
+                          <div>
+                            <div style={{ fontFamily: M, fontSize: 10, fontWeight: 700, color: '#f9ff3c', letterSpacing: '0.04em' }}>{new Date(w.scheduled_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+                            <div style={{ fontFamily: M, fontSize: 8, color: 'rgba(249,255,60,0.45)', marginTop: 2 }}>{new Date(w.scheduled_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' })}</div>
+                          </div>
+                          <div>
+                            <div style={{ fontFamily: S, fontSize: 13, fontWeight: 500, color: '#fff' }}>{w.title}</div>
+                            {w.description && <div style={{ fontFamily: S, fontSize: 11, color: 'rgba(255,255,255,0.35)', marginTop: 2 }}>{w.description}</div>}
+                          </div>
+                          <div style={{ textAlign: 'center' }}>
+                            {w.join_link ? (
+                              <a href={w.join_link} target="_blank" rel="noopener noreferrer" style={{ fontFamily: M, fontSize: 8, color: '#22c55e', letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none' }}>🔗 Link ✓</a>
+                            ) : (
+                              <span style={{ fontFamily: M, fontSize: 8, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.08em' }}>No link</span>
+                            )}
+                          </div>
+                          <div style={{ textAlign: 'center' }}>
+                            <span style={{ fontFamily: M, fontSize: 8, color: 'rgba(255,255,255,0.18)', letterSpacing: '0.08em' }}>
+                              {w.is_published ? '● Published' : '○ Draft'}
+                            </span>
+                          </div>
+                          <div style={{ display: 'flex', gap: 6 }}>
+                            <button onClick={() => openEditWebinar(w)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 5, padding: '5px 11px', fontFamily: M, fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', transition: 'all 0.15s' }}
+                              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(249,255,60,0.35)'; e.currentTarget.style.color = '#f9ff3c'; }}
+                              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = 'rgba(255,255,255,0.4)'; }}>Edit</button>
+                            <button onClick={() => removeWebinar(w.id)} style={{ background: 'none', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 5, padding: '5px 11px', fontFamily: M, fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(239,68,68,0.5)', cursor: 'pointer', transition: 'all 0.15s' }}
+                              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(239,68,68,0.5)'; e.currentTarget.style.color = '#ef4444'; }}
+                              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(239,68,68,0.2)'; e.currentTarget.style.color = 'rgba(239,68,68,0.5)'; }}>Del</button>
+                          </div>
                         </div>
-                        <span style={{ fontFamily: "'DM Sans', system-ui", fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>
-                          {(m.current_phase ?? 0) === 0 ? 'Not started' : PHASE_LABELS[m.current_phase ?? 0]}
-                        </span>
-                      </div>
-                    </td>
-                    <td style={{ padding: '13px 14px' }}>
-                      <span style={{
-                        fontFamily: "'Space Mono', monospace", fontSize: 9, fontWeight: 700,
-                        letterSpacing: '0.12em', textTransform: 'uppercase',
-                        color: m.role === 'admin' ? '#f9ff3c' : 'rgba(255,255,255,0.35)',
-                        background: m.role === 'admin' ? 'rgba(249,255,60,0.08)' : 'transparent',
-                        padding: m.role === 'admin' ? '3px 7px' : '0',
-                        borderRadius: 4,
-                      }}>{m.role}</span>
-                    </td>
-                    <td style={{ padding: '13px 14px' }}>
-                      <span style={{
-                        display: 'inline-block', width: 6, height: 6, borderRadius: '50%',
-                        background: m.active ? '#22c55e' : '#ef4444',
-                        boxShadow: m.active ? '0 0 8px rgba(34,197,94,0.5)' : 'none',
-                      }} />
-                    </td>
-                    <td style={{ padding: '13px 14px', fontFamily: "'DM Sans', system-ui", fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>{timeAgo(m.last_login)}</td>
-                    <td style={{ padding: '13px 14px', fontFamily: "'DM Sans', system-ui", fontSize: 12, color: 'rgba(255,255,255,0.25)' }}>{fmt(m.created_at)}</td>
-                    <td style={{ padding: '13px 14px' }}>
-                      <button
-                        onClick={() => openEdit(m)}
-                        style={{
-                          background: 'none', border: '1px solid rgba(255,255,255,0.08)',
-                          borderRadius: 5, padding: '5px 12px',
-                          fontFamily: "'Space Mono', monospace", fontSize: 9,
-                          letterSpacing: '0.1em', textTransform: 'uppercase',
-                          color: 'rgba(255,255,255,0.35)', cursor: 'pointer', transition: 'all 0.15s',
-                        }}
-                        onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(249,255,60,0.3)'; e.currentTarget.style.color = '#f9ff3c'; }}
-                        onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = 'rgba(255,255,255,0.35)'; }}
-                      >Edit</button>
-                    </td>
-                  </tr>
-                ))}
-                {filtered.length === 0 && (
-                  <tr><td colSpan={8} style={{ padding: '40px 14px', textAlign: 'center', fontFamily: "'DM Sans', system-ui", fontSize: 13, color: 'rgba(255,255,255,0.2)' }}>No members found</td></tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Past / Recordings */}
+                <div>
+                  <div style={{ fontFamily: M, fontSize: 8, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', marginBottom: 12 }}>
+                    Past & Recordings · {past.length}
+                  </div>
+                  {past.length === 0 ? (
+                    <div style={{ padding: '20px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10, fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>
+                      No past sessions yet.
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                      {past.map(w => (
+                        <div key={w.id} style={{ display: 'grid', gridTemplateColumns: '170px 1fr 130px 100px auto', gap: 14, alignItems: 'center', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 9, padding: '12px 16px' }}>
+                          <div style={{ fontFamily: M, fontSize: 10, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.04em' }}>
+                            {new Date(w.scheduled_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                          </div>
+                          <div>
+                            <div style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.75)' }}>{w.title}</div>
+                            {w.description && <div style={{ fontFamily: S, fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 1 }}>{w.description}</div>}
+                          </div>
+                          <div>
+                            {w.recording_url ? (
+                              <a href={w.recording_url} target="_blank" rel="noopener noreferrer" style={{ fontFamily: M, fontSize: 8, color: '#22c55e', letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none' }}>🎬 Recording ✓</a>
+                            ) : (
+                              <span style={{ fontFamily: M, fontSize: 8, color: '#f59e0b', letterSpacing: '0.08em' }}>No recording yet</span>
+                            )}
+                          </div>
+                          <div style={{ textAlign: 'center' }}>
+                            <span style={{ fontFamily: M, fontSize: 8, color: 'rgba(255,255,255,0.18)', letterSpacing: '0.08em' }}>
+                              {w.is_published ? '● Published' : '○ Draft'}
+                            </span>
+                          </div>
+                          <div style={{ display: 'flex', gap: 6 }}>
+                            <button onClick={() => openEditWebinar(w)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 5, padding: '5px 11px', fontFamily: M, fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', transition: 'all 0.15s' }}
+                              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(249,255,60,0.35)'; e.currentTarget.style.color = '#f9ff3c'; }}
+                              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = 'rgba(255,255,255,0.4)'; }}>Edit</button>
+                            <button onClick={() => removeWebinar(w.id)} style={{ background: 'none', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 5, padding: '5px 11px', fontFamily: M, fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(239,68,68,0.5)', cursor: 'pointer', transition: 'all 0.15s' }}
+                              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(239,68,68,0.5)'; e.currentTarget.style.color = '#ef4444'; }}
+                              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(239,68,68,0.2)'; e.currentTarget.style.color = 'rgba(239,68,68,0.5)'; }}>Del</button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+          </>
         )}
       </main>
 
-      {/* Add Member Panel */}
+      {/* ── Add Member Modal ── */}
       {showAdd && (
         <div style={panelStyle} onClick={() => setShowAdd(false)}>
           <div style={cardStyle} onClick={e => e.stopPropagation()}>
-            <h2 style={{ fontFamily: "'Sora', system-ui", fontSize: 18, fontWeight: 700, margin: '0 0 20px', letterSpacing: '-0.02em' }}>Add Member</h2>
+            <h2 style={{ fontFamily: D, fontSize: 18, fontWeight: 700, margin: '0 0 20px', letterSpacing: '-0.02em' }}>Add Member</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <input placeholder="Email *" value={addEmail} onChange={e => setAddEmail(e.target.value)} style={FIELD_STYLE}
-                onFocus={e => { e.currentTarget.style.borderColor = 'rgba(249,255,60,0.3)'; }} onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }} />
-              <input placeholder="Full name" value={addName} onChange={e => setAddName(e.target.value)} style={FIELD_STYLE}
-                onFocus={e => { e.currentTarget.style.borderColor = 'rgba(249,255,60,0.3)'; }} onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }} />
-              <input placeholder="Password *" type="password" value={addPassword} onChange={e => setAddPassword(e.target.value)} style={FIELD_STYLE}
-                onFocus={e => { e.currentTarget.style.borderColor = 'rgba(249,255,60,0.3)'; }} onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }} />
-              <input placeholder="Cohort (e.g. June 2026)" value={addCohort} onChange={e => setAddCohort(e.target.value)} style={FIELD_STYLE}
-                onFocus={e => { e.currentTarget.style.borderColor = 'rgba(249,255,60,0.3)'; }} onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }} />
-              <select value={addRole} onChange={e => setAddRole(e.target.value as 'member' | 'admin')}
-                style={{ ...FIELD_STYLE, appearance: 'none' as const }}>
+              <input placeholder="Email *" value={addEmail} onChange={e => setAddEmail(e.target.value)} style={F} onFocus={FO} onBlur={FB} />
+              <input placeholder="Full name" value={addName} onChange={e => setAddName(e.target.value)} style={F} onFocus={FO} onBlur={FB} />
+              <input placeholder="Password *" type="password" value={addPassword} onChange={e => setAddPassword(e.target.value)} style={F} onFocus={FO} onBlur={FB} />
+              <input placeholder="Cohort (e.g. June 2026)" value={addCohort} onChange={e => setAddCohort(e.target.value)} style={F} onFocus={FO} onBlur={FB} />
+              <select value={addRole} onChange={e => setAddRole(e.target.value as 'member' | 'admin')} style={{ ...F, appearance: 'none' as const }}>
                 <option value="member">Member</option>
                 <option value="admin">Admin</option>
               </select>
             </div>
-            {addError && <p style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, color: '#ef4444', marginTop: 10, letterSpacing: '0.06em' }}>{addError}</p>}
+            {addError && <p style={{ fontFamily: M, fontSize: 10, color: '#ef4444', marginTop: 10, letterSpacing: '0.06em' }}>{addError}</p>}
             <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
-              <button onClick={() => setShowAdd(false)}
-                style={{ flex: 1, height: 40, background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 7, fontFamily: "'Space Mono', monospace", fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}>
-                Cancel
-              </button>
-              <button onClick={addMember} disabled={addLoading || !addEmail || !addPassword}
-                style={{ flex: 2, height: 40, background: addLoading || !addEmail || !addPassword ? 'rgba(249,255,60,0.15)' : '#f9ff3c', border: 'none', borderRadius: 7, fontFamily: "'Space Mono', monospace", fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: addLoading || !addEmail || !addPassword ? 'rgba(249,255,60,0.4)' : '#000', cursor: addLoading || !addEmail || !addPassword ? 'not-allowed' : 'pointer' }}>
+              <button onClick={() => setShowAdd(false)} style={{ flex: 1, height: 40, background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 7, fontFamily: M, fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}>Cancel</button>
+              <button onClick={addMember} disabled={addLoading || !addEmail || !addPassword} style={{ flex: 2, height: 40, background: addLoading || !addEmail || !addPassword ? 'rgba(249,255,60,0.15)' : '#f9ff3c', border: 'none', borderRadius: 7, fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: addLoading || !addEmail || !addPassword ? 'rgba(249,255,60,0.4)' : '#000', cursor: addLoading || !addEmail || !addPassword ? 'not-allowed' : 'pointer' }}>
                 {addLoading ? '...' : 'Add Member'}
               </button>
             </div>
@@ -356,36 +500,63 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* Edit Member Panel */}
+      {/* ── Edit Member Modal ── */}
       {selected && (
         <div style={panelStyle} onClick={() => setSelected(null)}>
           <div style={cardStyle} onClick={e => e.stopPropagation()}>
             <div style={{ marginBottom: 20 }}>
-              <h2 style={{ fontFamily: "'Sora', system-ui", fontSize: 18, fontWeight: 700, margin: '0 0 4px', letterSpacing: '-0.02em' }}>Edit Member</h2>
-              <p style={{ fontFamily: "'DM Sans', system-ui", fontSize: 13, color: 'rgba(255,255,255,0.35)', margin: 0 }}>{selected.email}</p>
+              <h2 style={{ fontFamily: D, fontSize: 18, fontWeight: 700, margin: '0 0 4px', letterSpacing: '-0.02em' }}>Edit Member</h2>
+              <p style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.35)', margin: 0 }}>{selected.email}</p>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <input placeholder="Full name" value={editName} onChange={e => setEditName(e.target.value)} style={FIELD_STYLE}
-                onFocus={e => { e.currentTarget.style.borderColor = 'rgba(249,255,60,0.3)'; }} onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }} />
-              <input placeholder="Cohort" value={editCohort} onChange={e => setEditCohort(e.target.value)} style={FIELD_STYLE}
-                onFocus={e => { e.currentTarget.style.borderColor = 'rgba(249,255,60,0.3)'; }} onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }} />
-              <input placeholder="Notes (internal only)" value={editNotes} onChange={e => setEditNotes(e.target.value)} style={FIELD_STYLE}
-                onFocus={e => { e.currentTarget.style.borderColor = 'rgba(249,255,60,0.3)'; }} onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }} />
-              <input placeholder="New password (leave blank to keep)" type="password" value={editPassword} onChange={e => setEditPassword(e.target.value)} style={FIELD_STYLE}
-                onFocus={e => { e.currentTarget.style.borderColor = 'rgba(249,255,60,0.3)'; }} onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }} />
+              <input placeholder="Full name" value={editName} onChange={e => setEditName(e.target.value)} style={F} onFocus={FO} onBlur={FB} />
+              <input placeholder="Cohort" value={editCohort} onChange={e => setEditCohort(e.target.value)} style={F} onFocus={FO} onBlur={FB} />
+              <input placeholder="Notes (internal)" value={editNotes} onChange={e => setEditNotes(e.target.value)} style={F} onFocus={FO} onBlur={FB} />
+              <input placeholder="New password (leave blank to keep)" type="password" value={editPassword} onChange={e => setEditPassword(e.target.value)} style={F} onFocus={FO} onBlur={FB} />
               <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
                 <input type="checkbox" checked={editActive} onChange={e => setEditActive(e.target.checked)} style={{ accentColor: '#f9ff3c', width: 14, height: 14 }} />
-                <span style={{ fontFamily: "'DM Sans', system-ui", fontSize: 13, color: 'rgba(255,255,255,0.55)' }}>Active (can log in)</span>
+                <span style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.55)' }}>Active (can log in)</span>
               </label>
             </div>
             <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
-              <button onClick={() => setSelected(null)}
-                style={{ flex: 1, height: 40, background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 7, fontFamily: "'Space Mono', monospace", fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}>
-                Cancel
-              </button>
-              <button onClick={saveEdit} disabled={editLoading}
-                style={{ flex: 2, height: 40, background: editLoading ? 'rgba(249,255,60,0.15)' : '#f9ff3c', border: 'none', borderRadius: 7, fontFamily: "'Space Mono', monospace", fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: editLoading ? 'rgba(249,255,60,0.4)' : '#000', cursor: editLoading ? 'not-allowed' : 'pointer' }}>
+              <button onClick={() => setSelected(null)} style={{ flex: 1, height: 40, background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 7, fontFamily: M, fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}>Cancel</button>
+              <button onClick={saveEdit} disabled={editLoading} style={{ flex: 2, height: 40, background: editLoading ? 'rgba(249,255,60,0.15)' : '#f9ff3c', border: 'none', borderRadius: 7, fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: editLoading ? 'rgba(249,255,60,0.4)' : '#000', cursor: editLoading ? 'not-allowed' : 'pointer' }}>
                 {editLoading ? '...' : 'Save Changes'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Webinar Modal ── */}
+      {showWebinarModal && (
+        <div style={panelStyle} onClick={() => setShowWebinarModal(false)}>
+          <div style={{ ...cardStyle, maxWidth: 520 }} onClick={e => e.stopPropagation()}>
+            <h2 style={{ fontFamily: D, fontSize: 18, fontWeight: 700, margin: '0 0 6px', letterSpacing: '-0.02em' }}>
+              {editingWebinar ? 'Edit Webinar' : 'Schedule New Call'}
+            </h2>
+            <p style={{ fontFamily: S, fontSize: 12, color: 'rgba(255,255,255,0.3)', margin: '0 0 20px' }}>
+              {editingWebinar ? 'Update details. Add recording URL after the call.' : 'Fills the portal automatically when saved.'}
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <input placeholder="Title * (e.g. Weekly Call #5 — Fibonacci Confluence)" value={wTitle} onChange={e => setWTitle(e.target.value)} style={F} onFocus={FO} onBlur={FB} />
+              <input placeholder="Description (optional)" value={wDescription} onChange={e => setWDescription(e.target.value)} style={F} onFocus={FO} onBlur={FB} />
+              <div>
+                <label style={{ fontFamily: M, fontSize: 8, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', display: 'block', marginBottom: 6 }}>Date & Time *</label>
+                <input type="datetime-local" value={wScheduledAt} onChange={e => setWScheduledAt(e.target.value)} style={{ ...F, colorScheme: 'dark' }} onFocus={FO} onBlur={FB} />
+              </div>
+              <input placeholder="Join Link (Zoom / Google Meet URL)" value={wJoinLink} onChange={e => setWJoinLink(e.target.value)} style={F} onFocus={FO} onBlur={FB} />
+              <input placeholder="Recording URL (add after the call)" value={wRecordingUrl} onChange={e => setWRecordingUrl(e.target.value)} style={F} onFocus={FO} onBlur={FB} />
+              <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', padding: '8px 0' }}>
+                <input type="checkbox" checked={wPublished} onChange={e => setWPublished(e.target.checked)} style={{ accentColor: '#f9ff3c', width: 14, height: 14 }} />
+                <span style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.55)' }}>Published (visible to all members)</span>
+              </label>
+            </div>
+            {wError && <p style={{ fontFamily: M, fontSize: 10, color: '#ef4444', marginTop: 8, letterSpacing: '0.06em' }}>{wError}</p>}
+            <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
+              <button onClick={() => setShowWebinarModal(false)} style={{ flex: 1, height: 40, background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 7, fontFamily: M, fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}>Cancel</button>
+              <button onClick={saveWebinar} disabled={wSaving || !wTitle.trim() || !wScheduledAt} style={{ flex: 2, height: 40, background: wSaving || !wTitle.trim() || !wScheduledAt ? 'rgba(249,255,60,0.15)' : '#f9ff3c', border: 'none', borderRadius: 7, fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: wSaving || !wTitle.trim() || !wScheduledAt ? 'rgba(249,255,60,0.4)' : '#000', cursor: wSaving || !wTitle.trim() || !wScheduledAt ? 'not-allowed' : 'pointer' }}>
+                {wSaving ? '...' : editingWebinar ? 'Save Changes' : 'Schedule Call'}
               </button>
             </div>
           </div>

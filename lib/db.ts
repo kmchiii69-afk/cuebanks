@@ -118,3 +118,76 @@ export async function recordLogin(email: string): Promise<void> {
     .update({ last_login: Date.now() })
     .eq('email', email.toLowerCase().trim());
 }
+
+// ─── Webinars ────────────────────────────────────────────────────────────────
+
+const WEBINARS_TABLE = 'wsa_webinars';
+
+export interface Webinar {
+  id: string;
+  title: string;
+  description: string;
+  scheduled_at: string; // ISO 8601
+  join_link: string;
+  recording_url: string;
+  is_published: boolean;
+  created_at: string;
+  created_by: string;
+}
+
+export async function getWebinars(): Promise<Webinar[]> {
+  const { data } = await db()
+    .from(WEBINARS_TABLE)
+    .select('*')
+    .eq('is_published', true)
+    .order('scheduled_at', { ascending: false });
+  return data ?? [];
+}
+
+export async function getAllWebinars(): Promise<Webinar[]> {
+  const { data } = await db()
+    .from(WEBINARS_TABLE)
+    .select('*')
+    .order('scheduled_at', { ascending: false });
+  return data ?? [];
+}
+
+export async function createWebinar(input: {
+  title: string;
+  description?: string;
+  scheduled_at: string;
+  join_link?: string;
+  recording_url?: string;
+  is_published?: boolean;
+  created_by?: string;
+}): Promise<Webinar> {
+  const record = {
+    title: input.title,
+    description: input.description ?? '',
+    scheduled_at: input.scheduled_at,
+    join_link: input.join_link ?? '',
+    recording_url: input.recording_url ?? '',
+    is_published: input.is_published ?? true,
+    created_by: input.created_by ?? '',
+  };
+  const { data, error } = await db().from(WEBINARS_TABLE).insert(record).select().single();
+  if (error) throw error;
+  return data;
+}
+
+export async function updateWebinar(
+  id: string,
+  updates: Partial<Omit<Webinar, 'id' | 'created_at'>>
+): Promise<Webinar | null> {
+  const { data } = await db()
+    .from(WEBINARS_TABLE)
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single();
+  return data ?? null;
+}
+
+export async function deleteWebinar(id: string): Promise<void> {
+  await db().from(WEBINARS_TABLE).delete().eq('id', id);
+}

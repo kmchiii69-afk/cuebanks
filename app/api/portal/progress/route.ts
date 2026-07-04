@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const { phase } = await req.json();
-  if (typeof phase !== 'number' || phase < 0 || phase > 6) {
+  if (typeof phase !== 'number' || phase < 0 || phase > 8) {
     return NextResponse.json({ error: 'Invalid phase' }, { status: 400 });
   }
 
