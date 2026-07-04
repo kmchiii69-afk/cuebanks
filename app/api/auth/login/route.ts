@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { validateCredentials, recordLogin } from '@/lib/db';
 import { signToken, COOKIE_NAME, COOKIE_OPTS } from '@/lib/auth';
+import { rateLimit } from '@/lib/rate-limit';
 
 export async function POST(req: NextRequest) {
+  // 10 attempts per IP per 15 minutes
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown';
+  if (!rateLimit(`login:${ip}`, 10, 15 * 60 * 1000)) {
+    return NextResponse.json({ error: 'Too many attempts. Try again in 15 minutes.' }, { status: 429 });
+  }
+
   try {
     const { email, password } = await req.json();
     if (!email || !password) {

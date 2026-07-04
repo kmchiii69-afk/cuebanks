@@ -3,6 +3,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import qaData from "@/lib/cue-qa.json";
 import { getAuthUser } from "@/lib/auth";
 import { getMember, saveChatAnalytic } from "@/lib/db";
+import { rateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -139,6 +140,11 @@ export async function POST(req: NextRequest) {
   const authUser = await getAuthUser();
   if (!authUser) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
+  }
+
+  // 20 messages per user per hour to protect Anthropic spend
+  if (!rateLimit(`cue:${authUser.email}`, 20, 60 * 60 * 1000)) {
+    return new Response(JSON.stringify({ error: "You've hit the hourly limit (20 messages). Come back in an hour." }), { status: 429 });
   }
 
   let body: unknown;

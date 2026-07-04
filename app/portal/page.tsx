@@ -182,8 +182,9 @@ export default function PortalPage() {
   useEffect(() => {
     fetch('/api/calendar')
       .then(r => r.json())
-      .then(({ events }) => {
-        const today = (events as CalEvent[]).filter(e => isToday(e.date));
+      .then((data: unknown) => {
+        const events = Array.isArray((data as { events?: unknown }).events) ? (data as { events: CalEvent[] }).events : [];
+        const today = events.filter(e => isToday(e.date));
         today.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
         setCalEvents(today);
       })
@@ -396,7 +397,7 @@ export default function PortalPage() {
                         <span style={{ ...M, fontSize: 8, color: open ? s.color : 'rgba(255,255,255,0.15)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{open ? 'OPEN' : 'CLOSED'}</span>
                       </div>
                       <div style={{ ...M, fontSize: 7.5, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.04em' }}>
-                        {s.utcOpen}:00 – {s.overnight ? s.utcClose : s.utcClose}:00 UTC
+                        {String(s.utcOpen).padStart(2,'0')}:00 – {String(s.utcClose).padStart(2,'0')}:00 UTC
                       </div>
                     </div>
                   </div>
