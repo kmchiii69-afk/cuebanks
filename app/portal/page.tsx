@@ -123,7 +123,7 @@ export default function PortalPage() {
 
   // Onboarding
   const [onboarding, setOnboarding] = useState(false);
-  const [onboardStep, setOnboardStep] = useState<0 | 1 | 2>(0); // 0=video, 1=goal, 2=tour
+  const [onboardStep, setOnboardStep] = useState<0 | 1 | 2 | 3>(0); // 0=video, 1=calendly, 2=goal, 3=tour
   const [goalText, setGoalText] = useState('');
   const [savingGoal, setSavingGoal] = useState(false);
   const [tourStep, setTourStep] = useState(0);
@@ -234,7 +234,7 @@ export default function PortalPage() {
     });
     setMember(m => m ? { ...m, goal: goalText.trim(), onboarded: true } : m);
     setSavingGoal(false);
-    setOnboardStep(2);
+    setOnboardStep(3);
   }
 
   function finishOnboarding() {
@@ -688,11 +688,65 @@ export default function PortalPage() {
             </div>
           )}
 
-          {/* Step 1: Goal Form */}
+          {/* Step 1: Onboarding Call Booking */}
           {onboardStep === 1 && (
+            <div style={{ width: '100%', maxWidth: 880, display: 'flex', flexDirection: 'column', gap: 0 }}>
+              {/* Header */}
+              <div style={{ marginBottom: 20 }}>
+                <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(249,255,60,0.5)', textTransform: 'uppercase', marginBottom: 12 }}>Step 1 of 3 · Book Your Onboarding Call</div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 0 }}>
+                  <div>
+                    <h2 style={{ ...D, fontSize: 22, fontWeight: 700, letterSpacing: '-0.02em', color: '#fff', margin: '0 0 10px' }}>Your first call with the team.</h2>
+                    <p style={{ ...S, fontSize: 13, color: 'rgba(255,255,255,0.5)', margin: '0 0 14px', lineHeight: 1.65 }}>
+                      Before you begin the roadmap, we want to make sure you are fully set up for success. Book a 1-on-1 onboarding call with our Client Success Manager — someone who has been training directly under Cue for years and knows this system inside and out.
+                    </p>
+                    <p style={{ ...S, fontSize: 13, color: 'rgba(255,255,255,0.5)', margin: '0 0 16px', lineHeight: 1.65 }}>
+                      On this call, they will walk you through the full roadmap, show you how your Discord server is organized, explain exactly how the mentorship works, and make sure you know what to expect from day one.
+                    </p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                      {[
+                        'Full walkthrough of your roadmap',
+                        'How your Discord & 1-on-1 channel work',
+                        'Mentorship structure & weekly calls',
+                        'What to focus on in your first week',
+                      ].map(item => (
+                        <div key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                          <span style={{ color: '#f9ff3c', fontSize: 12, marginTop: 1, flexShrink: 0 }}>▸</span>
+                          <span style={{ ...S, fontSize: 13, color: 'rgba(255,255,255,0.65)' }}>{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Calendly embed */}
+                  <div style={{ borderRadius: 10, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)', background: '#fff', minHeight: 580 }}>
+                    <iframe
+                      src="https://calendly.com/filip-wsacademyfx?background_color=ffffff&text_color=111111&primary_color=000000"
+                      style={{ width: '100%', height: 580, border: 'none', display: 'block' }}
+                      title="Book your onboarding call"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: 12, paddingTop: 4 }}>
+                <button onClick={() => setOnboardStep(0)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '10px 18px', ...M, fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', cursor: 'pointer' }}>← Back</button>
+                <button onClick={() => setOnboardStep(2)} style={{ flex: 1, background: '#f9ff3c', border: 'none', borderRadius: 8, padding: '12px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#000', cursor: 'pointer' }}>{"I've Booked My Call →"}</button>
+              </div>
+            </div>
+          )}
+
+          {/* Step 2: Goal Form */}
+          {onboardStep === 2 && (
             <div style={{ width: '100%', maxWidth: 560, display: 'flex', flexDirection: 'column', gap: 24 }}>
+              {/* Thank you card */}
+              <div style={{ background: 'rgba(34,197,94,0.06)', border: '1px solid rgba(34,197,94,0.2)', borderRadius: 10, padding: '16px 20px', display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+                <span style={{ fontSize: 20, flexShrink: 0, marginTop: 1 }}>✅</span>
+                <div>
+                  <div style={{ ...D, fontSize: 14, fontWeight: 700, color: '#22c55e', marginBottom: 4 }}>Thank you — welcome to the program.</div>
+                  <div style={{ ...S, fontSize: 13, color: 'rgba(255,255,255,0.45)', lineHeight: 1.5 }}>We are genuinely excited to have you here. Your onboarding call is confirmed. Go text in your 1-on-1 channel in Discord — everything is ready and waiting for you.</div>
+                </div>
+              </div>
               <div>
-                <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(249,255,60,0.5)', textTransform: 'uppercase', marginBottom: 10 }}>Step 1 of 2 · Set Your Goal</div>
+                <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(249,255,60,0.5)', textTransform: 'uppercase', marginBottom: 10 }}>Step 2 of 3 · Set Your Goal</div>
                 <h2 style={{ ...D, fontSize: 26, fontWeight: 700, letterSpacing: '-0.03em', color: '#fff', margin: '0 0 8px' }}>What do you want to achieve in 4 months?</h2>
                 <p style={{ ...S, fontSize: 14, color: 'rgba(255,255,255,0.38)', margin: 0, lineHeight: 1.55 }}>Be specific. This goal lives on your portal so you see it every time you log in. It&apos;s your why.</p>
               </div>
@@ -706,7 +760,7 @@ export default function PortalPage() {
                 onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; }}
               />
               <div style={{ display: 'flex', gap: 12 }}>
-                <button onClick={() => setOnboardStep(0)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '10px 18px', ...M, fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', cursor: 'pointer' }}>← Back</button>
+                <button onClick={() => setOnboardStep(1)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '10px 18px', ...M, fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', cursor: 'pointer' }}>← Back</button>
                 <button
                   onClick={submitGoal}
                   disabled={savingGoal || !goalText.trim()}
@@ -718,11 +772,11 @@ export default function PortalPage() {
             </div>
           )}
 
-          {/* Step 2: App Tour */}
-          {onboardStep === 2 && (
+          {/* Step 3: App Tour */}
+          {onboardStep === 3 && (
             <div style={{ width: '100%', maxWidth: 520, display: 'flex', flexDirection: 'column', gap: 24 }}>
               <div>
-                <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(249,255,60,0.5)', textTransform: 'uppercase', marginBottom: 10 }}>Step 2 of 2 · Quick Tour</div>
+                <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(249,255,60,0.5)', textTransform: 'uppercase', marginBottom: 10 }}>Step 3 of 3 · Quick Tour</div>
                 <h2 style={{ ...D, fontSize: 24, fontWeight: 700, letterSpacing: '-0.03em', color: '#fff', margin: '0 0 4px' }}>{TOUR_STEPS[tourStep].icon} {TOUR_STEPS[tourStep].title}</h2>
               </div>
 
