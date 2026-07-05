@@ -216,7 +216,7 @@ export default function BrokerOffers() {
       <section style={{ padding: "24px 0 80px" }}>
         <Wrap>
           <div className="bk-skip" style={{ border: `1px solid ${wsa.line}`, borderRadius: 14, background: wsa.panel, padding: "40px 44px", position: "relative", overflow: "hidden" }}>
-            <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(560px 220px at 0% 50%, rgba(249,255,60,0.06), transparent 62%)" }} />
+            <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(560px 220px at 0% 50%, rgba(37,99,235,0.06), transparent 62%)" }} />
             <div style={{ position: "relative" }}>
               <Eyebrow style={{ marginBottom: 12 }}>· No pressure ·</Eyebrow>
               <div style={{ fontFamily: wsa.fontH2, fontSize: 28, fontWeight: 800, letterSpacing: "-0.01em", color: wsa.white, lineHeight: 1.15, marginBottom: 14, maxWidth: 660 }}>

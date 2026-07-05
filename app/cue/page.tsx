@@ -144,7 +144,7 @@ export default function CuePage() {
           pointerEvents: "none",
           zIndex: 0,
           background:
-            "radial-gradient(ellipse 900px 600px at 50% 42%, rgba(249,255,60,0.055) 0%, transparent 70%)",
+            "radial-gradient(ellipse 900px 600px at 50% 42%, rgba(37,99,235,0.055) 0%, transparent 70%)",
           transition: "opacity 0.6s ease",
         }}
       />
@@ -183,7 +183,7 @@ export default function CuePage() {
               flexShrink: 0,
             }}
           >
-            <span style={{ fontFamily: "var(--font-mono)", fontWeight: 800, fontSize: 14, color: "var(--bg)" }}>C</span>
+            <span style={{ fontFamily: "var(--font-mono)", fontWeight: 800, fontSize: 14, color: "#fff" }}>C</span>
           </div>
           <div>
             <div style={{ fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: 12, color: "var(--bone)", letterSpacing: "0.14em" }}>CUE AI</div>
@@ -240,9 +240,9 @@ export default function CuePage() {
                   width: 68,
                   height: 68,
                   borderRadius: "50%",
-                  background: "rgba(249,255,60,0.08)",
-                  border: "1px solid rgba(249,255,60,0.25)",
-                  boxShadow: "0 0 48px rgba(249,255,60,0.1)",
+                  background: "rgba(37,99,235,0.08)",
+                  border: "1px solid rgba(37,99,235,0.25)",
+                  boxShadow: "0 0 48px rgba(37,99,235,0.1)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -275,10 +275,10 @@ export default function CuePage() {
                 width: "100%",
                 maxWidth: 760,
                 background: "rgba(12,16,24,0.85)",
-                border: `1px solid ${focused ? "rgba(249,255,60,0.35)" : "rgba(255,255,255,0.07)"}`,
+                border: `1px solid ${focused ? "rgba(37,99,235,0.35)" : "rgba(255,255,255,0.07)"}`,
                 borderRadius: 16,
                 boxShadow: focused
-                  ? "0 0 0 1px rgba(249,255,60,0.12), 0 24px 80px rgba(0,0,0,0.6), 0 0 60px rgba(249,255,60,0.06)"
+                  ? "0 0 0 1px rgba(37,99,235,0.12), 0 24px 80px rgba(0,0,0,0.6), 0 0 60px rgba(37,99,235,0.06)"
                   : "0 24px 80px rgba(0,0,0,0.6)",
                 overflow: "hidden",
                 transition: "border-color 0.2s, box-shadow 0.2s",
@@ -358,7 +358,7 @@ export default function CuePage() {
                     background: canSend ? "var(--acid)" : "rgba(255,255,255,0.05)",
                     border: "none",
                     borderRadius: 8,
-                    color: canSend ? "var(--bg)" : "var(--muted)",
+                    color: canSend ? "#fff" : "var(--muted)",
                     fontFamily: "var(--font-mono)",
                     fontSize: 11,
                     fontWeight: 700,
@@ -408,8 +408,8 @@ export default function CuePage() {
                     backdropFilter: "blur(8px)",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "rgba(249,255,60,0.07)";
-                    e.currentTarget.style.borderColor = "rgba(249,255,60,0.3)";
+                    e.currentTarget.style.background = "rgba(37,99,235,0.07)";
+                    e.currentTarget.style.borderColor = "rgba(37,99,235,0.3)";
                     e.currentTarget.style.color = "var(--bone)";
                   }}
                   onMouseLeave={(e) => {
@@ -458,15 +458,15 @@ export default function CuePage() {
                     <div style={{
                       width: 28, height: 28, borderRadius: "50%", flexShrink: 0,
                       background: "var(--acid)", display: "flex", alignItems: "center", justifyContent: "center",
-                      marginTop: 14, boxShadow: "0 0 20px rgba(249,255,60,0.18)",
+                      marginTop: 14, boxShadow: "0 0 20px rgba(37,99,235,0.18)",
                     }}>
-                      <span style={{ fontFamily: "var(--font-mono)", fontWeight: 800, fontSize: 11, color: "var(--bg)" }}>C</span>
+                      <span style={{ fontFamily: "var(--font-mono)", fontWeight: 800, fontSize: 11, color: "#fff" }}>C</span>
                     </div>
                     {/* Response card */}
                     <div style={{
                       flex: 1, minWidth: 0,
-                      background: "rgba(249,255,60,0.025)",
-                      borderLeft: "2px solid rgba(249,255,60,0.35)",
+                      background: "rgba(37,99,235,0.025)",
+                      borderLeft: "2px solid rgba(37,99,235,0.35)",
                       borderRadius: "0 12px 12px 0",
                       padding: "16px 22px",
                     }}>
@@ -519,10 +519,10 @@ export default function CuePage() {
               maxWidth: 760,
               margin: "0 auto",
               background: "rgba(12,16,24,0.9)",
-              border: `1px solid ${focused ? "rgba(249,255,60,0.35)" : "rgba(255,255,255,0.08)"}`,
+              border: `1px solid ${focused ? "rgba(37,99,235,0.35)" : "rgba(255,255,255,0.08)"}`,
               borderRadius: 14,
               boxShadow: focused
-                ? "0 0 0 1px rgba(249,255,60,0.1), 0 16px 60px rgba(0,0,0,0.7)"
+                ? "0 0 0 1px rgba(37,99,235,0.1), 0 16px 60px rgba(0,0,0,0.7)"
                 : "0 16px 60px rgba(0,0,0,0.7)",
               overflow: "hidden",
               backdropFilter: "blur(20px)",
@@ -585,7 +585,7 @@ export default function CuePage() {
                   background: canSend ? "var(--acid)" : "rgba(255,255,255,0.05)",
                   border: "none",
                   borderRadius: 7,
-                  color: canSend ? "var(--bg)" : "var(--muted)",
+                  color: canSend ? "#fff" : "var(--muted)",
                   fontFamily: "var(--font-mono)",
                   fontSize: 10,
                   fontWeight: 700,

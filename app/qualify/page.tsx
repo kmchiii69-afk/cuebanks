@@ -44,7 +44,7 @@ export default function QualifyPage() {
 
       {/* HERO */}
       <section style={{ maxWidth: 1180, margin: "0 auto", padding: "64px 48px 24px", textAlign: "center", position: "relative" }}>
-        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(800px 360px at 50% 0%, rgba(249,255,60,0.10), transparent 60%)" }} />
+        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(800px 360px at 50% 0%, rgba(37,99,235,0.10), transparent 60%)" }} />
         <div style={{ position: "relative" }}>
           <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 700, color: "var(--acid)", letterSpacing: "0.22em", textTransform: "uppercase", marginBottom: 18 }}>
             · Wall Street Academy · Operator Application ·

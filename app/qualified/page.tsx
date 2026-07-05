@@ -51,7 +51,7 @@ export default function QualifiedPage() {
   return (
     <div className="grid-bg" style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--bone)", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <div style={{ textAlign: "center", maxWidth: 480, padding: "0 48px", position: "relative" }}>
-        <div style={{ position: "absolute", inset: -100, pointerEvents: "none", background: "radial-gradient(600px 360px at 50% 50%, rgba(249,255,60,0.10), transparent 60%)" }} />
+        <div style={{ position: "absolute", inset: -100, pointerEvents: "none", background: "radial-gradient(600px 360px at 50% 50%, rgba(37,99,235,0.10), transparent 60%)" }} />
         <div style={{ position: "relative" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/wsa/home/1.png" alt="Wall Street Academy" style={{ height: 64, width: 64, borderRadius: "50%", objectFit: "cover", display: "block", margin: "0 auto 28px" }} />

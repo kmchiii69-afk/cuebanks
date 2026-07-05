@@ -74,7 +74,7 @@ const F: React.CSSProperties = {
   outline: 'none', boxSizing: 'border-box',
   transition: 'border-color 0.15s',
 };
-const FO = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => { e.currentTarget.style.borderColor = 'rgba(249,255,60,0.35)'; };
+const FO = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => { e.currentTarget.style.borderColor = 'rgba(37,99,235,0.35)'; };
 const FB = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; };
 const M = "'Space Mono', monospace";
 const S = "'DM Sans', system-ui, sans-serif";
@@ -268,18 +268,18 @@ export default function AdminPage() {
   const past = webinars.filter(w => new Date(w.scheduled_at) <= now).sort((a, b) => new Date(b.scheduled_at).getTime() - new Date(a.scheduled_at).getTime());
 
   const panelStyle: React.CSSProperties = { position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(0,0,0,0.88)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 };
-  const cardStyle: React.CSSProperties = { background: '#0c1018', border: '1px solid rgba(255,255,255,0.1)', borderTop: '2px solid #f9ff3c', borderRadius: 10, padding: 28, width: '100%', maxWidth: 480 };
+  const cardStyle: React.CSSProperties = { background: '#0c1018', border: '1px solid rgba(255,255,255,0.1)', borderTop: '2px solid #2563eb', borderRadius: 10, padding: 28, width: '100%', maxWidth: 480 };
 
   return (
     <div style={{ minHeight: '100vh', background: '#000', color: '#fff' }}>
-      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, backgroundImage: 'linear-gradient(rgba(249,255,60,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(249,255,60,0.015) 1px, transparent 1px)', backgroundSize: '48px 48px' }} />
+      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, backgroundImage: 'linear-gradient(rgba(37,99,235,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(37,99,235,0.015) 1px, transparent 1px)', backgroundSize: '48px 48px' }} />
 
       {/* Nav */}
       <nav style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(0,0,0,0.92)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 32px', height: 60 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/wsa/home/1.png" alt="WSA" style={{ height: 36, width: 36, borderRadius: '50%', objectFit: 'cover', border: '1px solid rgba(255,255,255,0.12)' }} />
-          <span style={{ fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(249,255,60,0.65)', textTransform: 'uppercase' }}>Admin</span>
+          <span style={{ fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(37,99,235,0.65)', textTransform: 'uppercase' }}>Admin</span>
           <a href="/portal" style={{ fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.32)', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 5, padding: '4px 10px' }}>← Portal</a>
         </div>
         <button onClick={logout} disabled={loggingOut} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 6, padding: '6px 14px', fontFamily: M, fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.32)', cursor: 'pointer', transition: 'all 0.15s' }}
@@ -295,11 +295,11 @@ export default function AdminPage() {
         <div style={{ display: 'flex', gap: 6, marginBottom: 28 }}>
           {(['members', 'webinars', 'analytics'] as const).map(tab => (
             <button key={tab} onClick={() => { setActiveTab(tab); if (tab === 'analytics') loadAnalytics(analyticsPlan); }} style={{
-              background: activeTab === tab ? 'rgba(249,255,60,0.1)' : 'transparent',
-              border: `1px solid ${activeTab === tab ? 'rgba(249,255,60,0.35)' : 'rgba(255,255,255,0.1)'}`,
+              background: activeTab === tab ? 'rgba(37,99,235,0.1)' : 'transparent',
+              border: `1px solid ${activeTab === tab ? 'rgba(37,99,235,0.35)' : 'rgba(255,255,255,0.1)'}`,
               borderRadius: 7, padding: '8px 20px', fontFamily: M, fontSize: 9, fontWeight: 700,
               letterSpacing: '0.18em', textTransform: 'uppercase',
-              color: activeTab === tab ? '#f9ff3c' : 'rgba(255,255,255,0.35)', cursor: 'pointer', transition: 'all 0.15s',
+              color: activeTab === tab ? '#2563eb' : 'rgba(255,255,255,0.35)', cursor: 'pointer', transition: 'all 0.15s',
             }}>
               {tab === 'members' ? `Members · ${members.length}` : tab === 'webinars' ? `Webinars · ${webinars.length}` : 'Analytics'}
             </button>
@@ -314,7 +314,7 @@ export default function AdminPage() {
                 <h1 style={{ fontFamily: D, fontSize: 22, fontWeight: 700, letterSpacing: '-0.02em', margin: '0 0 3px' }}>Members</h1>
                 <p style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.3)', margin: 0 }}>{members.length} total · {members.filter(m => m.active).length} active</p>
               </div>
-              <button onClick={() => setShowAdd(true)} style={{ background: '#f9ff3c', border: 'none', borderRadius: 8, padding: '10px 20px', fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#000', cursor: 'pointer' }}
+              <button onClick={() => setShowAdd(true)} style={{ background: '#2563eb', border: 'none', borderRadius: 8, padding: '10px 20px', fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#fff', cursor: 'pointer' }}
                 onMouseEnter={e => { e.currentTarget.style.opacity = '0.85'; }} onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}>
                 + Add Member
               </button>
@@ -323,7 +323,7 @@ export default function AdminPage() {
             <input type="text" placeholder="Search by email, name or cohort…" value={search} onChange={e => setSearch(e.target.value)} style={{ ...F, marginBottom: 14, height: 42, paddingLeft: 16 }} onFocus={FO} onBlur={FB} />
 
             {membersLoading ? (
-              <div style={{ textAlign: 'center', padding: '60px 0', fontFamily: M, fontSize: 11, color: 'rgba(249,255,60,0.4)', letterSpacing: '0.2em' }}>LOADING</div>
+              <div style={{ textAlign: 'center', padding: '60px 0', fontFamily: M, fontSize: 11, color: 'rgba(37,99,235,0.4)', letterSpacing: '0.2em' }}>LOADING</div>
             ) : (
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -342,7 +342,7 @@ export default function AdminPage() {
                         <td style={{ padding: '12px 14px', fontFamily: S, fontSize: 13, color: m.active ? '#fff' : 'rgba(255,255,255,0.28)' }}>{m.name || '—'}</td>
                         <td style={{ padding: '12px 14px', fontFamily: S, fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>{m.email}</td>
                         <td style={{ padding: '12px 14px' }}>
-                          <span style={{ fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: m.plan === '15k' ? '#f9ff3c' : m.plan === '7.5k' ? '#f97316' : 'rgba(255,255,255,0.4)', background: m.plan === '15k' ? 'rgba(249,255,60,0.08)' : m.plan === '7.5k' ? 'rgba(249,115,22,0.08)' : 'rgba(255,255,255,0.04)', padding: '3px 8px', borderRadius: 4 }}>{m.plan || '5k'}</span>
+                          <span style={{ fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: m.plan === '15k' ? '#2563eb' : m.plan === '7.5k' ? '#f97316' : 'rgba(255,255,255,0.4)', background: m.plan === '15k' ? 'rgba(37,99,235,0.08)' : m.plan === '7.5k' ? 'rgba(249,115,22,0.08)' : 'rgba(255,255,255,0.04)', padding: '3px 8px', borderRadius: 4 }}>{m.plan || '5k'}</span>
                         </td>
                         <td style={{ padding: '12px 14px', fontFamily: M, fontSize: 10, color: m.expires_at && new Date(m.expires_at) < new Date() ? '#ef4444' : 'rgba(255,255,255,0.3)' }}>
                           {m.expires_at ? new Date(m.expires_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
@@ -351,7 +351,7 @@ export default function AdminPage() {
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                             <div style={{ display: 'flex', gap: 2 }}>
                               {[1,2,3,4,5,6,7].map(p => (
-                                <div key={p} style={{ width: 7, height: 7, borderRadius: 2, background: (m.current_phase ?? 0) >= p ? '#f9ff3c' : 'rgba(255,255,255,0.07)' }} />
+                                <div key={p} style={{ width: 7, height: 7, borderRadius: 2, background: (m.current_phase ?? 0) >= p ? '#2563eb' : 'rgba(255,255,255,0.07)' }} />
                               ))}
                             </div>
                             <span style={{ fontFamily: S, fontSize: 11, color: 'rgba(255,255,255,0.32)' }}>
@@ -360,7 +360,7 @@ export default function AdminPage() {
                           </div>
                         </td>
                         <td style={{ padding: '12px 14px' }}>
-                          <span style={{ fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: m.role === 'admin' ? '#f9ff3c' : 'rgba(255,255,255,0.32)', background: m.role === 'admin' ? 'rgba(249,255,60,0.08)' : 'transparent', padding: m.role === 'admin' ? '3px 7px' : '0', borderRadius: 4 }}>{m.role}</span>
+                          <span style={{ fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: m.role === 'admin' ? '#2563eb' : 'rgba(255,255,255,0.32)', background: m.role === 'admin' ? 'rgba(37,99,235,0.08)' : 'transparent', padding: m.role === 'admin' ? '3px 7px' : '0', borderRadius: 4 }}>{m.role}</span>
                         </td>
                         <td style={{ padding: '12px 14px' }}>
                           <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: m.active ? '#22c55e' : '#ef4444', boxShadow: m.active ? '0 0 6px rgba(34,197,94,0.5)' : 'none' }} />
@@ -369,7 +369,7 @@ export default function AdminPage() {
                         <td style={{ padding: '12px 14px', fontFamily: S, fontSize: 12, color: 'rgba(255,255,255,0.22)' }}>{fmt(m.created_at)}</td>
                         <td style={{ padding: '12px 14px' }}>
                           <button onClick={() => openEdit(m)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 5, padding: '5px 12px', fontFamily: M, fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.32)', cursor: 'pointer', transition: 'all 0.15s' }}
-                            onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(249,255,60,0.35)'; e.currentTarget.style.color = '#f9ff3c'; }}
+                            onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(37,99,235,0.35)'; e.currentTarget.style.color = '#2563eb'; }}
                             onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = 'rgba(255,255,255,0.32)'; }}>Edit</button>
                         </td>
                       </tr>
@@ -392,19 +392,19 @@ export default function AdminPage() {
                 <h1 style={{ fontFamily: D, fontSize: 22, fontWeight: 700, letterSpacing: '-0.02em', margin: '0 0 3px' }}>Webinars & Recordings</h1>
                 <p style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.3)', margin: 0 }}>Schedule calls · add recordings after · auto-populates to member portal</p>
               </div>
-              <button onClick={openNewWebinar} style={{ background: '#f9ff3c', border: 'none', borderRadius: 8, padding: '10px 20px', fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#000', cursor: 'pointer' }}
+              <button onClick={openNewWebinar} style={{ background: '#2563eb', border: 'none', borderRadius: 8, padding: '10px 20px', fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#fff', cursor: 'pointer' }}
                 onMouseEnter={e => { e.currentTarget.style.opacity = '0.85'; }} onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}>
                 + Schedule Call
               </button>
             </div>
 
             {webinarsLoading ? (
-              <div style={{ textAlign: 'center', padding: '60px 0', fontFamily: M, fontSize: 11, color: 'rgba(249,255,60,0.4)', letterSpacing: '0.2em' }}>LOADING</div>
+              <div style={{ textAlign: 'center', padding: '60px 0', fontFamily: M, fontSize: 11, color: 'rgba(37,99,235,0.4)', letterSpacing: '0.2em' }}>LOADING</div>
             ) : (
               <>
                 {/* Upcoming */}
                 <div style={{ marginBottom: 32 }}>
-                  <div style={{ fontFamily: M, fontSize: 8, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(249,255,60,0.5)', textTransform: 'uppercase', marginBottom: 12 }}>
+                  <div style={{ fontFamily: M, fontSize: 8, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(37,99,235,0.5)', textTransform: 'uppercase', marginBottom: 12 }}>
                     Upcoming · {upcoming.length}
                   </div>
                   {upcoming.length === 0 ? (
@@ -414,10 +414,10 @@ export default function AdminPage() {
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                       {upcoming.map(w => (
-                        <div key={w.id} style={{ display: 'grid', gridTemplateColumns: '170px 1fr 100px 100px auto', gap: 14, alignItems: 'center', background: 'rgba(249,255,60,0.03)', border: '1px solid rgba(249,255,60,0.12)', borderRadius: 9, padding: '13px 16px' }}>
+                        <div key={w.id} style={{ display: 'grid', gridTemplateColumns: '170px 1fr 100px 100px auto', gap: 14, alignItems: 'center', background: 'rgba(37,99,235,0.03)', border: '1px solid rgba(37,99,235,0.12)', borderRadius: 9, padding: '13px 16px' }}>
                           <div>
-                            <div style={{ fontFamily: M, fontSize: 10, fontWeight: 700, color: '#f9ff3c', letterSpacing: '0.04em' }}>{new Date(w.scheduled_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
-                            <div style={{ fontFamily: M, fontSize: 8, color: 'rgba(249,255,60,0.45)', marginTop: 2 }}>{new Date(w.scheduled_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' })}</div>
+                            <div style={{ fontFamily: M, fontSize: 10, fontWeight: 700, color: '#2563eb', letterSpacing: '0.04em' }}>{new Date(w.scheduled_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+                            <div style={{ fontFamily: M, fontSize: 8, color: 'rgba(37,99,235,0.45)', marginTop: 2 }}>{new Date(w.scheduled_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' })}</div>
                           </div>
                           <div>
                             <div style={{ fontFamily: S, fontSize: 13, fontWeight: 500, color: '#fff' }}>{w.title}</div>
@@ -437,7 +437,7 @@ export default function AdminPage() {
                           </div>
                           <div style={{ display: 'flex', gap: 6 }}>
                             <button onClick={() => openEditWebinar(w)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 5, padding: '5px 11px', fontFamily: M, fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', transition: 'all 0.15s' }}
-                              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(249,255,60,0.35)'; e.currentTarget.style.color = '#f9ff3c'; }}
+                              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(37,99,235,0.35)'; e.currentTarget.style.color = '#2563eb'; }}
                               onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = 'rgba(255,255,255,0.4)'; }}>Edit</button>
                             <button onClick={() => removeWebinar(w.id)} style={{ background: 'none', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 5, padding: '5px 11px', fontFamily: M, fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(239,68,68,0.5)', cursor: 'pointer', transition: 'all 0.15s' }}
                               onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(239,68,68,0.5)'; e.currentTarget.style.color = '#ef4444'; }}
@@ -483,7 +483,7 @@ export default function AdminPage() {
                           </div>
                           <div style={{ display: 'flex', gap: 6 }}>
                             <button onClick={() => openEditWebinar(w)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 5, padding: '5px 11px', fontFamily: M, fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', transition: 'all 0.15s' }}
-                              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(249,255,60,0.35)'; e.currentTarget.style.color = '#f9ff3c'; }}
+                              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(37,99,235,0.35)'; e.currentTarget.style.color = '#2563eb'; }}
                               onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = 'rgba(255,255,255,0.4)'; }}>Edit</button>
                             <button onClick={() => removeWebinar(w.id)} style={{ background: 'none', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 5, padding: '5px 11px', fontFamily: M, fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(239,68,68,0.5)', cursor: 'pointer', transition: 'all 0.15s' }}
                               onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(239,68,68,0.5)'; e.currentTarget.style.color = '#ef4444'; }}
@@ -508,14 +508,14 @@ export default function AdminPage() {
               </div>
               <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                 {(['all', '5k', '7.5k', '15k'] as const).map(p => (
-                  <button key={p} onClick={() => { setAnalyticsPlan(p); loadAnalytics(p); }} style={{ background: analyticsPlan === p ? 'rgba(249,255,60,0.1)' : 'transparent', border: `1px solid ${analyticsPlan === p ? 'rgba(249,255,60,0.35)' : 'rgba(255,255,255,0.1)'}`, borderRadius: 7, padding: '6px 16px', fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: analyticsPlan === p ? '#f9ff3c' : 'rgba(255,255,255,0.35)', cursor: 'pointer' }}>
+                  <button key={p} onClick={() => { setAnalyticsPlan(p); loadAnalytics(p); }} style={{ background: analyticsPlan === p ? 'rgba(37,99,235,0.1)' : 'transparent', border: `1px solid ${analyticsPlan === p ? 'rgba(37,99,235,0.35)' : 'rgba(255,255,255,0.1)'}`, borderRadius: 7, padding: '6px 16px', fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: analyticsPlan === p ? '#2563eb' : 'rgba(255,255,255,0.35)', cursor: 'pointer' }}>
                     {p === 'all' ? 'All' : p}
                   </button>
                 ))}
               </div>
             </div>
             {analyticsLoading ? (
-              <div style={{ textAlign: 'center', padding: '60px 0', fontFamily: M, fontSize: 11, color: 'rgba(249,255,60,0.4)', letterSpacing: '0.2em' }}>LOADING</div>
+              <div style={{ textAlign: 'center', padding: '60px 0', fontFamily: M, fontSize: 11, color: 'rgba(37,99,235,0.4)', letterSpacing: '0.2em' }}>LOADING</div>
             ) : analytics.length === 0 ? (
               <div style={{ padding: '40px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10, textAlign: 'center', fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.25)' }}>
                 No questions logged yet. Questions appear here after members use Cue AI.
@@ -529,7 +529,7 @@ export default function AdminPage() {
                 </div>
                 {analytics.map((row, i) => (
                   <div key={row.id} style={{ display: 'grid', gridTemplateColumns: '80px 180px 1fr 110px', gap: 14, padding: '11px 14px', borderBottom: '1px solid rgba(255,255,255,0.04)', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)', alignItems: 'flex-start' }}>
-                    <span style={{ fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: row.plan === '15k' ? '#f9ff3c' : row.plan === '7.5k' ? '#f97316' : 'rgba(255,255,255,0.4)', background: row.plan === '15k' ? 'rgba(249,255,60,0.07)' : row.plan === '7.5k' ? 'rgba(249,115,22,0.07)' : 'rgba(255,255,255,0.04)', padding: '3px 8px', borderRadius: 4, display: 'inline-block' }}>{row.plan}</span>
+                    <span style={{ fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: row.plan === '15k' ? '#2563eb' : row.plan === '7.5k' ? '#f97316' : 'rgba(255,255,255,0.4)', background: row.plan === '15k' ? 'rgba(37,99,235,0.07)' : row.plan === '7.5k' ? 'rgba(249,115,22,0.07)' : 'rgba(255,255,255,0.04)', padding: '3px 8px', borderRadius: 4, display: 'inline-block' }}>{row.plan}</span>
                     <span style={{ fontFamily: S, fontSize: 11, color: 'rgba(255,255,255,0.4)', wordBreak: 'break-word' }}>{row.member_email}</span>
                     <span style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.75)', lineHeight: 1.5, wordBreak: 'break-word' }}>{row.question}</span>
                     <span style={{ fontFamily: M, fontSize: 9, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.04em' }}>{new Date(row.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
@@ -565,7 +565,7 @@ export default function AdminPage() {
             {addError && <p style={{ fontFamily: M, fontSize: 10, color: '#ef4444', marginTop: 10, letterSpacing: '0.06em' }}>{addError}</p>}
             <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
               <button onClick={() => setShowAdd(false)} style={{ flex: 1, height: 40, background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 7, fontFamily: M, fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}>Cancel</button>
-              <button onClick={addMember} disabled={addLoading || !addEmail || !addPassword} style={{ flex: 2, height: 40, background: addLoading || !addEmail || !addPassword ? 'rgba(249,255,60,0.15)' : '#f9ff3c', border: 'none', borderRadius: 7, fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: addLoading || !addEmail || !addPassword ? 'rgba(249,255,60,0.4)' : '#000', cursor: addLoading || !addEmail || !addPassword ? 'not-allowed' : 'pointer' }}>
+              <button onClick={addMember} disabled={addLoading || !addEmail || !addPassword} style={{ flex: 2, height: 40, background: addLoading || !addEmail || !addPassword ? 'rgba(37,99,235,0.15)' : '#2563eb', border: 'none', borderRadius: 7, fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: addLoading || !addEmail || !addPassword ? 'rgba(37,99,235,0.4)' : '#000', cursor: addLoading || !addEmail || !addPassword ? 'not-allowed' : 'pointer' }}>
                 {addLoading ? '...' : 'Add Member'}
               </button>
             </div>
@@ -592,13 +592,13 @@ export default function AdminPage() {
                 <option value="15k">15K — + 1-on-1 with Cue</option>
               </select>
               <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
-                <input type="checkbox" checked={editActive} onChange={e => setEditActive(e.target.checked)} style={{ accentColor: '#f9ff3c', width: 14, height: 14 }} />
+                <input type="checkbox" checked={editActive} onChange={e => setEditActive(e.target.checked)} style={{ accentColor: '#2563eb', width: 14, height: 14 }} />
                 <span style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.55)' }}>Active (can log in)</span>
               </label>
             </div>
             <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
               <button onClick={() => setSelected(null)} style={{ flex: 1, height: 40, background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 7, fontFamily: M, fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}>Cancel</button>
-              <button onClick={saveEdit} disabled={editLoading} style={{ flex: 2, height: 40, background: editLoading ? 'rgba(249,255,60,0.15)' : '#f9ff3c', border: 'none', borderRadius: 7, fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: editLoading ? 'rgba(249,255,60,0.4)' : '#000', cursor: editLoading ? 'not-allowed' : 'pointer' }}>
+              <button onClick={saveEdit} disabled={editLoading} style={{ flex: 2, height: 40, background: editLoading ? 'rgba(37,99,235,0.15)' : '#2563eb', border: 'none', borderRadius: 7, fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: editLoading ? 'rgba(37,99,235,0.4)' : '#000', cursor: editLoading ? 'not-allowed' : 'pointer' }}>
                 {editLoading ? '...' : 'Save Changes'}
               </button>
             </div>
@@ -626,14 +626,14 @@ export default function AdminPage() {
               <input placeholder="Join Link (Zoom / Google Meet URL)" value={wJoinLink} onChange={e => setWJoinLink(e.target.value)} style={F} onFocus={FO} onBlur={FB} />
               <input placeholder="Recording URL (add after the call)" value={wRecordingUrl} onChange={e => setWRecordingUrl(e.target.value)} style={F} onFocus={FO} onBlur={FB} />
               <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', padding: '8px 0' }}>
-                <input type="checkbox" checked={wPublished} onChange={e => setWPublished(e.target.checked)} style={{ accentColor: '#f9ff3c', width: 14, height: 14 }} />
+                <input type="checkbox" checked={wPublished} onChange={e => setWPublished(e.target.checked)} style={{ accentColor: '#2563eb', width: 14, height: 14 }} />
                 <span style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.55)' }}>Published (visible to all members)</span>
               </label>
             </div>
             {wError && <p style={{ fontFamily: M, fontSize: 10, color: '#ef4444', marginTop: 8, letterSpacing: '0.06em' }}>{wError}</p>}
             <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
               <button onClick={() => setShowWebinarModal(false)} style={{ flex: 1, height: 40, background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 7, fontFamily: M, fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}>Cancel</button>
-              <button onClick={saveWebinar} disabled={wSaving || !wTitle.trim() || !wScheduledAt} style={{ flex: 2, height: 40, background: wSaving || !wTitle.trim() || !wScheduledAt ? 'rgba(249,255,60,0.15)' : '#f9ff3c', border: 'none', borderRadius: 7, fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: wSaving || !wTitle.trim() || !wScheduledAt ? 'rgba(249,255,60,0.4)' : '#000', cursor: wSaving || !wTitle.trim() || !wScheduledAt ? 'not-allowed' : 'pointer' }}>
+              <button onClick={saveWebinar} disabled={wSaving || !wTitle.trim() || !wScheduledAt} style={{ flex: 2, height: 40, background: wSaving || !wTitle.trim() || !wScheduledAt ? 'rgba(37,99,235,0.15)' : '#2563eb', border: 'none', borderRadius: 7, fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: wSaving || !wTitle.trim() || !wScheduledAt ? 'rgba(37,99,235,0.4)' : '#000', cursor: wSaving || !wTitle.trim() || !wScheduledAt ? 'not-allowed' : 'pointer' }}>
                 {wSaving ? '...' : editingWebinar ? 'Save Changes' : 'Schedule Call'}
               </button>
             </div>

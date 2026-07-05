@@ -31,7 +31,7 @@ function LessonCard({ lesson }: { lesson: typeof LESSONS[number] }) {
         display: "block", position: "relative", overflow: "hidden", borderRadius: 12,
         border: lesson.featured ? `1px solid ${wsa.yellow}` : `1px solid ${hovered ? "#3a4456" : wsa.line}`,
         textDecoration: "none", transition: "border-color 200ms ease",
-        boxShadow: lesson.featured ? "0 0 60px rgba(249,255,60,0.12)" : "none",
+        boxShadow: lesson.featured ? "0 0 60px rgba(37,99,235,0.12)" : "none",
       }}
     >
       <div style={{ position: "relative", overflow: "hidden", aspectRatio: "16/9" }}>
@@ -42,18 +42,18 @@ function LessonCard({ lesson }: { lesson: typeof LESSONS[number] }) {
           position: "absolute", top: "50%", left: "50%",
           transform: `translate(-50%, -50%) scale(${hovered ? 1.12 : 1})`, transition: "transform 240ms ease, opacity 240ms ease",
           opacity: hovered ? 1 : 0.8, width: lesson.featured ? 64 : 50, height: lesson.featured ? 64 : 50, borderRadius: "50%",
-          background: lesson.featured ? wsa.yellow : "rgba(0,0,0,0.55)", border: `1px solid ${lesson.featured ? wsa.yellow : "rgba(249,255,60,0.5)"}`,
+          background: lesson.featured ? wsa.yellow : "rgba(0,0,0,0.55)", border: `1px solid ${lesson.featured ? wsa.yellow : "rgba(37,99,235,0.5)"}`,
           display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(6px)",
         }}>
           <svg width={lesson.featured ? 20 : 15} height={lesson.featured ? 20 : 15} viewBox="0 0 20 20"><polygon points="5,3 17,10 5,17" fill={lesson.featured ? "#000" : wsa.yellow} /></svg>
         </div>
-        <div style={{ position: "absolute", top: 12, left: 12, fontFamily: wsa.fontH2, fontSize: 11, fontWeight: 800, color: wsa.yellow, background: "rgba(0,0,0,0.82)", padding: "4px 10px", letterSpacing: "0.06em", borderRadius: 6, border: "1px solid rgba(249,255,60,0.25)" }}>{lesson.stat}</div>
+        <div style={{ position: "absolute", top: 12, left: 12, fontFamily: wsa.fontH2, fontSize: 11, fontWeight: 800, color: wsa.yellow, background: "rgba(0,0,0,0.82)", padding: "4px 10px", letterSpacing: "0.06em", borderRadius: 6, border: "1px solid rgba(37,99,235,0.25)" }}>{lesson.stat}</div>
         <div style={{ position: "absolute", bottom: 12, right: 12, fontFamily: wsa.fontH2, fontSize: 10, fontWeight: 800, color: lesson.featured ? "#000" : wsa.white, background: lesson.featured ? wsa.yellow : "rgba(0,0,0,0.82)", padding: "4px 9px", letterSpacing: "0.05em", borderRadius: 6 }}>{lesson.dur}</div>
         {lesson.featured && (
           <div style={{ position: "absolute", top: 12, right: 12, fontFamily: wsa.fontH2, fontSize: 9, fontWeight: 800, color: "#000", background: wsa.yellow, padding: "4px 10px", letterSpacing: "0.18em", textTransform: "uppercase", borderRadius: 6 }}>START HERE</div>
         )}
       </div>
-      <div style={{ padding: lesson.featured ? "18px 22px 20px" : "15px 17px 17px", background: lesson.featured ? "rgba(249,255,60,0.04)" : wsa.panel, borderTop: `1px solid ${lesson.featured ? "rgba(249,255,60,0.18)" : wsa.line}` }}>
+      <div style={{ padding: lesson.featured ? "18px 22px 20px" : "15px 17px 17px", background: lesson.featured ? "rgba(37,99,235,0.04)" : wsa.panel, borderTop: `1px solid ${lesson.featured ? "rgba(37,99,235,0.18)" : wsa.line}` }}>
         <div style={{ fontFamily: wsa.fontH2, fontSize: 9, fontWeight: 800, color: lesson.featured ? wsa.yellow : wsa.muted, letterSpacing: "0.22em", textTransform: "uppercase", marginBottom: lesson.featured ? 10 : 8, display: "flex", alignItems: "center", gap: 10 }}>
           <span>LESSON {lesson.n}</span>
           <span style={{ width: 12, height: 1, background: lesson.featured ? wsa.yellow : wsa.line, display: "inline-block" }} />
@@ -97,7 +97,7 @@ export default function FreeCourseConfirm() {
 
       {/* HERO */}
       <section style={{ padding: "64px 0 56px", borderBottom: `1px solid ${wsa.line}`, position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: -120, left: "50%", transform: "translateX(-50%)", width: 900, height: 500, background: "radial-gradient(ellipse at center, rgba(249,255,60,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: -120, left: "50%", transform: "translateX(-50%)", width: 900, height: 500, background: "radial-gradient(ellipse at center, rgba(37,99,235,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
         <div className="cf-wrap" style={{ position: "relative" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 26 }}>
             <div style={{ width: 32, height: 32, borderRadius: "50%", background: wsa.green2, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>

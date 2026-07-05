@@ -52,7 +52,7 @@ const PHASES = [
 
 const SESSIONS = [
   { name: 'London',   utcOpen: 8,  utcClose: 17, overnight: false, color: '#3b82f6', abbr: 'LON' },
-  { name: 'New York', utcOpen: 13, utcClose: 22, overnight: false, color: '#f9ff3c', abbr: 'NY'  },
+  { name: 'New York', utcOpen: 13, utcClose: 22, overnight: false, color: '#2563eb', abbr: 'NY'  },
   { name: 'Tokyo',    utcOpen: 0,  utcClose: 9,  overnight: false, color: '#f97316', abbr: 'TKY' },
   { name: 'Sydney',   utcOpen: 22, utcClose: 7,  overnight: true,  color: '#22c55e', abbr: 'SYD' },
 ];
@@ -123,7 +123,7 @@ export default function PortalPage() {
 
   // Onboarding
   const [onboarding, setOnboarding] = useState(false);
-  const [onboardStep, setOnboardStep] = useState<0 | 1 | 2 | 3>(0); // 0=video, 1=calendly, 2=goal, 3=tour
+  const [onboardStep, setOnboardStep] = useState<0 | 1 | 2 | 3 | 4>(0); // 0=video, 1=contract, 2=calendly, 3=goal, 4=tour
   const [goalText, setGoalText] = useState('');
   const [savingGoal, setSavingGoal] = useState(false);
   const [tourStep, setTourStep] = useState(0);
@@ -234,7 +234,7 @@ export default function PortalPage() {
     });
     setMember(m => m ? { ...m, goal: goalText.trim(), onboarded: true } : m);
     setSavingGoal(false);
-    setOnboardStep(3);
+    setOnboardStep(4);
   }
 
   function finishOnboarding() {
@@ -243,7 +243,7 @@ export default function PortalPage() {
 
   if (loading) return (
     <div style={{ minHeight: '100vh', background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div style={{ ...M, fontSize: 11, color: 'rgba(249,255,60,0.4)', letterSpacing: '0.2em' }}>LOADING</div>
+      <div style={{ ...M, fontSize: 11, color: 'rgba(37,99,235,0.4)', letterSpacing: '0.2em' }}>LOADING</div>
     </div>
   );
 
@@ -303,7 +303,7 @@ export default function PortalPage() {
             <div style={{ ...M, fontSize: 8, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.14em', textTransform: 'uppercase', marginTop: 3 }}>Member Portal</div>
           </div>
           {isAdmin && (
-            <a href="/admin" style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#f9ff3c', textDecoration: 'none', background: 'rgba(249,255,60,0.08)', border: '1px solid rgba(249,255,60,0.2)', borderRadius: 4, padding: '4px 10px', marginLeft: 6 }}>Admin</a>
+            <a href="/admin" style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#2563eb', textDecoration: 'none', background: 'rgba(37,99,235,0.08)', border: '1px solid rgba(37,99,235,0.2)', borderRadius: 4, padding: '4px 10px', marginLeft: 6 }}>Admin</a>
           )}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
@@ -329,8 +329,8 @@ export default function PortalPage() {
 
         {/* ── GOAL BANNER ───────────────────────────────────── */}
         {member?.goal && (
-          <div style={{ marginBottom: 14, background: 'rgba(249,255,60,0.04)', border: '1px solid rgba(249,255,60,0.15)', borderRadius: 10, padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 14 }}>
-            <span style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(249,255,60,0.5)', flexShrink: 0 }}>MY GOAL</span>
+          <div style={{ marginBottom: 14, background: 'rgba(37,99,235,0.04)', border: '1px solid rgba(37,99,235,0.15)', borderRadius: 10, padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 14 }}>
+            <span style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(37,99,235,0.5)', flexShrink: 0 }}>MY GOAL</span>
             <span style={{ ...S, fontSize: 13, color: 'rgba(255,255,255,0.7)', lineHeight: 1.4, flex: 1 }}>{member.goal}</span>
             <span style={{ ...M, fontSize: 8, color: 'rgba(255,255,255,0.18)', flexShrink: 0, letterSpacing: '0.1em' }}>4 months</span>
           </div>
@@ -341,7 +341,7 @@ export default function PortalPage() {
 
           {/* Welcome */}
           <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '26px 26px 22px' }}>
-            <p style={{ ...M, fontSize: 9, letterSpacing: '0.22em', color: 'rgba(249,255,60,0.45)', textTransform: 'uppercase', margin: '0 0 8px' }}>
+            <p style={{ ...M, fontSize: 9, letterSpacing: '0.22em', color: 'rgba(37,99,235,0.45)', textTransform: 'uppercase', margin: '0 0 8px' }}>
               {member?.cohort ? `Cohort ${member.cohort}` : 'WSA Member'} · Joined {fmtJoin(member?.created_at ?? 0)}
             </p>
             <h1 style={{ ...D, fontSize: 26, fontWeight: 700, letterSpacing: '-0.03em', color: '#fff', margin: '0 0 18px' }}>
@@ -356,7 +356,7 @@ export default function PortalPage() {
               </span>
             </div>
             <div style={{ height: 3, background: 'rgba(255,255,255,0.07)', borderRadius: 2, marginBottom: 18, overflow: 'hidden' }}>
-              <div style={{ height: '100%', width: `${(phase / 8) * 100}%`, background: 'linear-gradient(90deg, #f9ff3c, #d4f700)', borderRadius: 2, transition: 'width 0.5s ease' }} />
+              <div style={{ height: '100%', width: `${(phase / 8) * 100}%`, background: 'linear-gradient(90deg, #2563eb, #d4f700)', borderRadius: 2, transition: 'width 0.5s ease' }} />
             </div>
 
             {/* Today at a glance */}
@@ -379,9 +379,9 @@ export default function PortalPage() {
             <div style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginBottom: 12 }}>Market Sessions · UTC</div>
 
             {overlap && (
-              <div style={{ background: 'rgba(249,255,60,0.07)', border: '1px solid rgba(249,255,60,0.22)', borderRadius: 7, padding: '7px 11px', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 7 }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#f9ff3c', boxShadow: '0 0 8px #f9ff3c', flexShrink: 0 }} />
-                <span style={{ ...M, fontSize: 8, color: '#f9ff3c', letterSpacing: '0.12em', textTransform: 'uppercase' }}>London / NY Overlap</span>
+              <div style={{ background: 'rgba(37,99,235,0.07)', border: '1px solid rgba(37,99,235,0.22)', borderRadius: 7, padding: '7px 11px', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 7 }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#2563eb', boxShadow: '0 0 8px #2563eb', flexShrink: 0 }} />
+                <span style={{ ...M, fontSize: 8, color: '#2563eb', letterSpacing: '0.12em', textTransform: 'uppercase' }}>London / NY Overlap</span>
               </div>
             )}
 
@@ -406,7 +406,7 @@ export default function PortalPage() {
             </div>
             <div style={{ marginTop: 12, paddingTop: 10, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
               <div style={{ ...S, fontSize: 11.5, color: 'rgba(255,255,255,0.35)', lineHeight: 1.55 }}>
-                Best window: <span style={{ color: '#f9ff3c' }}>1pm – 5pm UTC</span><br />
+                Best window: <span style={{ color: '#2563eb' }}>1pm – 5pm UTC</span><br />
                 <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)' }}>London / NY overlap · peak liquidity</span>
               </div>
             </div>
@@ -415,24 +415,24 @@ export default function PortalPage() {
 
         {/* ── ROW 2: Action Cards ──────────────────────────── */}
         <div style={{ display: 'grid', gridTemplateColumns: isAdmin ? 'repeat(3,1fr)' : 'repeat(2,1fr)', gap: 12, marginBottom: 14 }}>
-          <a href="/roadmap" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '18px 20px', background: 'rgba(249,255,60,0.04)', border: '1px solid rgba(249,255,60,0.18)', borderRadius: 12, textDecoration: 'none', transition: 'all 0.15s' }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(249,255,60,0.09)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(249,255,60,0.4)'; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(249,255,60,0.04)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(249,255,60,0.18)'; }}>
-            <div style={{ width: 42, height: 42, borderRadius: 9, background: 'rgba(249,255,60,0.1)', border: '1px solid rgba(249,255,60,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 3h14M2 7h10M2 11h12M2 15h7" stroke="#f9ff3c" strokeWidth="1.6" strokeLinecap="round"/></svg>
+          <a href="/roadmap" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '18px 20px', background: 'rgba(37,99,235,0.04)', border: '1px solid rgba(37,99,235,0.18)', borderRadius: 12, textDecoration: 'none', transition: 'all 0.15s' }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(37,99,235,0.09)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(37,99,235,0.4)'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(37,99,235,0.04)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(37,99,235,0.18)'; }}>
+            <div style={{ width: 42, height: 42, borderRadius: 9, background: 'rgba(37,99,235,0.1)', border: '1px solid rgba(37,99,235,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 3h14M2 7h10M2 11h12M2 15h7" stroke="#2563eb" strokeWidth="1.6" strokeLinecap="round"/></svg>
             </div>
             <div style={{ flex: 1 }}>
-              <div style={{ ...D, fontSize: 15, fontWeight: 700, color: '#f9ff3c', marginBottom: 2 }}>Course Roadmap</div>
+              <div style={{ ...D, fontSize: 15, fontWeight: 700, color: '#2563eb', marginBottom: 2 }}>Course Roadmap</div>
               <div style={{ ...S, fontSize: 12, color: 'rgba(255,255,255,0.38)' }}>{phase === 0 ? 'Start here — Week 0, Prepare' : phase >= 8 ? 'All phases complete' : `Phase ${phase} of 8 active`}</div>
             </div>
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 6.5h8M8 3.5l3 3-3 3" stroke="rgba(249,255,60,0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 6.5h8M8 3.5l3 3-3 3" stroke="rgba(37,99,235,0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </a>
 
           <a href="/cue" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '18px 20px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, textDecoration: 'none', transition: 'all 0.15s' }}
             onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.06)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.15)'; }}
             onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.02)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.08)'; }}>
-            <div style={{ width: 42, height: 42, borderRadius: 9, background: 'rgba(249,255,60,0.1)', border: '1px solid rgba(249,255,60,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <span style={{ ...M, fontWeight: 800, fontSize: 18, color: '#f9ff3c', lineHeight: 1 }}>C</span>
+            <div style={{ width: 42, height: 42, borderRadius: 9, background: 'rgba(37,99,235,0.1)', border: '1px solid rgba(37,99,235,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <span style={{ ...M, fontWeight: 800, fontSize: 18, color: '#2563eb', lineHeight: 1 }}>C</span>
             </div>
             <div style={{ flex: 1 }}>
               <div style={{ ...D, fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 2 }}>Cue AI</div>
@@ -460,7 +460,7 @@ export default function PortalPage() {
         <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '20px 20px', marginBottom: 14 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
             <span style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.22)', textTransform: 'uppercase' }}>Phase Tracker · Click to Mark</span>
-            <a href="/roadmap" style={{ ...M, fontSize: 8, letterSpacing: '0.14em', color: 'rgba(249,255,60,0.45)', textDecoration: 'none', textTransform: 'uppercase' }}>Open Roadmap →</a>
+            <a href="/roadmap" style={{ ...M, fontSize: 8, letterSpacing: '0.14em', color: 'rgba(37,99,235,0.45)', textDecoration: 'none', textTransform: 'uppercase' }}>Open Roadmap →</a>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8,1fr)', gap: 5 }}>
             {PHASES.map((ph, i) => {
@@ -468,10 +468,10 @@ export default function PortalPage() {
               const active = phase === pn;
               const done = phase > pn;
               return (
-                <div key={ph.num} onClick={() => setPhase(active ? 0 : pn)} style={{ background: active ? 'rgba(249,255,60,0.09)' : done ? 'rgba(34,197,94,0.06)' : 'rgba(255,255,255,0.02)', border: `1px solid ${active ? 'rgba(249,255,60,0.35)' : done ? 'rgba(34,197,94,0.2)' : 'rgba(255,255,255,0.06)'}`, borderRadius: 8, padding: '9px 7px', cursor: 'pointer', transition: 'all 0.15s', textAlign: 'center' }}
+                <div key={ph.num} onClick={() => setPhase(active ? 0 : pn)} style={{ background: active ? 'rgba(37,99,235,0.09)' : done ? 'rgba(34,197,94,0.06)' : 'rgba(255,255,255,0.02)', border: `1px solid ${active ? 'rgba(37,99,235,0.35)' : done ? 'rgba(34,197,94,0.2)' : 'rgba(255,255,255,0.06)'}`, borderRadius: 8, padding: '9px 7px', cursor: 'pointer', transition: 'all 0.15s', textAlign: 'center' }}
                   onMouseEnter={e => { if (!active) (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.16)'; }}
                   onMouseLeave={e => { if (!active) (e.currentTarget as HTMLElement).style.borderColor = done ? 'rgba(34,197,94,0.2)' : 'rgba(255,255,255,0.06)'; }}>
-                  <div style={{ ...M, fontSize: 10, fontWeight: 700, color: active ? '#f9ff3c' : done ? '#22c55e' : 'rgba(255,255,255,0.22)', marginBottom: 4 }}>{done ? '✓' : ph.num}</div>
+                  <div style={{ ...M, fontSize: 10, fontWeight: 700, color: active ? '#2563eb' : done ? '#22c55e' : 'rgba(255,255,255,0.22)', marginBottom: 4 }}>{done ? '✓' : ph.num}</div>
                   <div style={{ ...S, fontSize: 10, color: active ? 'rgba(255,255,255,0.85)' : done ? 'rgba(255,255,255,0.42)' : 'rgba(255,255,255,0.28)', lineHeight: 1.3 }}>{ph.title}</div>
                   <div style={{ ...M, fontSize: 7, color: 'rgba(255,255,255,0.13)', marginTop: 3 }}>{ph.duration}</div>
                 </div>
@@ -486,9 +486,9 @@ export default function PortalPage() {
 
             {/* Next Upcoming Call */}
             {nextCall && (
-              <div style={{ background: 'rgba(249,255,60,0.04)', border: '1px solid rgba(249,255,60,0.2)', borderRadius: 12, padding: '20px 22px' }}>
+              <div style={{ background: 'rgba(37,99,235,0.04)', border: '1px solid rgba(37,99,235,0.2)', borderRadius: 12, padding: '20px 22px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
-                  <div style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(249,255,60,0.55)', textTransform: 'uppercase' }}>Next Live Call</div>
+                  <div style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(37,99,235,0.55)', textTransform: 'uppercase' }}>Next Live Call</div>
                   <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                     <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 6px #22c55e80' }} />
                     <span style={{ ...M, fontSize: 8, color: '#22c55e', letterSpacing: '0.1em' }}>UPCOMING</span>
@@ -496,9 +496,9 @@ export default function PortalPage() {
                 </div>
                 <div style={{ ...D, fontSize: 17, fontWeight: 700, color: '#fff', marginBottom: 6, lineHeight: 1.3 }}>{nextCall.title}</div>
                 {nextCall.description && <div style={{ ...S, fontSize: 12, color: 'rgba(255,255,255,0.38)', marginBottom: 10, lineHeight: 1.5 }}>{nextCall.description}</div>}
-                <div style={{ ...M, fontSize: 10, color: 'rgba(249,255,60,0.7)', marginBottom: 14, letterSpacing: '0.04em' }}>{fmtCallDate(nextCall.scheduled_at)}</div>
+                <div style={{ ...M, fontSize: 10, color: 'rgba(37,99,235,0.7)', marginBottom: 14, letterSpacing: '0.04em' }}>{fmtCallDate(nextCall.scheduled_at)}</div>
                 {nextCall.join_link ? (
-                  <a href={nextCall.join_link} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#f9ff3c', borderRadius: 7, padding: '9px 18px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#000', textDecoration: 'none', transition: 'opacity 0.15s' }}
+                  <a href={nextCall.join_link} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#2563eb', borderRadius: 7, padding: '9px 18px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#fff', textDecoration: 'none', transition: 'opacity 0.15s' }}
                     onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = '0.85'; }}
                     onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1'; }}>
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#000" strokeWidth="1.3"/><path d="M4.5 4.5l3 1.5-3 1.5V4.5z" fill="#000"/></svg>
@@ -519,9 +519,9 @@ export default function PortalPage() {
                     <div key={w.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '9px 0', borderBottom: i < pastRecordings.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
                       <span style={{ ...M, fontSize: 9, color: 'rgba(255,255,255,0.25)', flexShrink: 0, letterSpacing: '0.04em', minWidth: 70 }}>{fmtRecDate(w.scheduled_at)}</span>
                       <span style={{ ...S, fontSize: 12, color: 'rgba(255,255,255,0.65)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{w.title}</span>
-                      <a href={w.recording_url} target="_blank" rel="noopener noreferrer" style={{ ...M, fontSize: 8, color: 'rgba(249,255,60,0.6)', letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', flexShrink: 0, transition: 'color 0.15s' }}
-                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#f9ff3c'; }}
-                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(249,255,60,0.6)'; }}>
+                      <a href={w.recording_url} target="_blank" rel="noopener noreferrer" style={{ ...M, fontSize: 8, color: 'rgba(37,99,235,0.6)', letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', flexShrink: 0, transition: 'color 0.15s' }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#2563eb'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(37,99,235,0.6)'; }}>
                         Watch →
                       </a>
                     </div>
@@ -533,10 +533,10 @@ export default function PortalPage() {
         )}
 
         {/* ── ROW 5: Economic Calendar + Checklist + Notes ─── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 14 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: member?.plan === '5k' ? '380px' : '1fr 380px', gap: 14 }}>
 
-          {/* Economic Calendar */}
-          <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '20px 20px' }}>
+          {/* Economic Calendar — 7.5k and 15k only */}
+          {member?.plan !== '5k' && <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '20px 20px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
               <div>
                 <div style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginBottom: 4 }}>Economic Calendar</div>
@@ -586,7 +586,7 @@ export default function PortalPage() {
                       <span style={{ ...S, fontSize: 12, color: past ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.8)', lineHeight: 1.35, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ev.title}</span>
                       <span style={{ ...M, fontSize: 10, color: 'rgba(255,255,255,0.35)' }}>{ev.forecast || '—'}</span>
                       <span style={{ ...M, fontSize: 10, color: 'rgba(255,255,255,0.3)' }}>{ev.previous || '—'}</span>
-                      <span style={{ ...M, fontSize: 10, fontWeight: 700, color: ev.actual ? '#f9ff3c' : 'rgba(255,255,255,0.18)' }}>{ev.actual || '—'}</span>
+                      <span style={{ ...M, fontSize: 10, fontWeight: 700, color: ev.actual ? '#2563eb' : 'rgba(255,255,255,0.18)' }}>{ev.actual || '—'}</span>
                     </div>
                   );
                 })}
@@ -596,10 +596,10 @@ export default function PortalPage() {
             {!calLoading && (
               <div style={{ marginTop: 14, paddingTop: 10, borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ ...S, fontSize: 11, color: 'rgba(255,255,255,0.2)' }}>Times shown in your local timezone · Updates every 30 min</span>
-                <a href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener noreferrer" style={{ ...M, fontSize: 8, color: 'rgba(249,255,60,0.4)', textDecoration: 'none', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Full Calendar →</a>
+                <a href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener noreferrer" style={{ ...M, fontSize: 8, color: 'rgba(37,99,235,0.4)', textDecoration: 'none', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Full Calendar →</a>
               </div>
             )}
-          </div>
+          </div>}
 
           {/* Right column: Checklist + Notes */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -618,7 +618,7 @@ export default function PortalPage() {
 
               {/* Progress bar */}
               <div style={{ height: 2, background: 'rgba(255,255,255,0.06)', borderRadius: 2, marginBottom: 14, overflow: 'hidden' }}>
-                <div style={{ height: '100%', width: `${(checkDone / CHECKLIST.length) * 100}%`, background: checkDone === CHECKLIST.length ? '#22c55e' : 'rgba(249,255,60,0.6)', borderRadius: 2, transition: 'width 0.3s ease' }} />
+                <div style={{ height: '100%', width: `${(checkDone / CHECKLIST.length) * 100}%`, background: checkDone === CHECKLIST.length ? '#22c55e' : 'rgba(37,99,235,0.6)', borderRadius: 2, transition: 'width 0.3s ease' }} />
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
@@ -651,14 +651,37 @@ export default function PortalPage() {
             <div style={{ flex: 1, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '18px 18px', display: 'flex', flexDirection: 'column' }}>
               <div style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginBottom: 12 }}>My Notes</div>
               <textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="Trade ideas, setups, observations, questions for Cue..." style={{ flex: 1, minHeight: 120, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 7, padding: '11px 13px', color: '#fff', ...S, fontSize: 13, lineHeight: 1.6, resize: 'none', outline: 'none', transition: 'border-color 0.15s' }}
-                onFocus={e => { e.currentTarget.style.borderColor = 'rgba(249,255,60,0.25)'; }}
+                onFocus={e => { e.currentTarget.style.borderColor = 'rgba(37,99,235,0.25)'; }}
                 onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; }} />
-              <button onClick={saveNotes} style={{ marginTop: 8, background: notesSaved ? 'rgba(34,197,94,0.09)' : 'rgba(249,255,60,0.06)', border: `1px solid ${notesSaved ? 'rgba(34,197,94,0.25)' : 'rgba(249,255,60,0.18)'}`, borderRadius: 6, padding: '8px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: notesSaved ? '#22c55e' : '#f9ff3c', cursor: 'pointer', transition: 'all 0.2s' }}>
+              <button onClick={saveNotes} style={{ marginTop: 8, background: notesSaved ? 'rgba(34,197,94,0.09)' : 'rgba(37,99,235,0.06)', border: `1px solid ${notesSaved ? 'rgba(34,197,94,0.25)' : 'rgba(37,99,235,0.18)'}`, borderRadius: 6, padding: '8px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: notesSaved ? '#22c55e' : '#2563eb', cursor: 'pointer', transition: 'all 0.2s' }}>
                 {notesSaved ? '✓ Saved' : 'Save Notes'}
               </button>
             </div>
           </div>
         </div>
+
+        {/* ── Contact Support — 5k only ─────────────────────── */}
+        {member?.plan === '5k' && (
+          <div style={{ marginTop: 14, background: 'rgba(37,99,235,0.04)', border: '1px solid rgba(37,99,235,0.18)', borderRadius: 12, padding: '18px 22px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
+            <div>
+              <div style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(37,99,235,0.7)', textTransform: 'uppercase', marginBottom: 4 }}>Support</div>
+              <div style={{ ...S, fontSize: 13, color: 'rgba(255,255,255,0.65)' }}>For any queries, reach out to your account manager.</div>
+              <div style={{ ...S, fontSize: 12, color: 'rgba(255,255,255,0.35)', marginTop: 3 }}>Response within 24 hours during business days.</div>
+            </div>
+            <a
+              href="mailto:filip@wsacademyfx.com"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(37,99,235,0.12)', border: '1px solid rgba(37,99,235,0.35)', borderRadius: 8, padding: '10px 18px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(37,99,235,1)', textDecoration: 'none', flexShrink: 0, transition: 'background 0.15s, border-color 0.15s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(37,99,235,0.22)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(37,99,235,0.6)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(37,99,235,0.12)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(37,99,235,0.35)'; }}
+            >
+              <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+                <rect x="0.5" y="0.5" width="10" height="8" rx="1" stroke="currentColor" strokeWidth="1"/>
+                <path d="M0.5 2L5.5 5L10.5 2" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/>
+              </svg>
+              Contact Us
+            </a>
+          </div>
+        )}
 
       </main>
 
@@ -670,7 +693,7 @@ export default function PortalPage() {
           {onboardStep === 0 && (
             <div style={{ width: '100%', maxWidth: 860, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 28 }}>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(249,255,60,0.5)', textTransform: 'uppercase', marginBottom: 10 }}>Wall Street Academy · Welcome</div>
+                <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(37,99,235,0.5)', textTransform: 'uppercase', marginBottom: 10 }}>Wall Street Academy · Welcome</div>
                 <h2 style={{ ...D, fontSize: 28, fontWeight: 700, letterSpacing: '-0.03em', color: '#fff', margin: 0 }}>A message from Cue.</h2>
               </div>
               <div style={{ width: '100%', borderRadius: 12, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)', background: '#000', aspectRatio: '16/9', position: 'relative' }}>
@@ -683,17 +706,62 @@ export default function PortalPage() {
               </div>
               <div style={{ display: 'flex', gap: 12 }}>
                 <button onClick={() => setOnboardStep(1)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 8, padding: '10px 22px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', cursor: 'pointer' }}>Skip video</button>
-                <button onClick={() => setOnboardStep(1)} style={{ background: '#f9ff3c', border: 'none', borderRadius: 8, padding: '10px 28px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#000', cursor: 'pointer' }}>{"I'm Ready →"}</button>
+                <button onClick={() => setOnboardStep(1)} style={{ background: '#2563eb', border: 'none', borderRadius: 8, padding: '10px 28px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#fff', cursor: 'pointer' }}>{"I'm Ready →"}</button>
               </div>
             </div>
           )}
 
-          {/* Step 1: Onboarding Call Booking */}
+          {/* Step 1: Contract Signing */}
           {onboardStep === 1 && (
+            <div style={{ width: '100%', maxWidth: 760, display: 'flex', flexDirection: 'column', gap: 20 }}>
+              <div>
+                <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(37,99,235,0.5)', textTransform: 'uppercase', marginBottom: 10 }}>Step 1 of 4 · Sign Your Contract</div>
+                <h2 style={{ ...D, fontSize: 24, fontWeight: 700, letterSpacing: '-0.02em', color: '#fff', margin: '0 0 8px' }}>Before your call — sign your contract.</h2>
+                <p style={{ ...S, fontSize: 14, color: 'rgba(255,255,255,0.5)', margin: 0, lineHeight: 1.65 }}>
+                  This is required before your onboarding call. Please complete it now so your call can go straight into strategy.
+                </p>
+              </div>
+              {/* Warning banner */}
+              <div style={{ background: 'rgba(37,99,235,0.05)', border: '1px solid rgba(37,99,235,0.3)', borderRadius: 10, padding: '14px 18px', display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                <span style={{ fontSize: 16, flexShrink: 0, marginTop: 1 }}>⚠️</span>
+                <div style={{ ...S, fontSize: 13, color: 'rgba(37,99,235,0.85)', lineHeight: 1.6 }}>
+                  <strong>Important:</strong> You must sign this contract before your onboarding call. Your call cannot proceed without it.
+                </div>
+              </div>
+              {/* Contract embed */}
+              <div style={{ borderRadius: 10, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.02)' }}>
+                <iframe
+                  src={member?.plan === '15k'
+                    ? 'https://sendlink.co/documents/doc-form/6a498aed193ad951c24c1beb?locale=en-US'
+                    : 'https://sendlink.co/documents/doc-form/6a49857e1d7de5fba1a059a5?locale=en-US'}
+                  style={{ width: '100%', height: 520, border: 'none', display: 'block' }}
+                  title="Program contract"
+                />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: -8 }}>
+                <a
+                  href={member?.plan === '15k'
+                    ? 'https://sendlink.co/documents/doc-form/6a498aed193ad951c24c1beb?locale=en-US'
+                    : 'https://sendlink.co/documents/doc-form/6a49857e1d7de5fba1a059a5?locale=en-US'}
+                  target="_blank" rel="noopener noreferrer"
+                  style={{ ...M, fontSize: 9, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none' }}
+                >
+                  Open in new tab ↗
+                </a>
+              </div>
+              <div style={{ display: 'flex', gap: 12 }}>
+                <button onClick={() => setOnboardStep(0)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '10px 18px', ...M, fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', cursor: 'pointer' }}>← Back</button>
+                <button onClick={() => setOnboardStep(2)} style={{ flex: 1, background: '#2563eb', border: 'none', borderRadius: 8, padding: '12px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#fff', cursor: 'pointer' }}>{"I've Signed My Contract →"}</button>
+              </div>
+            </div>
+          )}
+
+          {/* Step 2: Onboarding Call Booking */}
+          {onboardStep === 2 && (
             <div style={{ width: '100%', maxWidth: 880, display: 'flex', flexDirection: 'column', gap: 0 }}>
               {/* Header */}
               <div style={{ marginBottom: 20 }}>
-                <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(249,255,60,0.5)', textTransform: 'uppercase', marginBottom: 12 }}>Step 1 of 3 · Book Your Onboarding Call</div>
+                <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(37,99,235,0.5)', textTransform: 'uppercase', marginBottom: 12 }}>Step 2 of 4 · Book Your Onboarding Call</div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 0 }}>
                   <div>
                     <h2 style={{ ...D, fontSize: 22, fontWeight: 700, letterSpacing: '-0.02em', color: '#fff', margin: '0 0 10px' }}>Your first call with the team.</h2>
@@ -711,7 +779,7 @@ export default function PortalPage() {
                         'What to focus on in your first week',
                       ].map(item => (
                         <div key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                          <span style={{ color: '#f9ff3c', fontSize: 12, marginTop: 1, flexShrink: 0 }}>▸</span>
+                          <span style={{ color: '#2563eb', fontSize: 12, marginTop: 1, flexShrink: 0 }}>▸</span>
                           <span style={{ ...S, fontSize: 13, color: 'rgba(255,255,255,0.65)' }}>{item}</span>
                         </div>
                       ))}
@@ -728,14 +796,14 @@ export default function PortalPage() {
                 </div>
               </div>
               <div style={{ display: 'flex', gap: 12, paddingTop: 4 }}>
-                <button onClick={() => setOnboardStep(0)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '10px 18px', ...M, fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', cursor: 'pointer' }}>← Back</button>
-                <button onClick={() => setOnboardStep(2)} style={{ flex: 1, background: '#f9ff3c', border: 'none', borderRadius: 8, padding: '12px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#000', cursor: 'pointer' }}>{"I've Booked My Call →"}</button>
+                <button onClick={() => setOnboardStep(1)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '10px 18px', ...M, fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', cursor: 'pointer' }}>← Back</button>
+                <button onClick={() => setOnboardStep(3)} style={{ flex: 1, background: '#2563eb', border: 'none', borderRadius: 8, padding: '12px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#fff', cursor: 'pointer' }}>{"I've Booked My Call →"}</button>
               </div>
             </div>
           )}
 
-          {/* Step 2: Goal Form */}
-          {onboardStep === 2 && (
+          {/* Step 3: Goal Form */}
+          {onboardStep === 3 && (
             <div style={{ width: '100%', maxWidth: 560, display: 'flex', flexDirection: 'column', gap: 24 }}>
               {/* Thank you card */}
               <div style={{ background: 'rgba(34,197,94,0.06)', border: '1px solid rgba(34,197,94,0.2)', borderRadius: 10, padding: '16px 20px', display: 'flex', alignItems: 'flex-start', gap: 14 }}>
@@ -746,7 +814,7 @@ export default function PortalPage() {
                 </div>
               </div>
               <div>
-                <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(249,255,60,0.5)', textTransform: 'uppercase', marginBottom: 10 }}>Step 2 of 3 · Set Your Goal</div>
+                <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(37,99,235,0.5)', textTransform: 'uppercase', marginBottom: 10 }}>Step 3 of 4 · Set Your Goal</div>
                 <h2 style={{ ...D, fontSize: 26, fontWeight: 700, letterSpacing: '-0.03em', color: '#fff', margin: '0 0 8px' }}>What do you want to achieve in 4 months?</h2>
                 <p style={{ ...S, fontSize: 14, color: 'rgba(255,255,255,0.38)', margin: 0, lineHeight: 1.55 }}>Be specific. This goal lives on your portal so you see it every time you log in. It&apos;s your why.</p>
               </div>
@@ -756,15 +824,15 @@ export default function PortalPage() {
                 placeholder="e.g. Pass a $100K prop challenge by trading only A+ setups with 2% risk per trade..."
                 rows={4}
                 style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, padding: '16px', color: '#fff', ...S, fontSize: 14, lineHeight: 1.6, resize: 'vertical', outline: 'none', boxSizing: 'border-box', fontFamily: "'DM Sans', system-ui, sans-serif" }}
-                onFocus={e => { e.currentTarget.style.borderColor = 'rgba(249,255,60,0.35)'; }}
+                onFocus={e => { e.currentTarget.style.borderColor = 'rgba(37,99,235,0.35)'; }}
                 onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; }}
               />
               <div style={{ display: 'flex', gap: 12 }}>
-                <button onClick={() => setOnboardStep(1)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '10px 18px', ...M, fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', cursor: 'pointer' }}>← Back</button>
+                <button onClick={() => setOnboardStep(2)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '10px 18px', ...M, fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', cursor: 'pointer' }}>← Back</button>
                 <button
                   onClick={submitGoal}
                   disabled={savingGoal || !goalText.trim()}
-                  style={{ flex: 1, background: savingGoal || !goalText.trim() ? 'rgba(249,255,60,0.15)' : '#f9ff3c', border: 'none', borderRadius: 8, padding: '12px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: savingGoal || !goalText.trim() ? 'rgba(249,255,60,0.4)' : '#000', cursor: savingGoal || !goalText.trim() ? 'not-allowed' : 'pointer' }}
+                  style={{ flex: 1, background: savingGoal || !goalText.trim() ? 'rgba(37,99,235,0.15)' : '#2563eb', border: 'none', borderRadius: 8, padding: '12px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: savingGoal || !goalText.trim() ? 'rgba(37,99,235,0.4)' : '#000', cursor: savingGoal || !goalText.trim() ? 'not-allowed' : 'pointer' }}
                 >
                   {savingGoal ? 'Saving...' : 'Lock In My Goal →'}
                 </button>
@@ -772,18 +840,18 @@ export default function PortalPage() {
             </div>
           )}
 
-          {/* Step 3: App Tour */}
-          {onboardStep === 3 && (
+          {/* Step 4: App Tour */}
+          {onboardStep === 4 && (
             <div style={{ width: '100%', maxWidth: 520, display: 'flex', flexDirection: 'column', gap: 24 }}>
               <div>
-                <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(249,255,60,0.5)', textTransform: 'uppercase', marginBottom: 10 }}>Step 3 of 3 · Quick Tour</div>
+                <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(37,99,235,0.5)', textTransform: 'uppercase', marginBottom: 10 }}>Step 4 of 4 · Quick Tour</div>
                 <h2 style={{ ...D, fontSize: 24, fontWeight: 700, letterSpacing: '-0.03em', color: '#fff', margin: '0 0 4px' }}>{TOUR_STEPS[tourStep].icon} {TOUR_STEPS[tourStep].title}</h2>
               </div>
 
               {/* Tour dots */}
               <div style={{ display: 'flex', gap: 6 }}>
                 {TOUR_STEPS.map((_, i) => (
-                  <div key={i} style={{ height: 3, flex: 1, borderRadius: 2, background: i <= tourStep ? '#f9ff3c' : 'rgba(255,255,255,0.1)', transition: 'background 0.2s' }} />
+                  <div key={i} style={{ height: 3, flex: 1, borderRadius: 2, background: i <= tourStep ? '#2563eb' : 'rgba(255,255,255,0.1)', transition: 'background 0.2s' }} />
                 ))}
               </div>
 
@@ -794,9 +862,9 @@ export default function PortalPage() {
               <div style={{ display: 'flex', gap: 10 }}>
                 <button onClick={finishOnboarding} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '10px 18px', ...M, fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', cursor: 'pointer' }}>Skip tour</button>
                 {tourStep < TOUR_STEPS.length - 1 ? (
-                  <button onClick={() => setTourStep(t => t + 1)} style={{ flex: 1, background: 'rgba(249,255,60,0.08)', border: '1px solid rgba(249,255,60,0.25)', borderRadius: 8, padding: '10px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#f9ff3c', cursor: 'pointer' }}>Next →</button>
+                  <button onClick={() => setTourStep(t => t + 1)} style={{ flex: 1, background: 'rgba(37,99,235,0.08)', border: '1px solid rgba(37,99,235,0.25)', borderRadius: 8, padding: '10px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#2563eb', cursor: 'pointer' }}>Next →</button>
                 ) : (
-                  <button onClick={finishOnboarding} style={{ flex: 1, background: '#f9ff3c', border: 'none', borderRadius: 8, padding: '10px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#000', cursor: 'pointer' }}>{"Let's Trade →"}</button>
+                  <button onClick={finishOnboarding} style={{ flex: 1, background: '#2563eb', border: 'none', borderRadius: 8, padding: '10px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#fff', cursor: 'pointer' }}>{"Let's Trade →"}</button>
                 )}
               </div>
             </div>

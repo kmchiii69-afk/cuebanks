@@ -364,9 +364,9 @@ export default function InnerCirclePage() {
 
           {/* 4-month boot camp banner */}
           {!isBasic && (
-            <div className="ic-reveal" style={{ marginTop: 40, display: "inline-flex", alignItems: "center", gap: 10, background: "rgba(249,255,60,0.06)", border: "1px solid rgba(249,255,60,0.2)", padding: "10px 20px" }}>
+            <div className="ic-reveal" style={{ marginTop: 40, display: "inline-flex", alignItems: "center", gap: 10, background: "rgba(37,99,235,0.06)", border: "1px solid rgba(37,99,235,0.2)", padding: "10px 20px" }}>
               <div style={{ width: 4, height: 4, borderRadius: "50%", background: acid, flexShrink: 0 }} />
-              <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(249,255,60,0.7)" }}>
+              <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(37,99,235,0.7)" }}>
                 4-Month Boot Camp · Cohort-Based · Starts July 5th
               </span>
             </div>
@@ -515,7 +515,7 @@ export default function InnerCirclePage() {
           <Heading>Every tool.<br /><em style={{ color: acid, fontStyle: "normal" }}>Nothing missing.</em></Heading>
 
           {isPremium && (
-            <div className="ic-reveal" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(249,255,60,0.08)", border: "1px solid rgba(249,255,60,0.25)", padding: "8px 16px", marginTop: 20, marginBottom: 4 }}>
+            <div className="ic-reveal" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(37,99,235,0.08)", border: "1px solid rgba(37,99,235,0.25)", padding: "8px 16px", marginTop: 20, marginBottom: 4 }}>
               <div style={{ width: 5, height: 5, borderRadius: "50%", background: acid }} />
               <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: acid }}>4 exclusive additions in 2.0</span>
             </div>
@@ -529,11 +529,11 @@ export default function InnerCirclePage() {
 
           <div className="ic-reveal" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 1, background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.07)", marginTop: 24 }}>
             {included.map(({ tag, n, title, desc, exclusive }) => (
-              <div key={title} style={{ background: exclusive ? "rgba(249,255,60,0.04)" : "#000", padding: "22px 22px", borderTop: exclusive ? "1px solid rgba(249,255,60,0.2)" : "none", position: "relative" }}>
+              <div key={title} style={{ background: exclusive ? "rgba(37,99,235,0.04)" : "#000", padding: "22px 22px", borderTop: exclusive ? "1px solid rgba(37,99,235,0.2)" : "none", position: "relative" }}>
                 <div style={{ fontFamily: mono, fontSize: 8, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: exclusive ? acid : "rgba(255,255,255,0.3)", marginBottom: 9 }}>{tag}</div>
                 <div style={{ fontFamily: display, fontSize: 16, fontWeight: 700, letterSpacing: "-0.015em", color: bone, marginBottom: 7, lineHeight: 1.2 }}>{title}</div>
                 <div style={{ fontFamily: body, fontSize: 13, lineHeight: 1.6, color: exclusive ? "rgba(255,255,255,0.45)" : "rgba(255,255,255,0.3)", marginBottom: 14 }}>{desc}</div>
-                <div style={{ fontFamily: display, fontSize: 28, fontWeight: 800, letterSpacing: "-0.04em", color: exclusive ? "rgba(249,255,60,0.25)" : "rgba(255,255,255,0.18)", lineHeight: 1 }}>{n}</div>
+                <div style={{ fontFamily: display, fontSize: 28, fontWeight: 800, letterSpacing: "-0.04em", color: exclusive ? "rgba(37,99,235,0.25)" : "rgba(255,255,255,0.18)", lineHeight: 1 }}>{n}</div>
               </div>
             ))}
           </div>
@@ -547,7 +547,7 @@ export default function InnerCirclePage() {
           <Eyebrow label="The roadmap" />
           <Heading>Six phases.<br /><em style={{ color: acid, fontStyle: "normal" }}>In this order.</em></Heading>
           {isPremium && (
-            <div className="ic-reveal" style={{ fontFamily: body, fontSize: 16, lineHeight: 1.65, color: "rgba(249,255,60,0.65)", maxWidth: 560, margin: "16px 0 8px", borderLeft: "2px solid rgba(249,255,60,0.3)", paddingLeft: 18 }}>
+            <div className="ic-reveal" style={{ fontFamily: body, fontSize: 16, lineHeight: 1.65, color: "rgba(37,99,235,0.65)", maxWidth: 560, margin: "16px 0 8px", borderLeft: "2px solid rgba(37,99,235,0.3)", paddingLeft: 18 }}>
               In 2.0, Quillan reviews this with you personally on your orientation call — adjusting emphasis and custom targets to match where you actually are.
             </div>
           )}
@@ -609,7 +609,7 @@ export default function InnerCirclePage() {
                   : "One 90-minute webinar every week for 16 weeks. Each one is built around a specific phase topic: not a Q&A session, not chart-and-chill. Structured content, taught live, that doesn't exist outside this program. The last 10 minutes open for questions."}
               </p>
               {isPremium && (
-                <div className="ic-reveal" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(249,255,60,0.07)", border: "1px solid rgba(249,255,60,0.2)", padding: "8px 16px", marginBottom: 20 }}>
+                <div className="ic-reveal" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(37,99,235,0.07)", border: "1px solid rgba(37,99,235,0.2)", padding: "8px 16px", marginBottom: 20 }}>
                   <div style={{ width: 4, height: 4, borderRadius: "50%", background: acid }} />
                   <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: acid }}>★ rows = 2.0 exclusive</span>
                 </div>
@@ -619,7 +619,7 @@ export default function InnerCirclePage() {
                   const isExclusive = isPremium && "exclusive" in call && call.exclusive;
                   return (
                     <div key={call.n + call.label} style={{
-                      background: isExclusive ? "rgba(249,255,60,0.04)" : "#000",
+                      background: isExclusive ? "rgba(37,99,235,0.04)" : "#000",
                       borderLeft: isExclusive ? `3px solid ${acid}` : "3px solid transparent",
                       padding: "16px 20px",
                       display: "grid",
@@ -628,7 +628,7 @@ export default function InnerCirclePage() {
                       alignItems: "center",
                     }}>
                       <span style={{ fontFamily: mono, fontSize: 10, fontWeight: 700, color: isExclusive ? acid : "rgba(255,255,255,0.2)" }}>{call.n}</span>
-                      <span style={{ fontFamily: mono, fontSize: 8, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: isExclusive ? acid : "rgba(255,255,255,0.3)", background: isExclusive ? "rgba(249,255,60,0.1)" : "rgba(255,255,255,0.05)", padding: "3px 7px" }}>{call.type}</span>
+                      <span style={{ fontFamily: mono, fontSize: 8, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: isExclusive ? acid : "rgba(255,255,255,0.3)", background: isExclusive ? "rgba(37,99,235,0.1)" : "rgba(255,255,255,0.05)", padding: "3px 7px" }}>{call.type}</span>
                       <div>
                         <div style={{ fontFamily: display, fontSize: 15, fontWeight: 700, color: isExclusive ? acid : bone, letterSpacing: "-0.015em", marginBottom: 3 }}>{call.label}</div>
                         <div style={{ fontFamily: body, fontSize: 13, color: "rgba(255,255,255,0.32)", lineHeight: 1.5 }}>{call.note}</div>
@@ -680,7 +680,7 @@ export default function InnerCirclePage() {
           <Heading>{isPremium ? "Inner Circle 2.0." : isBasic ? "Premium Group." : "Inner Circle."}<br /><em style={{ color: acid, fontStyle: "normal" }}>The investment.</em></Heading>
 
           {/* Selected tier detail */}
-          <div className="ic-reveal" style={{ marginTop: 36, padding: "28px 32px", border: "1px solid rgba(249,255,60,0.15)", background: "rgba(249,255,60,0.03)" }}>
+          <div className="ic-reveal" style={{ marginTop: 36, padding: "28px 32px", border: "1px solid rgba(37,99,235,0.15)", background: "rgba(37,99,235,0.03)" }}>
             <div style={{ display: "flex", alignItems: "baseline", gap: 16, marginBottom: 12, flexWrap: "wrap" }}>
               <span style={{ fontFamily: mono, fontSize: 10, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: acid }}>· {TIER_LABELS[tier]} ·</span>
               <span style={{ fontFamily: display, fontSize: 40, fontWeight: 800, letterSpacing: "-0.05em", color: bone }}>{price}</span>

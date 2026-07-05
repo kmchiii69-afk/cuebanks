@@ -123,11 +123,11 @@ export default function PostApplicationPage() {
                 width: 72, height: 72, borderRadius: "50%",
                 background: "var(--acid)",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                boxShadow: "0 0 40px rgba(249,255,60,0.25)",
+                boxShadow: "0 0 40px rgba(37,99,235,0.25)",
                 transition: "transform 0.15s, box-shadow 0.15s",
               }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1.08)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 0 60px rgba(249,255,60,0.4)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 0 40px rgba(249,255,60,0.25)'; }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1.08)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 0 60px rgba(37,99,235,0.4)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 0 40px rgba(37,99,235,0.25)'; }}
               >
                 <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
                   <path d="M10 7L22 14L10 21V7Z" fill="#000" />

@@ -113,10 +113,10 @@ function CTA({ children = "Apply For Your Seat →", variant = "solid", style }:
 function DeckNav({ active, goTo }: { active: number; goTo: (i: number) => void }) {
   return (
     <>
-      <div style={{ position: "fixed", top: 0, left: 0, height: 3, background: "var(--acid)", width: `${((active + 1) / SLIDES.length) * 100}%`, zIndex: 95, transition: "width 320ms ease", boxShadow: "0 0 12px rgba(249,255,60,0.6)" }} />
+      <div style={{ position: "fixed", top: 0, left: 0, height: 3, background: "var(--acid)", width: `${((active + 1) / SLIDES.length) * 100}%`, zIndex: 95, transition: "width 320ms ease", boxShadow: "0 0 12px rgba(37,99,235,0.6)" }} />
       <div className="ofr-dots" style={{ position: "fixed", left: "50%", bottom: 18, transform: "translateX(-50%)", zIndex: 95, display: "flex", gap: 9, padding: "9px 14px", borderRadius: 999, background: "rgba(0,0,0,0.55)", backdropFilter: "blur(8px)", border: "1px solid var(--line)" }}>
         {SLIDES.map((label, i) => (
-          <button key={i} onClick={() => goTo(i)} title={label} aria-label={label} style={{ width: 8, height: 8, padding: 0, border: 0, cursor: "pointer", borderRadius: "50%", background: i === active ? "var(--acid)" : "var(--line-2)", boxShadow: i === active ? "0 0 10px rgba(249,255,60,0.7)" : "none", transition: "all 240ms ease", transform: i === active ? "scale(1.35)" : "scale(1)" }} />
+          <button key={i} onClick={() => goTo(i)} title={label} aria-label={label} style={{ width: 8, height: 8, padding: 0, border: 0, cursor: "pointer", borderRadius: "50%", background: i === active ? "var(--acid)" : "var(--line-2)", boxShadow: i === active ? "0 0 10px rgba(37,99,235,0.7)" : "none", transition: "all 240ms ease", transform: i === active ? "scale(1.35)" : "scale(1)" }} />
         ))}
       </div>
       <div className="ofr-counter" style={{ position: "fixed", right: 24, bottom: 16, zIndex: 95, fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 700, letterSpacing: "0.16em", color: "var(--muted)" }}>
@@ -214,8 +214,8 @@ function WinsCarousel() {
 
 function PricingCard({ featured, name, price, term, lead, features }: { featured?: boolean; name: string; price: string; term: string; lead: string; features: string[] }) {
   return (
-    <div style={{ position: "relative", height: "100%", background: "var(--bg)", border: featured ? "1px solid var(--acid)" : "1px solid var(--line)", borderTop: `3px solid ${featured ? "var(--acid)" : "var(--line-2)"}`, borderRadius: 16, padding: "34px 32px", display: "flex", flexDirection: "column", boxShadow: featured ? "0 0 80px rgba(249,255,60,0.10)" : "none", overflow: "hidden" }}>
-      {featured && <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(600px 300px at 50% 0%, rgba(249,255,60,0.08), transparent 60%)" }} />}
+    <div style={{ position: "relative", height: "100%", background: "var(--bg)", border: featured ? "1px solid var(--acid)" : "1px solid var(--line)", borderTop: `3px solid ${featured ? "var(--acid)" : "var(--line-2)"}`, borderRadius: 16, padding: "34px 32px", display: "flex", flexDirection: "column", boxShadow: featured ? "0 0 80px rgba(37,99,235,0.10)" : "none", overflow: "hidden" }}>
+      {featured && <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(600px 300px at 50% 0%, rgba(37,99,235,0.08), transparent 60%)" }} />}
       <div style={{ position: "relative", display: "flex", flexDirection: "column", height: "100%" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
           <Eyebrow color={featured ? "var(--acid)" : "var(--ash)"} style={{ fontSize: 10 }}>{name}</Eyebrow>
@@ -358,7 +358,7 @@ export default function OfferPage() {
 
       {/* 01 — BIG PROMISE */}
       <Slide id="slide-1" n={1} className="grid-bg" style={{ overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(1100px 640px at 50% 30%, rgba(249,255,60,0.10), transparent 60%)" }} />
+        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(1100px 640px at 50% 30%, rgba(37,99,235,0.10), transparent 60%)" }} />
         <div style={{ position: "relative", textAlign: "center", maxWidth: 940, margin: "0 auto" }}>
           <Reveal><Eyebrow style={{ marginBottom: 26, justifyContent: "center", display: "flex" }}>The WSA Transformation · 4-Month Program</Eyebrow></Reveal>
           <Reveal delay={120}>
@@ -414,7 +414,7 @@ export default function OfferPage() {
           {STATS.map((s, i) => (
             <Reveal key={i} delay={i * 140}>
               <div style={{ textAlign: "center" }}>
-                <div style={{ fontFamily: "var(--font-display)", fontSize: "clamp(48px,7vw,84px)", fontWeight: 800, color: "var(--acid)", letterSpacing: "-0.04em", lineHeight: 1, textShadow: "0 0 40px rgba(249,255,60,0.25)" }}>
+                <div style={{ fontFamily: "var(--font-display)", fontSize: "clamp(48px,7vw,84px)", fontWeight: 800, color: "var(--acid)", letterSpacing: "-0.04em", lineHeight: 1, textShadow: "0 0 40px rgba(37,99,235,0.25)" }}>
                   <CountUp to={s.to} suffix={s.suffix} />
                 </div>
                 <Eyebrow color="var(--ash)" style={{ fontSize: 10, marginTop: 14, justifyContent: "center", display: "flex" }}>{s.k}</Eyebrow>
@@ -559,7 +559,7 @@ export default function OfferPage() {
 
       {/* 14 — CTA */}
       <Slide id="slide-14" n={14} style={{ overflow: "hidden", borderBottom: "none" }}>
-        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(900px 520px at 50% 50%, rgba(249,255,60,0.12), transparent 60%)" }} />
+        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(900px 520px at 50% 50%, rgba(37,99,235,0.12), transparent 60%)" }} />
         <div style={{ position: "relative", textAlign: "center", maxWidth: 920, margin: "0 auto" }}>
           <Reveal><Eyebrow style={{ marginBottom: 22, justifyContent: "center", display: "flex" }}>The decision</Eyebrow></Reveal>
           <Reveal delay={120}><Title size={72} style={{ textAlign: "center" }}>Keep doing it alone — or get the system <span style={{ color: "var(--acid)" }}>and the coach.</span></Title></Reveal>

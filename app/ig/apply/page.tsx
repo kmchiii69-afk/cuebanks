@@ -32,7 +32,7 @@ export default function IGApplyPage() {
 
       {/* HERO */}
       <section style={{ maxWidth: 1180, margin: "0 auto", padding: "56px 48px 24px", textAlign: "center", position: "relative" }}>
-        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(800px 360px at 50% 0%, rgba(249,255,60,0.09), transparent 60%)" }} />
+        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(800px 360px at 50% 0%, rgba(37,99,235,0.09), transparent 60%)" }} />
         <div style={{ position: "relative" }}>
           <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(36px, 5vw, 56px)", lineHeight: 1.05, letterSpacing: "-0.03em", color: "var(--bone)", margin: "0 0 16px" }}>
             Let&rsquo;s see if you&rsquo;re a fit.

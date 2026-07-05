@@ -114,7 +114,7 @@ function Hero() {
 
   return (
     <section className="grid-bg" style={{ position: "relative", padding: "20px 0 64px", borderBottom: "1px solid var(--line)" }}>
-      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(900px 600px at 50% 0%, rgba(249,255,60,0.08), transparent 60%)" }} />
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(900px 600px at 50% 0%, rgba(37,99,235,0.08), transparent 60%)" }} />
       <Wrap style={{ position: "relative" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
           <Logo />
@@ -129,7 +129,7 @@ function Hero() {
           )}
           <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 60, lineHeight: 0.98, letterSpacing: "-0.045em", color: "var(--bone)", margin: "0 0 12px" }}>
             True freedom.{" "}
-            <em style={{ color: "var(--acid)", fontStyle: "italic", textShadow: "0 0 36px rgba(249,255,60,0.35)" }}>One day per week.</em>
+            <em style={{ color: "var(--acid)", fontStyle: "italic", textShadow: "0 0 36px rgba(37,99,235,0.35)" }}>One day per week.</em>
           </h1>
           <p style={{ fontFamily: "var(--font-body)", fontSize: 17, lineHeight: 1.5, color: "var(--ash)", margin: "0 auto 22px", maxWidth: 780, fontWeight: 400 }}>
             The Wall Street Academy Method — built and refined over 10 years of live trading. Mentored personally by Cue Banks. Crypto, stocks, forex. Bull and bear.
@@ -313,7 +313,7 @@ function PainPoints() {
       <div style={{ marginBottom: 32, textAlign: "center" }}>
         <ML style={{ marginBottom: 14, justifyContent: "center" }}>· There is another way ·</ML>
         <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 120, lineHeight: 0.92, letterSpacing: "-0.05em", color: "var(--bone)", margin: "0 auto", maxWidth: 1280 }}>
-          Swing trade. <em style={{ color: "var(--acid)", textShadow: "0 0 40px rgba(249,255,60,0.35)" }}>One day a week.</em>
+          Swing trade. <em style={{ color: "var(--acid)", textShadow: "0 0 40px rgba(37,99,235,0.35)" }}>One day a week.</em>
         </h2>
         <p style={{ fontFamily: "var(--font-body)", fontSize: 22, lineHeight: 1.5, color: "var(--ash)", margin: "32px auto 0", maxWidth: 820, fontWeight: 400 }}>
           The Wall Street Academy Method. Built by Cue Banks over 10 years of live trading — and the exact style the data says actually works.
@@ -336,7 +336,7 @@ function PainPoints() {
             { d: "FRI", on: false, label: "Free" },
             { d: "SAT", on: false, label: "Free" },
           ].map((day, i) => (
-            <div key={i} style={{ padding: "26px 18px 22px", background: day.on ? "var(--acid)" : "var(--bg-1)", border: day.on ? "1px solid var(--acid)" : "1px solid var(--line)", boxShadow: day.on ? "0 0 32px rgba(249,255,60,0.25)" : "none", display: "flex", flexDirection: "column", gap: 14 }}>
+            <div key={i} style={{ padding: "26px 18px 22px", background: day.on ? "var(--acid)" : "var(--bg-1)", border: day.on ? "1px solid var(--acid)" : "1px solid var(--line)", boxShadow: day.on ? "0 0 32px rgba(37,99,235,0.25)" : "none", display: "flex", flexDirection: "column", gap: 14 }}>
               <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 700, letterSpacing: "0.22em", color: day.on ? "var(--bg)" : "var(--ash)" }}>· {day.d}</span>
               <span style={{ fontFamily: "var(--font-display)", fontSize: day.on ? 22 : 18, fontWeight: day.on ? 700 : 500, letterSpacing: "-0.02em", lineHeight: 1.1, color: day.on ? "var(--bg)" : "var(--ash)", opacity: day.on ? 1 : 0.7 }}>{day.label}</span>
             </div>
@@ -361,7 +361,7 @@ function PainPoints() {
 
       {/* Stats band */}
       <div style={{ background: "var(--bg-1)", border: "1px solid var(--acid)", padding: "40px 48px", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 32, position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(900px 400px at 50% 50%, rgba(249,255,60,0.08), transparent 60%)" }} />
+        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(900px 400px at 50% 50%, rgba(37,99,235,0.08), transparent 60%)" }} />
         {[
           { v: "1 day",     k: "Plan window per week" },
           { v: "0",         k: "Real-time alerts" },
@@ -388,10 +388,10 @@ function ReviewsWall() {
   return (
     <Section id="reviews" py={140} style={{ borderBottom: "1px solid var(--line)" }}>
       <H num="05" label="Verified Reviews" title={<>4.95★ across <em style={{ color: "var(--acid)" }}>135 verified reviews.</em></>} sub="Every review below is a real, verified purchase posted on Whop — an independent third-party platform. We can't edit them. We can't fake them. We can't even take them down. This is what the community says when nobody is watching." />
-      <div style={{ display: "grid", gridTemplateColumns: "auto 1fr auto", gap: 36, alignItems: "center", padding: "40px 44px", background: "var(--bg-1)", border: "1px solid var(--acid)", marginBottom: 32, boxShadow: "0 0 60px rgba(249,255,60,0.10)" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "auto 1fr auto", gap: 36, alignItems: "center", padding: "40px 44px", background: "var(--bg-1)", border: "1px solid var(--acid)", marginBottom: 32, boxShadow: "0 0 60px rgba(37,99,235,0.10)" }}>
         <div>
           <div style={{ display: "flex", alignItems: "baseline", gap: 14 }}>
-            <div style={{ fontFamily: "var(--font-display)", fontSize: 88, fontWeight: 700, color: "var(--acid)", letterSpacing: "-0.04em", lineHeight: 0.9, textShadow: "0 0 32px rgba(249,255,60,0.35)" }}>4.95</div>
+            <div style={{ fontFamily: "var(--font-display)", fontSize: 88, fontWeight: 700, color: "var(--acid)", letterSpacing: "-0.04em", lineHeight: 0.9, textShadow: "0 0 32px rgba(37,99,235,0.35)" }}>4.95</div>
             <div style={{ fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 500, color: "var(--ash)", letterSpacing: "-0.02em" }}>/ 5.00</div>
           </div>
         </div>
@@ -673,10 +673,10 @@ function TrainingPageInner() {
         </div>
 
         <div style={{ background: "var(--bg-1)", border: "1px solid var(--acid)", padding: "32px 40px", display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: 32, alignItems: "center", position: "relative", overflow: "hidden" }}>
-          <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(700px 300px at 50% 50%, rgba(249,255,60,0.10), transparent 60%)" }} />
+          <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(700px 300px at 50% 50%, rgba(37,99,235,0.10), transparent 60%)" }} />
           <div style={{ position: "relative" }}>
             <ML style={{ marginBottom: 10, fontSize: 10 }}>· Day total · Oct 11, 2025 ·</ML>
-            <div style={{ fontFamily: "var(--font-display)", fontSize: 72, fontWeight: 700, color: "var(--acid)", letterSpacing: "-0.045em", lineHeight: 0.9, textShadow: "0 0 32px rgba(249,255,60,0.3)" }}>$237K+</div>
+            <div style={{ fontFamily: "var(--font-display)", fontSize: 72, fontWeight: 700, color: "var(--acid)", letterSpacing: "-0.045em", lineHeight: 0.9, textShadow: "0 0 32px rgba(37,99,235,0.3)" }}>$237K+</div>
             <ML color="var(--ash)" style={{ marginTop: 12, fontSize: 10 }}>· Sum across the 6 trades above ·</ML>
           </div>
           <div style={{ position: "relative", textAlign: "center" }}>
@@ -709,7 +709,7 @@ function TrainingPageInner() {
               <ML style={{ marginBottom: 18, justifyContent: "flex-end", display: "flex" }}>· Closed out the year ·</ML>
               <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 60, lineHeight: 0.98, letterSpacing: "-0.045em", color: "var(--bone)" }}>
                 Picked up in cash.<br />
-                <em style={{ color: "var(--acid)", textShadow: "0 0 36px rgba(249,255,60,0.35)" }}>End of cycle.</em>
+                <em style={{ color: "var(--acid)", textShadow: "0 0 36px rgba(37,99,235,0.35)" }}>End of cycle.</em>
               </div>
             </div>
           </Wrap>
@@ -774,10 +774,10 @@ function TrainingPageInner() {
 
       {/* Final CTA */}
       <Section id="apply" py={140}>
-        <div style={{ background: "var(--bg-1)", border: "1px solid var(--acid)", padding: "88px 64px", position: "relative", overflow: "hidden", boxShadow: "0 0 80px rgba(249,255,60,0.12)", textAlign: "center" }}>
+        <div style={{ background: "var(--bg-1)", border: "1px solid var(--acid)", padding: "88px 64px", position: "relative", overflow: "hidden", boxShadow: "0 0 80px rgba(37,99,235,0.12)", textAlign: "center" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/uploads/lifestyle/porsche-back-cine.jpg" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", opacity: 0.35 }} />
-          <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(180deg, rgba(6,7,10,0.85) 0%, rgba(6,7,10,0.75) 100%), radial-gradient(900px 600px at 50% 50%, rgba(249,255,60,0.08), transparent 60%)" }} />
+          <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(180deg, rgba(6,7,10,0.85) 0%, rgba(6,7,10,0.75) 100%), radial-gradient(900px 600px at 50% 50%, rgba(37,99,235,0.08), transparent 60%)" }} />
           <div style={{ position: "relative" }}>
             <ML style={{ marginBottom: 24, justifyContent: "center" }}>· Apply for your seat · 2026 cohort ·</ML>
             <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 108, lineHeight: 0.93, letterSpacing: "-0.045em", color: "var(--bone)", margin: 0 }}>

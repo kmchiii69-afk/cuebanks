@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 
+const BLUE = '#2563eb';
+
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -17,9 +19,7 @@ export default function LoginPage() {
   useEffect(() => {
     emailRef.current?.focus();
     fetch('/api/auth/me').then(r => {
-      if (r.ok) r.json().then(u => {
-        router.replace('/portal');
-      });
+      if (r.ok) router.replace('/portal');
     }).catch(() => {});
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -36,7 +36,6 @@ export default function LoginPage() {
         body: JSON.stringify({ email: email.trim(), password }),
       });
       if (res.ok) {
-        const u = await res.json();
         router.replace('/portal');
       } else {
         const data = await res.json().catch(() => ({}));
@@ -55,10 +54,12 @@ export default function LoginPage() {
     setLoading(false);
   }
 
+  const canSubmit = !loading && !!email && !!password;
+
   const inp: React.CSSProperties = {
     width: 280, height: 44,
-    background: error ? 'rgba(249,255,60,0.03)' : 'rgba(255,255,255,0.03)',
-    border: `1px solid ${error ? 'rgba(249,255,60,0.4)' : 'rgba(255,255,255,0.08)'}`,
+    background: error ? 'rgba(37,99,235,0.05)' : 'rgba(255,255,255,0.04)',
+    border: `1px solid ${error ? 'rgba(37,99,235,0.5)' : 'rgba(255,255,255,0.1)'}`,
     borderRadius: 8,
     padding: '0 16px',
     fontSize: 13,
@@ -81,13 +82,13 @@ export default function LoginPage() {
       {/* Grid bg */}
       <div style={{
         position: 'fixed', inset: 0, pointerEvents: 'none',
-        backgroundImage: 'linear-gradient(rgba(249,255,60,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(249,255,60,0.025) 1px, transparent 1px)',
+        backgroundImage: `linear-gradient(rgba(37,99,235,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(37,99,235,0.05) 1px, transparent 1px)`,
         backgroundSize: '48px 48px',
       }} />
       {/* Center glow */}
       <div style={{
         position: 'fixed', inset: 0, pointerEvents: 'none',
-        background: 'radial-gradient(ellipse 60% 60% at 50% 50%, rgba(249,255,60,0.04) 0%, transparent 70%)',
+        background: 'radial-gradient(ellipse 60% 60% at 50% 50%, rgba(37,99,235,0.09) 0%, transparent 70%)',
       }} />
 
       <style>{`
@@ -100,10 +101,13 @@ export default function LoginPage() {
           from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)}
         }
         .wsa-fade-up { animation: wsa-fade-up 0.6s ease forwards; }
-        .wsa-inp::placeholder { color: rgba(255,255,255,0.2); }
+        .wsa-inp::placeholder { color: rgba(255,255,255,0.22); }
         .wsa-inp:focus {
-          border-color: rgba(249,255,60,0.3) !important;
-          background: rgba(249,255,60,0.02) !important;
+          border-color: rgba(37,99,235,0.55) !important;
+          background: rgba(37,99,235,0.04) !important;
+        }
+        .wsa-btn:hover:not(:disabled) {
+          opacity: 0.88;
         }
       `}</style>
 
@@ -112,20 +116,24 @@ export default function LoginPage() {
         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0,
         padding: '2rem',
       }}>
-        {/* Logo mark */}
-        <div style={{ marginBottom: 32, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
-          <div style={{
-            width: 48, height: 48, borderRadius: 12,
-            background: 'var(--acid, #f9ff3c)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 0 40px rgba(249,255,60,0.25)',
-          }}>
-            <span style={{ fontFamily: "'Space Mono', monospace", fontWeight: 700, fontSize: 20, color: '#000' }}>W</span>
-          </div>
+        {/* WSA Logo */}
+        <div style={{ marginBottom: 32, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/wsa/home/1.png"
+            alt="Wall Street Academy"
+            style={{
+              width: 88, height: 88,
+              borderRadius: '50%',
+              objectFit: 'cover',
+              border: `2px solid rgba(37,99,235,0.3)`,
+              boxShadow: `0 0 40px rgba(37,99,235,0.25), 0 0 80px rgba(37,99,235,0.1)`,
+            }}
+          />
           <span style={{
             fontFamily: "'Space Mono', monospace", fontSize: 9, fontWeight: 700,
             letterSpacing: '0.35em', textTransform: 'uppercase',
-            color: 'rgba(249,255,60,0.5)',
+            color: 'rgba(255,255,255,0.35)',
           }}>Wall Street Academy</span>
         </div>
 
@@ -159,7 +167,7 @@ export default function LoginPage() {
                 style={{
                   position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)',
                   background: 'none', border: 'none', cursor: 'pointer', padding: 2,
-                  color: showPass ? 'rgba(249,255,60,0.7)' : 'rgba(255,255,255,0.25)',
+                  color: showPass ? `rgba(37,99,235,0.9)` : 'rgba(255,255,255,0.25)',
                   fontSize: 14, lineHeight: 1, transition: 'color 0.2s',
                 }}
               >
@@ -171,29 +179,26 @@ export default function LoginPage() {
           {errorMsg && (
             <p style={{
               fontFamily: "'Space Mono', monospace", fontSize: 10,
-              color: 'rgba(249,255,60,0.7)', letterSpacing: '0.08em',
+              color: `rgba(37,99,235,0.9)`, letterSpacing: '0.08em',
               margin: '2px 0 0',
             }}>{errorMsg}</p>
           )}
 
           <button
+            className="wsa-btn"
             type="submit"
-            disabled={loading || !email || !password}
+            disabled={!canSubmit}
             style={{
               marginTop: 8,
               width: 280, height: 44,
-              background: loading || !email || !password
-                ? 'rgba(249,255,60,0.06)'
-                : 'var(--acid, #f9ff3c)',
-              border: loading || !email || !password
-                ? '1px solid rgba(249,255,60,0.15)'
-                : '1px solid transparent',
+              background: canSubmit ? BLUE : 'rgba(37,99,235,0.08)',
+              border: canSubmit ? '1px solid transparent' : `1px solid rgba(37,99,235,0.18)`,
               borderRadius: 8,
               fontFamily: "'Space Mono', monospace",
               fontSize: 11, fontWeight: 700,
               letterSpacing: '0.18em', textTransform: 'uppercase',
-              color: loading || !email || !password ? 'rgba(249,255,60,0.35)' : '#000',
-              cursor: loading || !email || !password ? 'not-allowed' : 'pointer',
+              color: canSubmit ? '#fff' : 'rgba(37,99,235,0.4)',
+              cursor: canSubmit ? 'pointer' : 'not-allowed',
               transition: 'all 0.2s',
             }}
           >

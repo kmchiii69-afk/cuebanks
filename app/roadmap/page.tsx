@@ -369,6 +369,7 @@ const PHASES: Phase[] = [
         label: "Risk Management — Homework",
         tag: "Homework",
         note: "Do your own case scenario and create a breakdown similar to the one shown in the video above. Ask yourself:\n\n· How much are you going to deposit?\n· How much are you willing to risk per trade?\n· Which pair do you trade?\n· What is your usual stop loss (SL)?\n· Based on these factors, calculate your appropriate lot size.\n\nCue typically risks between 10% and 15% per trade, but that depends on his confidence, account balance, market conditions, confluences, and overall setup quality. Your risk should be based on your own level of precision, confidence, and consistency — whether that is 5%, 10%, or 15%.\n\nIf you are only risking 1% per trade, focus on improving your edge: study more, backtest more, keep a detailed journal, and build the confidence and consistency needed before increasing your risk.\n\nAs Cue always says: \"The most confident person in the room will make the most amount of money.\"",
+        images: ["/images/homework-1.png"],
       },
       {
         label: "The Four Fears + Greed, Revenge & Trading Style",
@@ -416,6 +417,14 @@ const PHASES: Phase[] = [
       {
         label: "Support & Resistance",
         note: "What forms a support and resistance level? What needs to happen for it to be considered broken or tested? This is the foundation of every setup you will ever take.",
+        images: [
+          "/images/sr-1.png",
+          "/images/sr-2.png",
+          "/images/sr-3.png",
+          "/images/sr-4.png",
+          "/images/sr-5.png",
+          "/images/sr-6.png",
+        ],
       },
       {
         label: "S&R — Homework",
@@ -462,6 +471,7 @@ const PHASES: Phase[] = [
           { id: "208979674", label: "Market Structure 2.0" },
           { id: "157785913", label: "Market Structure 1.0" },
         ],
+        images: ["/images/market-patterns.png"],
       },
       {
         label: "Market Structure Homework",
@@ -475,11 +485,21 @@ const PHASES: Phase[] = [
           { id: "214333836", label: "Fibonacci 2.0" },
           { id: "148814763", label: "Fibonacci 1.0" },
         ],
+        images: [
+          "/images/fib-bd-1.png",
+          "/images/fib-bd-2.png",
+          "/images/fib-bd-3.png",
+        ],
       },
       {
         label: "Fibonacci Tool Settings and Chart Examples",
         note: "How to configure the Fibonacci tool correctly in your charting platform. Follow these exact settings so your retracement levels match what Cue uses.",
         images: [
+          "/images/fib-tool-settings.png",
+          "/images/fib-tool-1.png",
+          "/images/fib-tool-2.png",
+          "/images/fib-tool-3.png",
+          "/images/fib-tool-4.png",
           "/images/fib-1.png",
           "/images/fib-2.png",
           "/images/fib-3.png",
@@ -494,7 +514,27 @@ const PHASES: Phase[] = [
         label: "Drawing Trendlines",
         note: "Always draw trendlines from wick to wick. If you can't walk in it, it's invalid. If that line is too steep, it's forced — it's gonna break, guaranteed waste of time. You want a nice angle.",
         videos: [{ id: "1162341882", hash: "e9c9f5a402", label: "Drawing Trendlines" }],
-        images: ["/images/gbpjpy-tl-1.png"],
+        images: [
+          "/images/gbpjpy-tl-1.png",
+          "/images/tl-us30-1.png",
+          "/images/tl-us30-2.png",
+          "/images/tl-us30-3.png",
+          "/images/tl-xau-1.png",
+          "/images/tl-xau-2.png",
+          "/images/tl-xau-3.png",
+          "/images/tl-xau-4.png",
+        ],
+      },
+      {
+        label: "GBPJPY — Candle Breakdown",
+        note: "This is what a sexy candle looks like — clean, precise, at the right level. If it's not this, don't touch it. Study these setups until you can spot them instantly.",
+        images: [
+          "/images/gbpjpy-candle-1.png",
+          "/images/gbpjpy-candle-2.png",
+          "/images/gbpjpy-candle-3.png",
+          "/images/gbpjpy-candle-4.png",
+          "/images/gbpjpy-candle-5.png",
+        ],
       },
       {
         label: "Trendlines — Homework",
@@ -573,6 +613,10 @@ const PHASES: Phase[] = [
         label: "Yes & No Trade Checklist",
         note: "Run this before every trade. Know when to pull the trigger and when to step away from the charts.",
         checklist: NO_TRADE_CHECKLIST,
+        images: [
+          "/images/checklist-yes.png",
+          "/images/checklist-no.png",
+        ],
       },
       {
         label: "Identify Where You Need to Improve",
@@ -778,7 +822,7 @@ function DocumentModal({ doc, onClose }: { doc: DocContent; onClose: () => void 
                   ))}
                 </ul>
               )}
-              {s.footer && <p style={{ fontFamily: "var(--font-body)", fontSize: 14, lineHeight: 1.7, color: "rgba(249,255,60,0.65)", marginTop: 12, fontStyle: "italic", margin: "12px 0 0" }}>{s.footer}</p>}
+              {s.footer && <p style={{ fontFamily: "var(--font-body)", fontSize: 14, lineHeight: 1.7, color: "rgba(37,99,235,0.65)", marginTop: 12, fontStyle: "italic", margin: "12px 0 0" }}>{s.footer}</p>}
             </div>
           ))}
         </div>
@@ -886,7 +930,7 @@ function ImageGalleryModal({ images, title, onClose }: { images: string[]; title
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
               {images.map((src, i) => (
                 <button key={i} onClick={() => setActive(src)} style={{ background: "none", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 4, padding: 0, cursor: "pointer", overflow: "hidden", transition: "border-color 0.15s" }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(249,255,60,0.35)"; }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(37,99,235,0.35)"; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.08)"; }}>
                   <img src={src} alt={`Chart ${i + 1}`} style={{ width: "100%", display: "block" }} />
                 </button>
@@ -922,6 +966,67 @@ function VideoModal({ video, onClose }: { video: ModalVideo; onClose: () => void
         </div>
       </div>
     </div>
+  );
+}
+
+// ─── Calendly Widget ──────────────────────────────────────────────────────────
+function CalendlyWidget() {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const h = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    if (open) document.addEventListener("keydown", h);
+    return () => document.removeEventListener("keydown", h);
+  }, [open]);
+
+  return (
+    <>
+      {open && (
+        <div onClick={() => setOpen(false)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.88)", zIndex: 1001, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+          <div onClick={e => e.stopPropagation()} style={{ width: "100%", maxWidth: 740, background: "rgba(8,10,16,0.98)", border: "1px solid rgba(255,255,255,0.1)", borderTop: "2px solid var(--acid)", display: "flex", flexDirection: "column" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 20px", borderBottom: "1px solid rgba(255,255,255,0.07)", flexShrink: 0 }}>
+              <div>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 700, color: "var(--acid)", letterSpacing: "0.16em", textTransform: "uppercase" }}>Book Your 1-on-1 Call</span>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(255,255,255,0.4)", margin: "3px 0 0" }}>Your call will be with Felipe, trained directly under Cue for years. He knows this system inside out — come prepared with your questions.</p>
+              </div>
+              <button onClick={() => setOpen(false)} style={{ background: "none", border: "none", color: "var(--muted)", cursor: "pointer", fontSize: 20, lineHeight: 1, padding: "0 4px", flexShrink: 0, marginLeft: 16 }}>✕</button>
+            </div>
+            <iframe
+              src="https://calendly.com/filip-wsacademyfx?background_color=080a10&text_color=ffffff&primary_color=f9ff3c"
+              style={{ width: "100%", height: 580, border: "none", display: "block" }}
+              title="Book your 1-on-1 call"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Floating button — bottom left */}
+      <button
+        onClick={() => setOpen(true)}
+        style={{
+          position: "fixed", bottom: 24, left: 24, zIndex: 999,
+          display: "flex", alignItems: "center", gap: 9,
+          padding: "0 16px 0 6px", height: 44, borderRadius: 30,
+          background: "rgba(10,14,22,0.92)", backdropFilter: "blur(16px)",
+          border: "1px solid rgba(37,99,235,0.25)",
+          cursor: "pointer",
+          boxShadow: "0 4px 24px rgba(0,0,0,0.6)",
+          transition: "border-color 0.2s, background 0.2s",
+        }}
+        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(37,99,235,0.55)"; (e.currentTarget as HTMLElement).style.background = "rgba(20,24,38,0.96)"; }}
+        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(37,99,235,0.25)"; (e.currentTarget as HTMLElement).style.background = "rgba(10,14,22,0.92)"; }}
+      >
+        <div style={{ width: 32, height: 32, borderRadius: "50%", background: "rgba(37,99,235,0.08)", border: "1px solid rgba(37,99,235,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+            <rect x="1" y="2" width="12" height="11" rx="1.5" stroke="var(--acid)" strokeWidth="1.2"/>
+            <path d="M4 1v2M10 1v2M1 5h12" stroke="var(--acid)" strokeWidth="1.2" strokeLinecap="round"/>
+            <rect x="3.5" y="7" width="2" height="2" rx="0.4" fill="var(--acid)"/>
+            <rect x="6.5" y="7" width="2" height="2" rx="0.4" fill="var(--acid)"/>
+          </svg>
+        </div>
+        <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.75)", letterSpacing: "0.1em", textTransform: "uppercase", whiteSpace: "nowrap" }}>Book a Call</span>
+      </button>
+    </>
   );
 }
 
@@ -988,16 +1093,16 @@ function CueChat() {
           background: "rgba(10,14,22,0.92)", backdropFilter: "blur(24px)",
           border: "1px solid rgba(255,255,255,0.08)",
           borderRadius: 20,
-          boxShadow: "0 0 0 1px rgba(249,255,60,0.08), 0 32px 100px rgba(0,0,0,0.85)",
+          boxShadow: "0 0 0 1px rgba(37,99,235,0.08), 0 32px 100px rgba(0,0,0,0.85)",
           overflow: "hidden",
         }}>
           {/* Acid top rule */}
-          <div style={{ height: 2, background: "linear-gradient(90deg, var(--acid) 0%, rgba(249,255,60,0.3) 100%)", flexShrink: 0 }} />
+          <div style={{ height: 2, background: "linear-gradient(90deg, var(--acid) 0%, rgba(37,99,235,0.3) 100%)", flexShrink: 0 }} />
 
           {/* Header */}
           <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
-            <div style={{ width: 32, height: 32, borderRadius: "50%", background: "var(--acid)", boxShadow: "0 0 16px rgba(249,255,60,0.25)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              <span style={{ fontFamily: "var(--font-mono)", fontWeight: 800, fontSize: 13, color: "var(--bg)" }}>C</span>
+            <div style={{ width: 32, height: 32, borderRadius: "50%", background: "var(--acid)", boxShadow: "0 0 16px rgba(37,99,235,0.25)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <span style={{ fontFamily: "var(--font-mono)", fontWeight: 800, fontSize: 13, color: "#fff" }}>C</span>
             </div>
             <div style={{ flex: 1 }}>
               <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 700, color: "var(--bone)", letterSpacing: "0.14em" }}>CUE AI</div>
@@ -1015,7 +1120,7 @@ function CueChat() {
           <div style={{ flex: 1, overflowY: "auto", padding: "16px 18px", display: "flex", flexDirection: "column", gap: 14 }}>
             {messages.length === 0 ? (
               <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start", paddingTop: 8, gap: 8 }}>
-                <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "rgba(249,255,60,0.5)", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 4 }}>ASK CUE ANYTHING</div>
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "rgba(37,99,235,0.5)", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 4 }}>ASK CUE ANYTHING</div>
                 <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(255,255,255,0.45)", lineHeight: 1.65, margin: "0 0 10px" }}>
                   Stuck on the roadmap? Not sure where to start? Ask me. I built this. I can walk you through all of it.
                 </p>
@@ -1023,7 +1128,7 @@ function CueChat() {
                 {["How do I go through this roadmap?", "Where do I start?", "What's Phase 1 about?", "How long does this take?"].map(q => (
                   <button key={q} onClick={() => send(q)}
                     style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8, padding: "9px 13px", color: "rgba(255,255,255,0.55)", fontFamily: "var(--font-body)", fontSize: 12, textAlign: "left", cursor: "pointer", display: "flex", alignItems: "center", gap: 8, transition: "background 0.15s, border-color 0.15s, color 0.15s" }}
-                    onMouseEnter={e => { e.currentTarget.style.background = "rgba(249,255,60,0.07)"; e.currentTarget.style.borderColor = "rgba(249,255,60,0.25)"; e.currentTarget.style.color = "var(--bone)"; }}
+                    onMouseEnter={e => { e.currentTarget.style.background = "rgba(37,99,235,0.07)"; e.currentTarget.style.borderColor = "rgba(37,99,235,0.25)"; e.currentTarget.style.color = "var(--bone)"; }}
                     onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.color = "rgba(255,255,255,0.55)"; }}>
                     <span style={{ color: "var(--acid)", fontSize: 9, flexShrink: 0 }}>▸</span>{q}
                   </button>
@@ -1032,7 +1137,7 @@ function CueChat() {
                 {["What is the stack?", "Walk me through top-down analysis", "How do I manage a trade?"].map(q => (
                   <button key={q} onClick={() => send(q)}
                     style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8, padding: "9px 13px", color: "rgba(255,255,255,0.55)", fontFamily: "var(--font-body)", fontSize: 12, textAlign: "left", cursor: "pointer", display: "flex", alignItems: "center", gap: 8, transition: "background 0.15s, border-color 0.15s, color 0.15s" }}
-                    onMouseEnter={e => { e.currentTarget.style.background = "rgba(249,255,60,0.07)"; e.currentTarget.style.borderColor = "rgba(249,255,60,0.25)"; e.currentTarget.style.color = "var(--bone)"; }}
+                    onMouseEnter={e => { e.currentTarget.style.background = "rgba(37,99,235,0.07)"; e.currentTarget.style.borderColor = "rgba(37,99,235,0.25)"; e.currentTarget.style.color = "var(--bone)"; }}
                     onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.color = "rgba(255,255,255,0.55)"; }}>
                     <span style={{ color: "var(--acid)", fontSize: 9, flexShrink: 0 }}>▸</span>{q}
                   </button>
@@ -1041,7 +1146,7 @@ function CueChat() {
             ) : (
               messages.map((m, i) => (
                 <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                  <div style={{ width: 22, height: 22, borderRadius: "50%", flexShrink: 0, marginTop: 1, background: m.role === "assistant" ? "var(--acid)" : "rgba(255,255,255,0.06)", border: m.role === "user" ? "1px solid rgba(255,255,255,0.1)" : "none", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: m.role === "assistant" ? "0 0 10px rgba(249,255,60,0.2)" : "none" }}>
+                  <div style={{ width: 22, height: 22, borderRadius: "50%", flexShrink: 0, marginTop: 1, background: m.role === "assistant" ? "var(--acid)" : "rgba(255,255,255,0.06)", border: m.role === "user" ? "1px solid rgba(255,255,255,0.1)" : "none", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: m.role === "assistant" ? "0 0 10px rgba(37,99,235,0.2)" : "none" }}>
                     <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 800, color: m.role === "assistant" ? "var(--bg)" : "var(--muted)" }}>{m.role === "assistant" ? "C" : "Y"}</span>
                   </div>
                   <div style={{ flex: 1, fontFamily: "var(--font-body)", fontSize: 13, lineHeight: 1.65, color: m.role === "assistant" ? "var(--bone)" : "var(--ash)", whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
@@ -1076,7 +1181,7 @@ function CueChat() {
                 <button type="submit" disabled={!canSend}
                   style={{ margin: "6px 8px 6px 0", background: canSend ? "var(--acid)" : "rgba(255,255,255,0.05)", border: "none", borderRadius: 8, width: 34, height: 34, cursor: canSend ? "pointer" : "not-allowed", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "background 0.15s" }}>
                   <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-                    <path d="M1 7h12M7 1l6 6-6 6" stroke={canSend ? "var(--bg)" : "var(--muted)"} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M1 7h12M7 1l6 6-6 6" stroke={canSend ? "#fff" : "var(--muted)"} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </button>
               </form>
@@ -1091,7 +1196,7 @@ function CueChat() {
           {/* Tooltip nudge */}
           <div style={{
             background: "rgba(10,14,22,0.92)", backdropFilter: "blur(12px)",
-            border: "1px solid rgba(249,255,60,0.25)", borderRadius: 10,
+            border: "1px solid rgba(37,99,235,0.25)", borderRadius: 10,
             padding: "8px 14px", display: "flex", alignItems: "center", gap: 8,
             boxShadow: "0 4px 24px rgba(0,0,0,0.5)",
             animation: "fabNudge 0.4s ease both",
@@ -1104,13 +1209,13 @@ function CueChat() {
             {/* Pulse ring */}
             <span style={{
               position: "absolute", inset: -6, borderRadius: 40,
-              border: "1.5px solid rgba(249,255,60,0.35)",
+              border: "1.5px solid rgba(37,99,235,0.35)",
               animation: "fabRing 2s ease-in-out infinite",
               pointerEvents: "none",
             }} />
             <span style={{
               position: "absolute", inset: -12, borderRadius: 44,
-              border: "1px solid rgba(249,255,60,0.15)",
+              border: "1px solid rgba(37,99,235,0.15)",
               animation: "fabRing 2s ease-in-out infinite 0.4s",
               pointerEvents: "none",
             }} />
@@ -1121,15 +1226,15 @@ function CueChat() {
                 padding: "0 18px 0 6px", height: 52, borderRadius: 36,
                 background: "var(--acid)",
                 border: "none", cursor: "pointer",
-                boxShadow: "0 0 0 1px rgba(249,255,60,0.6), 0 8px 40px rgba(249,255,60,0.45)",
+                boxShadow: "0 0 0 1px rgba(37,99,235,0.6), 0 8px 40px rgba(37,99,235,0.45)",
               }}
             >
-              <div style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(0,0,0,0.18)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <span style={{ fontFamily: "var(--font-mono)", fontWeight: 800, fontSize: 17, color: "#000", letterSpacing: "-0.02em" }}>C</span>
+              <div style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <span style={{ fontFamily: "var(--font-mono)", fontWeight: 800, fontSize: 17, color: "#fff", letterSpacing: "-0.02em" }}>C</span>
               </div>
               <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 1 }}>
-                <span style={{ fontFamily: "var(--font-mono)", fontWeight: 800, fontSize: 11, color: "#000", letterSpacing: "0.1em", textTransform: "uppercase", lineHeight: 1 }}>Cue AI</span>
-                <span style={{ fontFamily: "var(--font-body)", fontSize: 10.5, color: "rgba(0,0,0,0.6)", lineHeight: 1 }}>Ask me anything</span>
+                <span style={{ fontFamily: "var(--font-mono)", fontWeight: 800, fontSize: 11, color: "#fff", letterSpacing: "0.1em", textTransform: "uppercase", lineHeight: 1 }}>Cue AI</span>
+                <span style={{ fontFamily: "var(--font-body)", fontSize: 10.5, color: "rgba(255,255,255,0.7)", lineHeight: 1 }}>Ask me anything</span>
               </div>
             </button>
           </div>
@@ -1155,9 +1260,9 @@ function CueChat() {
 }
 
 // ─── Play button ───────────────────────────────────────────────────────────────
-const btnStyle = { display: "inline-flex" as const, alignItems: "center" as const, gap: 5, padding: "3px 9px 3px 7px", background: "rgba(249,255,60,0.07)", border: "1px solid rgba(249,255,60,0.2)", color: "var(--acid)", fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const, cursor: "pointer", transition: "background 0.12s, border-color 0.12s", whiteSpace: "nowrap" as const, textDecoration: "none" };
-const btnEnter = (e: React.MouseEvent<HTMLElement>) => { (e.currentTarget as HTMLElement).style.background = "rgba(249,255,60,0.15)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(249,255,60,0.5)"; };
-const btnLeave = (e: React.MouseEvent<HTMLElement>) => { (e.currentTarget as HTMLElement).style.background = "rgba(249,255,60,0.07)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(249,255,60,0.2)"; };
+const btnStyle = { display: "inline-flex" as const, alignItems: "center" as const, gap: 5, padding: "3px 9px 3px 7px", background: "rgba(37,99,235,0.07)", border: "1px solid rgba(37,99,235,0.2)", color: "var(--acid)", fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const, cursor: "pointer", transition: "background 0.12s, border-color 0.12s", whiteSpace: "nowrap" as const, textDecoration: "none" };
+const btnEnter = (e: React.MouseEvent<HTMLElement>) => { (e.currentTarget as HTMLElement).style.background = "rgba(37,99,235,0.15)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(37,99,235,0.5)"; };
+const btnLeave = (e: React.MouseEvent<HTMLElement>) => { (e.currentTarget as HTMLElement).style.background = "rgba(37,99,235,0.07)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(37,99,235,0.2)"; };
 
 function PlayBtn({ video, onPlay }: { video: Video; onPlay: (v: Video) => void }) {
   if (video.href) {
@@ -1196,18 +1301,18 @@ function ModuleItem({ item, index, isLast, onPlay, onOpenDoc, onOpenChecklist, o
     >
       <div style={{
         flexShrink: 0, width: 30, height: 30, borderRadius: "50%",
-        border: hovered ? "1px solid rgba(249,255,60,0.35)" : "1px solid rgba(255,255,255,0.1)",
-        background: hovered ? "rgba(249,255,60,0.06)" : "rgba(255,255,255,0.03)",
+        border: hovered ? "1px solid rgba(37,99,235,0.35)" : "1px solid rgba(255,255,255,0.1)",
+        background: hovered ? "rgba(37,99,235,0.06)" : "rgba(255,255,255,0.03)",
         display: "flex", alignItems: "center", justifyContent: "center", marginTop: 2,
         transition: "border-color 0.15s, background 0.15s",
       }}>
-        <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: hovered ? "rgba(249,255,60,0.7)" : "rgba(255,255,255,0.3)" }}>{index + 1}</span>
+        <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: hovered ? "rgba(37,99,235,0.7)" : "rgba(255,255,255,0.3)" }}>{index + 1}</span>
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8, flexWrap: "wrap" }}>
           <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 17, color: hovered ? "rgba(255,255,255,1)" : "rgba(255,255,255,0.9)", letterSpacing: "-0.02em", transition: "color 0.15s" }}>{item.label}</span>
           {item.tag && (
-            <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", color: "var(--bg)", background: "var(--acid)", padding: "3px 8px", borderRadius: 3 }}>{item.tag}</span>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", color: "#fff", background: "var(--acid)", padding: "3px 8px", borderRadius: 3 }}>{item.tag}</span>
           )}
         </div>
         <div style={{ fontFamily: "var(--font-body)", fontWeight: 400, fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,0.5)", marginBottom: (item.videos?.length || item.doc || item.checklist || item.images?.length) ? 14 : 0 }}>{item.note}</div>
@@ -1215,7 +1320,7 @@ function ModuleItem({ item, index, isLast, onPlay, onOpenDoc, onOpenChecklist, o
           {item.doc && (
             <button onClick={() => onOpenDoc(item.doc!)}
               style={{ ...btnStyle, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.14)", color: "rgba(255,255,255,0.55)" }}
-              onMouseEnter={e => { e.currentTarget.style.background = "rgba(249,255,60,0.07)"; e.currentTarget.style.borderColor = "rgba(249,255,60,0.3)"; e.currentTarget.style.color = "var(--acid)"; }}
+              onMouseEnter={e => { e.currentTarget.style.background = "rgba(37,99,235,0.07)"; e.currentTarget.style.borderColor = "rgba(37,99,235,0.3)"; e.currentTarget.style.color = "var(--acid)"; }}
               onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.05)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.14)"; e.currentTarget.style.color = "rgba(255,255,255,0.55)"; }}>
               <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 1h4l2 2v5H1V1z" stroke="currentColor" strokeWidth="1"/><path d="M5 1v2h2" stroke="currentColor" strokeWidth="1"/></svg>
               Read
@@ -1381,6 +1486,7 @@ export default function RoadmapPage() {
       {activeDoc && <DocumentModal doc={activeDoc} onClose={() => setActiveDoc(null)} />}
       {activeChecklist && <ChecklistModal doc={activeChecklist} onClose={() => setActiveChecklist(null)} />}
       {activeImages && <ImageGalleryModal images={activeImages.images} title={activeImages.title} onClose={() => setActiveImages(null)} />}
+      <CalendlyWidget />
       <CueChat />
 
       {/* HEADER */}
@@ -1394,7 +1500,7 @@ export default function RoadmapPage() {
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
           {PHASES.map((p, i) => (
             <button key={i} onClick={() => jumpTo(i)} style={{ background: "none", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.3)", fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", padding: "4px 8px", cursor: "pointer", transition: "color 0.15s, border-color 0.15s", borderRadius: 3 }}
-              onMouseEnter={e => { e.currentTarget.style.color = "var(--acid)"; e.currentTarget.style.borderColor = "rgba(249,255,60,0.4)"; }}
+              onMouseEnter={e => { e.currentTarget.style.color = "var(--acid)"; e.currentTarget.style.borderColor = "rgba(37,99,235,0.4)"; }}
               onMouseLeave={e => { e.currentTarget.style.color = "rgba(255,255,255,0.3)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)"; }}>
               {p.num}
             </button>
@@ -1406,15 +1512,15 @@ export default function RoadmapPage() {
           title={member?.name || 'My Progress'}
           style={{
             width: 38, height: 38, borderRadius: "50%",
-            background: member ? "rgba(249,255,60,0.12)" : "rgba(255,255,255,0.06)",
-            border: `1.5px solid ${member ? "rgba(249,255,60,0.4)" : "rgba(255,255,255,0.14)"}`,
+            background: member ? "rgba(37,99,235,0.12)" : "rgba(255,255,255,0.06)",
+            border: `1.5px solid ${member ? "rgba(37,99,235,0.4)" : "rgba(255,255,255,0.14)"}`,
             color: member ? "var(--acid)" : "var(--muted)",
             fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: 14,
             cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
             transition: "all 0.15s", flexShrink: 0,
           }}
-          onMouseEnter={e => { e.currentTarget.style.background = "rgba(249,255,60,0.2)"; e.currentTarget.style.borderColor = "rgba(249,255,60,0.7)"; }}
-          onMouseLeave={e => { e.currentTarget.style.background = member ? "rgba(249,255,60,0.12)" : "rgba(255,255,255,0.06)"; e.currentTarget.style.borderColor = member ? "rgba(249,255,60,0.4)" : "rgba(255,255,255,0.14)"; }}
+          onMouseEnter={e => { e.currentTarget.style.background = "rgba(37,99,235,0.2)"; e.currentTarget.style.borderColor = "rgba(37,99,235,0.7)"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = member ? "rgba(37,99,235,0.12)" : "rgba(255,255,255,0.06)"; e.currentTarget.style.borderColor = member ? "rgba(37,99,235,0.4)" : "rgba(255,255,255,0.14)"; }}
         >
           {member ? member.name.charAt(0).toUpperCase() : "?"}
         </button>
@@ -1476,8 +1582,8 @@ export default function RoadmapPage() {
                 key={ph.num}
                 onClick={() => setPhase(isActive ? 0 : phaseNum)}
                 style={{
-                  background: isActive ? "rgba(249,255,60,0.06)" : isDone ? "rgba(34,197,94,0.04)" : "rgba(255,255,255,0.02)",
-                  border: `1px solid ${isActive ? "rgba(249,255,60,0.25)" : isDone ? "rgba(34,197,94,0.15)" : "rgba(255,255,255,0.05)"}`,
+                  background: isActive ? "rgba(37,99,235,0.06)" : isDone ? "rgba(34,197,94,0.04)" : "rgba(255,255,255,0.02)",
+                  border: `1px solid ${isActive ? "rgba(37,99,235,0.25)" : isDone ? "rgba(34,197,94,0.15)" : "rgba(255,255,255,0.05)"}`,
                   borderRadius: 7, padding: "11px 14px",
                   display: "flex", alignItems: "center", justifyContent: "space-between",
                   cursor: "pointer", transition: "all 0.15s",
@@ -1518,14 +1624,14 @@ export default function RoadmapPage() {
               borderRadius: 8, padding: "12px 14px", color: "var(--bone)", fontFamily: "var(--font-body)",
               fontSize: 13, lineHeight: 1.65, resize: "none", outline: "none", transition: "border-color 0.15s",
             }}
-            onFocus={e => { e.currentTarget.style.borderColor = "rgba(249,255,60,0.25)"; }}
+            onFocus={e => { e.currentTarget.style.borderColor = "rgba(37,99,235,0.25)"; }}
             onBlur={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; }}
           />
           <button
             onClick={saveNotes}
             style={{
-              background: notesSaved ? "rgba(34,197,94,0.12)" : "rgba(249,255,60,0.08)",
-              border: `1px solid ${notesSaved ? "rgba(34,197,94,0.3)" : "rgba(249,255,60,0.2)"}`,
+              background: notesSaved ? "rgba(34,197,94,0.12)" : "rgba(37,99,235,0.08)",
+              border: `1px solid ${notesSaved ? "rgba(34,197,94,0.3)" : "rgba(37,99,235,0.2)"}`,
               borderRadius: 7, padding: "10px 16px",
               fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase",
               color: notesSaved ? "#22c55e" : "var(--acid)", cursor: "pointer", transition: "all 0.2s",
@@ -1566,7 +1672,7 @@ export default function RoadmapPage() {
       {/* PHASES */}
       <section style={{ maxWidth: 920, margin: "0 auto", padding: "0 48px 100px", position: "relative", zIndex: 1 }}>
         <div style={{ position: "relative" }}>
-          <div style={{ position: "absolute", left: 28, top: 0, bottom: 0, width: 1, background: "linear-gradient(to bottom, rgba(249,255,60,0.5) 0%, rgba(249,255,60,0.04) 100%)", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", left: 28, top: 0, bottom: 0, width: 1, background: "linear-gradient(to bottom, rgba(37,99,235,0.5) 0%, rgba(37,99,235,0.04) 100%)", pointerEvents: "none" }} />
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             {PHASES.map((phase, i) => {
               const videoCount = phase.items.reduce((a, item) => a + (item.videos?.length ?? 0), 0);
@@ -1574,19 +1680,19 @@ export default function RoadmapPage() {
                 <div key={i} ref={el => { phaseRefs.current[i] = el; }} style={{ display: "flex", gap: 32, position: "relative", scrollMarginTop: 80 }}>
                   {/* Dot */}
                   <div style={{ flexShrink: 0, width: 56, display: "flex", flexDirection: "column", alignItems: "center", paddingTop: 32, position: "relative", zIndex: 1 }}>
-                    <div style={{ width: 36, height: 36, borderRadius: "50%", background: "#000", border: "1.5px solid rgba(249,255,60,0.6)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 20px rgba(249,255,60,0.12), 0 0 60px rgba(249,255,60,0.05)" }}>
+                    <div style={{ width: 36, height: 36, borderRadius: "50%", background: "#000", border: "1.5px solid rgba(37,99,235,0.6)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 20px rgba(37,99,235,0.12), 0 0 60px rgba(37,99,235,0.05)" }}>
                       <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: "var(--acid)", letterSpacing: "0.04em" }}>{phase.num}</span>
                     </div>
                   </div>
 
                   {/* Card */}
-                  <div style={{ flex: 1, background: "rgba(12,16,24,0.7)", border: "1px solid rgba(255,255,255,0.07)", borderTop: "1px solid rgba(249,255,60,0.3)", overflow: "hidden", backdropFilter: "blur(8px)", boxShadow: "0 0 0 0 transparent, 0 8px 40px rgba(0,0,0,0.5)" }}>
+                  <div style={{ flex: 1, background: "rgba(12,16,24,0.7)", border: "1px solid rgba(255,255,255,0.07)", borderTop: "1px solid rgba(37,99,235,0.3)", overflow: "hidden", backdropFilter: "blur(8px)", boxShadow: "0 0 0 0 transparent, 0 8px 40px rgba(0,0,0,0.5)" }}>
                     {/* Card header */}
                     <div style={{ padding: "36px 40px 24px" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
                         <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.35)", letterSpacing: "0.2em", textTransform: "uppercase", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 4, padding: "5px 12px" }}>{phase.duration}</div>
                         {videoCount > 0 && (
-                          <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: "var(--acid)", letterSpacing: "0.14em", textTransform: "uppercase", background: "rgba(249,255,60,0.07)", border: "1px solid rgba(249,255,60,0.2)", borderRadius: 4, padding: "5px 12px" }}>
+                          <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: "var(--acid)", letterSpacing: "0.14em", textTransform: "uppercase", background: "rgba(37,99,235,0.07)", border: "1px solid rgba(37,99,235,0.2)", borderRadius: 4, padding: "5px 12px" }}>
                             ▶ {videoCount} videos
                           </div>
                         )}
@@ -1603,9 +1709,9 @@ export default function RoadmapPage() {
                     </div>
 
                     {/* Checkpoint */}
-                    <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", background: "rgba(249,255,60,0.03)", padding: "20px 40px", display: "flex", alignItems: "flex-start", gap: 16 }}>
-                      <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "rgba(249,255,60,0.45)", letterSpacing: "0.22em", textTransform: "uppercase", flexShrink: 0, paddingTop: 3, whiteSpace: "nowrap" }}>· After ·</div>
-                      <div style={{ fontFamily: "var(--font-body)", fontWeight: 400, fontSize: 14, lineHeight: 1.7, color: "rgba(249,255,60,0.65)" }}>{phase.checkpoint}</div>
+                    <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", background: "rgba(37,99,235,0.03)", padding: "20px 40px", display: "flex", alignItems: "flex-start", gap: 16 }}>
+                      <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "rgba(37,99,235,0.45)", letterSpacing: "0.22em", textTransform: "uppercase", flexShrink: 0, paddingTop: 3, whiteSpace: "nowrap" }}>· After ·</div>
+                      <div style={{ fontFamily: "var(--font-body)", fontWeight: 400, fontSize: 14, lineHeight: 1.7, color: "rgba(37,99,235,0.65)" }}>{phase.checkpoint}</div>
                     </div>
                   </div>
                 </div>

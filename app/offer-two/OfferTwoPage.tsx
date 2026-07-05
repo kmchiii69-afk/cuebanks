@@ -123,8 +123,8 @@ function Gallery() {
 
 function PricingCard({ featured, name, price, term, lead, features }: { featured?: boolean; name: string; price: string; term: string; lead: string; features: string[] }) {
   return (
-    <div style={{ position: "relative", height: "100%", background: "var(--bg)", border: featured ? "1px solid var(--acid)" : "1px solid var(--line)", borderTop: `3px solid ${featured ? "var(--acid)" : "var(--line-2)"}`, borderRadius: 14, padding: "34px 30px", display: "flex", flexDirection: "column", boxShadow: featured ? "0 0 70px rgba(249,255,60,0.10)" : "none", overflow: "hidden" }}>
-      {featured && <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(600px 300px at 50% 0%, rgba(249,255,60,0.08), transparent 60%)" }} />}
+    <div style={{ position: "relative", height: "100%", background: "var(--bg)", border: featured ? "1px solid var(--acid)" : "1px solid var(--line)", borderTop: `3px solid ${featured ? "var(--acid)" : "var(--line-2)"}`, borderRadius: 14, padding: "34px 30px", display: "flex", flexDirection: "column", boxShadow: featured ? "0 0 70px rgba(37,99,235,0.10)" : "none", overflow: "hidden" }}>
+      {featured && <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(600px 300px at 50% 0%, rgba(37,99,235,0.08), transparent 60%)" }} />}
       <div style={{ position: "relative", display: "flex", flexDirection: "column", height: "100%" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
           <Eyebrow color={featured ? "var(--acid)" : "var(--ash)"} style={{ fontSize: 10 }}>{name}</Eyebrow>
@@ -170,7 +170,7 @@ export default function OfferTwoPage() {
 
       {/* COVER */}
       <section className="grid-bg" style={{ position: "relative", overflow: "hidden", borderBottom: "1px solid var(--line)", minHeight: "92vh", display: "flex", flexDirection: "column" }}>
-        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(1000px 600px at 50% 0%, rgba(249,255,60,0.10), transparent 60%)" }} />
+        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(1000px 600px at 50% 0%, rgba(37,99,235,0.10), transparent 60%)" }} />
         <div style={{ position: "relative", maxWidth: 1120, width: "100%", margin: "0 auto", padding: "28px 28px 0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Logo />
           <Eyebrow color="var(--ash)" style={{ fontSize: 10 }}>· Strategy session · 2026 ·</Eyebrow>
@@ -225,8 +225,8 @@ export default function OfferTwoPage() {
             </div>
           </Reveal>
           <Reveal delay={120}>
-            <div style={{ background: "var(--bg)", border: "1px solid var(--acid)", borderRadius: 14, padding: "44px 32px", textAlign: "center", boxShadow: "0 0 60px rgba(249,255,60,0.08)" }}>
-              <div style={{ fontFamily: "var(--font-display)", fontSize: 92, fontWeight: 800, color: "var(--acid)", letterSpacing: "-0.04em", lineHeight: 0.9, textShadow: "0 0 40px rgba(249,255,60,0.3)" }}>100%</div>
+            <div style={{ background: "var(--bg)", border: "1px solid var(--acid)", borderRadius: 14, padding: "44px 32px", textAlign: "center", boxShadow: "0 0 60px rgba(37,99,235,0.08)" }}>
+              <div style={{ fontFamily: "var(--font-display)", fontSize: 92, fontWeight: 800, color: "var(--acid)", letterSpacing: "-0.04em", lineHeight: 0.9, textShadow: "0 0 40px rgba(37,99,235,0.3)" }}>100%</div>
               <Eyebrow style={{ marginTop: 16 }}>Opportunity cost</Eyebrow>
               <p style={{ fontFamily: "var(--font-body)", fontSize: 15, lineHeight: 1.55, color: "var(--ash)", margin: "12px 0 0" }}>Of the trades you never take.</p>
             </div>
@@ -370,7 +370,7 @@ export default function OfferTwoPage() {
             const featured = p.tone === "good";
             return (
               <Reveal key={i} delay={i * 80}>
-                <div style={{ height: "100%", background: "var(--bg-1)", border: featured ? "1px solid var(--acid)" : "1px solid var(--line)", borderTop: `2px solid ${accent}`, borderRadius: 12, padding: "30px 28px", boxShadow: featured ? "0 0 60px rgba(249,255,60,0.08)" : "none" }}>
+                <div style={{ height: "100%", background: "var(--bg-1)", border: featured ? "1px solid var(--acid)" : "1px solid var(--line)", borderTop: `2px solid ${accent}`, borderRadius: 12, padding: "30px 28px", boxShadow: featured ? "0 0 60px rgba(37,99,235,0.08)" : "none" }}>
                   <Eyebrow color={accent} style={{ fontSize: 10, marginBottom: 14 }}>{p.tag}</Eyebrow>
                   <div style={{ fontFamily: "var(--font-display)", fontSize: 21, fontWeight: 800, color: "var(--bone)", marginBottom: 10 }}>{p.t}</div>
                   <p style={{ fontFamily: "var(--font-body)", fontSize: 14.5, lineHeight: 1.55, color: "var(--ash)", margin: 0 }}>{p.d}</p>

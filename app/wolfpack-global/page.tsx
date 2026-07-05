@@ -187,7 +187,7 @@ function WolfVSL({ vimeoId }: { vimeoId: string }) {
         position: "relative",
         aspectRatio: "16/9",
         border: "1px solid var(--acid)",
-        boxShadow: "0 0 0 1px var(--acid), 0 8px 64px rgba(249,255,60,0.12)",
+        boxShadow: "0 0 0 1px var(--acid), 0 8px 64px rgba(37,99,235,0.12)",
         background: "var(--bg-2)",
         cursor: playing ? "default" : "pointer",
         overflow: "hidden",
@@ -388,7 +388,7 @@ function FuruRow({ furu, wolf }: FuruRowProps) {
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", borderLeft: "1px solid var(--line)", borderRight: "1px solid var(--line)" }}>
         <ML color="var(--muted)">VS</ML>
       </div>
-      <div style={{ padding: "24px 28px", display: "flex", gap: 14, background: "rgba(249,255,60,0.04)" }}>
+      <div style={{ padding: "24px 28px", display: "flex", gap: 14, background: "rgba(37,99,235,0.04)" }}>
         <span style={{ color: "var(--acid)", fontFamily: "var(--font-mono)", fontSize: 14, flexShrink: 0, marginTop: 2 }}>✓</span>
         <p style={{ fontFamily: "var(--font-body)", fontSize: 14, lineHeight: 1.6, color: "var(--bone)", margin: 0 }}>{wolf}</p>
       </div>
@@ -813,7 +813,7 @@ function Hero() {
       <div style={{
         position: "absolute",
         inset: 0,
-        background: "radial-gradient(ellipse 60% 50% at 50% -10%, rgba(249,255,60,0.10) 0%, transparent 70%)",
+        background: "radial-gradient(ellipse 60% 50% at 50% -10%, rgba(37,99,235,0.10) 0%, transparent 70%)",
         pointerEvents: "none",
       }} />
       {/* Watermark */}
@@ -1365,7 +1365,7 @@ function FuruVs() {
             <ML color="var(--pink)">· Typical furu ·</ML>
           </div>
           <div style={{ borderLeft: "1px solid var(--line)", borderRight: "1px solid var(--line)" }} />
-          <div style={{ padding: "20px 28px", background: "rgba(249,255,60,0.04)" }}>
+          <div style={{ padding: "20px 28px", background: "rgba(37,99,235,0.04)" }}>
             <div style={{ fontFamily: "var(--font-display)", fontSize: 20, fontWeight: 600, color: "var(--bone)", marginBottom: 6, display: "flex", alignItems: "center", gap: 10 }}>
               Cue + the pack <WolfMark size={20} />
             </div>
@@ -1519,7 +1519,7 @@ function PriceBlock() {
         border: "1px solid var(--acid)",
         position: "relative",
         overflow: "hidden",
-        background: "radial-gradient(ellipse 80% 60% at 50% -20%, rgba(249,255,60,0.08) 0%, transparent 70%)",
+        background: "radial-gradient(ellipse 80% 60% at 50% -20%, rgba(37,99,235,0.08) 0%, transparent 70%)",
       }}>
         <WolfMark
           size={500}
@@ -1679,7 +1679,7 @@ function FinalCTA() {
         border: "1px solid var(--acid)",
         position: "relative",
         overflow: "hidden",
-        background: "radial-gradient(ellipse 80% 60% at 50% -20%, rgba(249,255,60,0.08) 0%, transparent 70%)",
+        background: "radial-gradient(ellipse 80% 60% at 50% -20%, rgba(37,99,235,0.08) 0%, transparent 70%)",
         padding: "80px 48px",
       }}>
         <WolfMark

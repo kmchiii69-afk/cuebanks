@@ -36,7 +36,7 @@ export default function ContactPage() {
 
       {/* HERO */}
       <section className="grid-bg" style={{ position: "relative", overflow: "hidden", borderBottom: `1px solid ${wsa.line}` }}>
-        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(900px 460px at 50% -10%, rgba(249,255,60,0.10), transparent 60%)" }} />
+        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(900px 460px at 50% -10%, rgba(37,99,235,0.10), transparent 60%)" }} />
         <Wrap style={{ position: "relative", padding: "84px 22px 56px", textAlign: "center" }}>
           <Eyebrow style={{ marginBottom: 18, justifyContent: "center", display: "flex" }}>· Contact ·</Eyebrow>
           <h1 style={{ fontFamily: wsa.fontH1, fontWeight: 800, fontSize: "clamp(40px, 7vw, 72px)", lineHeight: 1.02, letterSpacing: "-0.02em", color: wsa.white, margin: "0 0 18px" }}>
@@ -78,7 +78,7 @@ export default function ContactPage() {
           </div>
 
           {/* RIGHT — form */}
-          <div style={{ background: wsa.panel, border: `1px solid ${wsa.line}`, borderTop: `3px solid ${wsa.yellow}`, borderRadius: 16, padding: "34px 32px", boxShadow: "0 0 60px rgba(249,255,60,0.06)" }}>
+          <div style={{ background: wsa.panel, border: `1px solid ${wsa.line}`, borderTop: `3px solid ${wsa.yellow}`, borderRadius: 16, padding: "34px 32px", boxShadow: "0 0 60px rgba(37,99,235,0.06)" }}>
             <div style={{ fontFamily: wsa.fontH2, fontSize: 22, fontWeight: 800, color: wsa.white, marginBottom: 6 }}>Send us a message</div>
             <p style={{ fontFamily: wsa.fontBody, fontSize: 14.5, lineHeight: 1.5, color: wsa.ash, margin: "0 0 22px" }}>
               Tell us what you need and we&rsquo;ll get back to you.

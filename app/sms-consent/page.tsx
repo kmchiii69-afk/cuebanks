@@ -44,7 +44,7 @@ export default function SmsConsentPage() {
 
       {/* HERO */}
       <section className="grid-bg" style={{ position: "relative", overflow: "hidden", borderBottom: `1px solid ${wsa.line}` }}>
-        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(900px 440px at 50% -10%, rgba(249,255,60,0.10), transparent 60%)" }} />
+        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(900px 440px at 50% -10%, rgba(37,99,235,0.10), transparent 60%)" }} />
         <Wrap style={{ position: "relative", padding: "84px 22px 52px", textAlign: "center" }}>
           <Eyebrow style={{ marginBottom: 18, justifyContent: "center", display: "flex" }}>· SMS Terms &amp; Opt-In ·</Eyebrow>
           <h1 style={{ fontFamily: wsa.fontH1, fontWeight: 800, fontSize: "clamp(36px, 6vw, 64px)", lineHeight: 1.04, letterSpacing: "-0.02em", color: wsa.white, margin: "0 0 18px" }}>
@@ -92,7 +92,7 @@ export default function SmsConsentPage() {
           </div>
 
           {/* RIGHT — opt-in form */}
-          <div style={{ background: wsa.panel, border: `1px solid ${wsa.line}`, borderTop: `3px solid ${wsa.yellow}`, borderRadius: 16, padding: "34px 32px", boxShadow: "0 0 60px rgba(249,255,60,0.06)" }}>
+          <div style={{ background: wsa.panel, border: `1px solid ${wsa.line}`, borderTop: `3px solid ${wsa.yellow}`, borderRadius: 16, padding: "34px 32px", boxShadow: "0 0 60px rgba(37,99,235,0.06)" }}>
             <div style={{ fontFamily: wsa.fontH2, fontSize: 22, fontWeight: 800, color: wsa.white, marginBottom: 6 }}>Sign up &amp; opt in</div>
             <p style={{ fontFamily: wsa.fontBody, fontSize: 14.5, lineHeight: 1.5, color: wsa.ash, margin: "0 0 22px" }}>
               Enter your details. Checking the SMS box is optional.
