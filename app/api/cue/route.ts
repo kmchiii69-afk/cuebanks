@@ -2,8 +2,27 @@ import { NextRequest } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import qaData from "@/lib/cue-qa.json";
 import { getAuthUser } from "@/lib/auth";
-import { getMember, saveChatAnalytic } from "@/lib/db";
+import { getMember, saveChatAnalytic, getActiveCueInstructions } from "@/lib/db";
 import { rateLimit } from "@/lib/rate-limit";
+
+let _instrCache: { text: string; at: number } | null = null;
+
+async function getInstructionAppendix(): Promise<string> {
+  const now = Date.now();
+  if (_instrCache && now - _instrCache.at < 5 * 60 * 1000) return _instrCache.text;
+  const instructions = await getActiveCueInstructions();
+  const dos = instructions.filter((i) => i.type === "do");
+  const donts = instructions.filter((i) => i.type === "dont");
+  let text = "";
+  if (dos.length > 0) {
+    text += "\n\nAdmin-configured behavior — things you DO:\n" + dos.map((i) => `- ${i.instruction}`).join("\n");
+  }
+  if (donts.length > 0) {
+    text += "\n\nAdmin-configured behavior — things you DON'T do:\n" + donts.map((i) => `- ${i.instruction}`).join("\n");
+  }
+  _instrCache = { text, at: now };
+  return text;
+}
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -180,6 +199,9 @@ export async function POST(req: NextRequest) {
     }).catch(() => {});
   }
 
+  const instructionAppendix = await getInstructionAppendix().catch(() => "");
+  const systemPrompt = SYSTEM_PROMPT + instructionAppendix;
+
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
   const stream = new ReadableStream({
@@ -189,7 +211,7 @@ export async function POST(req: NextRequest) {
         const s = client.messages.stream({
           model: "claude-opus-4-8",
           max_tokens: 1024,
-          system: SYSTEM_PROMPT,
+          system: systemPrompt,
           messages: cleaned,
         });
         for await (const event of s) {

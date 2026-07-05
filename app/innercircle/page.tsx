@@ -182,7 +182,7 @@ const wrap: React.CSSProperties = {
 
 function Eyebrow({ label, invert }: { label: string; invert?: boolean }) {
   return (
-    <div className="ic-reveal" style={{ fontFamily: mono, fontSize: 11, fontWeight: 700, letterSpacing: "0.24em", textTransform: "uppercase", color: invert ? "rgba(0,0,0,0.4)" : "rgba(255,255,255,0.3)", marginBottom: 24 }}>
+    <div className="ic-reveal" style={{ fontFamily: mono, fontSize: 11, fontWeight: 700, letterSpacing: "0.24em", textTransform: "uppercase", color: invert ? "rgba(255,255,255,0.55)" : "rgba(255,255,255,0.3)", marginBottom: 24 }}>
       {label}
     </div>
   );
@@ -190,7 +190,7 @@ function Eyebrow({ label, invert }: { label: string; invert?: boolean }) {
 
 function Heading({ children, invert }: { children: React.ReactNode; invert?: boolean }) {
   return (
-    <h2 className="ic-reveal" style={{ fontFamily: display, fontSize: "clamp(48px,6.5vw,80px)", fontWeight: 800, lineHeight: 0.95, letterSpacing: "-0.04em", color: invert ? "#000" : bone, margin: 0 }}>
+    <h2 className="ic-reveal" style={{ fontFamily: display, fontSize: "clamp(48px,6.5vw,80px)", fontWeight: 800, lineHeight: 0.95, letterSpacing: "-0.04em", color: invert ? "#fff" : bone, margin: 0 }}>
       {children}
     </h2>
   );
@@ -232,7 +232,7 @@ function TierSwitcher({ tier, setTier }: { tier: Tier; setTier: (t: Tier) => voi
           <button key={t} onClick={() => setTier(t)} style={{
             background: active ? acid : "transparent",
             border: "none",
-            color: active ? "#000" : "rgba(255,255,255,0.35)",
+            color: active ? "#fff" : "rgba(255,255,255,0.35)",
             fontFamily: mono,
             fontSize: 10,
             fontWeight: 700,
@@ -644,19 +644,19 @@ export default function InnerCirclePage() {
       </section>
 
       {/* ══ CUE AI — ACID INVERSION ═══════════════════════════════════════════════ */}
-      <section id="cue-ai" style={{ ...slide, background: acid, color: "#000", marginLeft: "calc(-50vw + 50%)", marginRight: "calc(-50vw + 50%)", width: "100vw", borderTop: "none" }}>
+      <section id="cue-ai" style={{ ...slide, background: acid, color: "#fff", marginLeft: "calc(-50vw + 50%)", marginRight: "calc(-50vw + 50%)", width: "100vw", borderTop: "none" }}>
         <div style={{ maxWidth: 860, margin: "0 auto", padding: "0 48px", width: "100%", position: "relative", zIndex: 1 }}>
           <Eyebrow label="Cue AI" invert />
           <Heading invert>Nobody has built<br />this for forex.</Heading>
-          <p className="ic-reveal" style={{ fontFamily: body, fontSize: 21, lineHeight: 1.7, color: "rgba(0,0,0,0.55)", maxWidth: 620, margin: "24px 0 28px" }}>
+          <p className="ic-reveal" style={{ fontFamily: body, fontSize: 21, lineHeight: 1.7, color: "rgba(255,255,255,0.75)", maxWidth: 620, margin: "24px 0 28px" }}>
             {isPremium
               ? "Every session. Every Q&A. Every live call ever recorded — trained into an AI that answers in Cue's voice. In 2.0, you also get priority direct access to Cue between sessions."
               : "Every session. Every Q&A. Every live call Quillan has ever recorded — trained into a single AI that thinks the way he thinks and answers the way he talks on calls."}
           </p>
-          <blockquote className="ic-reveal" style={{ borderLeft: "3px solid rgba(0,0,0,0.2)", paddingLeft: 28, fontFamily: display, fontSize: "clamp(20px,2.8vw,30px)", fontWeight: 700, letterSpacing: "-0.025em", lineHeight: 1.3, color: "#000", marginBottom: 32 }}>
+          <blockquote className="ic-reveal" style={{ borderLeft: "3px solid rgba(255,255,255,0.3)", paddingLeft: 28, fontFamily: display, fontSize: "clamp(20px,2.8vw,30px)", fontWeight: 700, letterSpacing: "-0.025em", lineHeight: 1.3, color: "#fff", marginBottom: 32 }}>
             &ldquo;Ask it anything — whether your setup qualifies, how to draw a fib, why you keep making the same mistake. It gives you the WSA answer. Not the generic answer.&rdquo;
           </blockquote>
-          <div className="ic-reveal" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 1, background: "rgba(0,0,0,0.12)", border: "1px solid rgba(0,0,0,0.12)" }}>
+          <div className="ic-reveal" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 1, background: "rgba(0,0,0,0.2)", border: "1px solid rgba(0,0,0,0.2)" }}>
             {[
               { title: "Trained on real sessions",  desc: "The actual Q&As, breakdowns, and live content from years of WSA." },
               { title: "Answers in Cue's voice",     desc: "Direct. If your thinking is wrong, it says so — then gives you the right way." },
@@ -664,8 +664,8 @@ export default function InnerCirclePage() {
               { title: "Roadmap-aware",               desc: "Knows the full curriculum. Walks you through any phase or concept." },
             ].map(({ title, desc }) => (
               <div key={title} style={{ background: acid, padding: "24px 20px" }}>
-                <div style={{ fontFamily: display, fontSize: 15, fontWeight: 700, color: "#000", marginBottom: 8 }}>{title}</div>
-                <div style={{ fontFamily: body, fontSize: 13, lineHeight: 1.6, color: "rgba(0,0,0,0.5)" }}>{desc}</div>
+                <div style={{ fontFamily: display, fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 8 }}>{title}</div>
+                <div style={{ fontFamily: body, fontSize: 13, lineHeight: 1.6, color: "rgba(255,255,255,0.65)" }}>{desc}</div>
               </div>
             ))}
           </div>

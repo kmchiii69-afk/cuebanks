@@ -832,7 +832,7 @@ export default function PortalPage() {
                 <button
                   onClick={submitGoal}
                   disabled={savingGoal || !goalText.trim()}
-                  style={{ flex: 1, background: savingGoal || !goalText.trim() ? 'rgba(37,99,235,0.15)' : '#2563eb', border: 'none', borderRadius: 8, padding: '12px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: savingGoal || !goalText.trim() ? 'rgba(37,99,235,0.4)' : '#000', cursor: savingGoal || !goalText.trim() ? 'not-allowed' : 'pointer' }}
+                  style={{ flex: 1, background: savingGoal || !goalText.trim() ? 'rgba(37,99,235,0.15)' : '#2563eb', border: 'none', borderRadius: 8, padding: '12px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: savingGoal || !goalText.trim() ? 'rgba(37,99,235,0.4)' : '#fff', cursor: savingGoal || !goalText.trim() ? 'not-allowed' : 'pointer' }}
                 >
                   {savingGoal ? 'Saving...' : 'Lock In My Goal →'}
                 </button>

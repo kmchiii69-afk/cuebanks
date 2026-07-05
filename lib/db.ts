@@ -250,6 +250,69 @@ export async function saveChatAnalytic(email: string, plan: string, question: st
   });
 }
 
+// ─── Cue AI Instructions ──────────────────────────────────────────────────────
+
+const CUE_INSTRUCTIONS_TABLE = 'wsa_cue_instructions';
+
+export type InstructionType = 'do' | 'dont';
+
+export interface CueInstruction {
+  id: string;
+  type: InstructionType;
+  instruction: string;
+  active: boolean;
+  created_at: string;
+  created_by: string;
+}
+
+export async function getCueInstructions(): Promise<CueInstruction[]> {
+  const { data } = await db()
+    .from(CUE_INSTRUCTIONS_TABLE)
+    .select('*')
+    .order('created_at', { ascending: true });
+  return (data ?? []) as CueInstruction[];
+}
+
+export async function getActiveCueInstructions(): Promise<CueInstruction[]> {
+  const { data } = await db()
+    .from(CUE_INSTRUCTIONS_TABLE)
+    .select('id, type, instruction')
+    .eq('active', true)
+    .order('created_at', { ascending: true });
+  return (data ?? []) as CueInstruction[];
+}
+
+export async function createCueInstruction(input: {
+  type: InstructionType;
+  instruction: string;
+  created_by: string;
+}): Promise<CueInstruction> {
+  const { data, error } = await db()
+    .from(CUE_INSTRUCTIONS_TABLE)
+    .insert({ type: input.type, instruction: input.instruction.trim(), active: true, created_by: input.created_by })
+    .select()
+    .single();
+  if (error) throw error;
+  return data as CueInstruction;
+}
+
+export async function updateCueInstruction(
+  id: string,
+  updates: Partial<Pick<CueInstruction, 'instruction' | 'active'>>
+): Promise<CueInstruction | null> {
+  const { data } = await db()
+    .from(CUE_INSTRUCTIONS_TABLE)
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single();
+  return data ?? null;
+}
+
+export async function deleteCueInstruction(id: string): Promise<void> {
+  await db().from(CUE_INSTRUCTIONS_TABLE).delete().eq('id', id);
+}
+
 // ─── Analytics (admin) ────────────────────────────────────────────────────────
 
 export interface AnalyticRow {

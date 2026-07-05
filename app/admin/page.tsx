@@ -24,6 +24,14 @@ interface Member {
   goal: string;
 }
 
+interface CueInstruction {
+  id: string;
+  type: 'do' | 'dont';
+  instruction: string;
+  active: boolean;
+  created_at: string;
+}
+
 interface Webinar {
   id: string;
   title: string;
@@ -82,7 +90,7 @@ const D = "'Sora', system-ui, sans-serif";
 
 export default function AdminPage() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<'members' | 'webinars' | 'analytics'>('members');
+  const [activeTab, setActiveTab] = useState<'members' | 'webinars' | 'analytics' | 'cue-ai'>('members');
 
   // ── Members ──
   const [members, setMembers] = useState<Member[]>([]);
@@ -114,6 +122,14 @@ export default function AdminPage() {
   const [analytics, setAnalytics] = useState<AnalyticRow[]>([]);
   const [analyticsLoading, setAnalyticsLoading] = useState(false);
   const [analyticsPlan, setAnalyticsPlan] = useState('all');
+
+  // Cue AI Instructions
+  const [cueInstructions, setCueInstructions] = useState<CueInstruction[]>([]);
+  const [cueLoading, setCueLoading] = useState(false);
+  const [newDoText, setNewDoText] = useState('');
+  const [newDontText, setNewDontText] = useState('');
+  const [addingDo, setAddingDo] = useState(false);
+  const [addingDont, setAddingDont] = useState(false);
 
   // ── Webinars ──
   const [webinars, setWebinars] = useState<Webinar[]>([]);
@@ -257,6 +273,42 @@ export default function AdminPage() {
     loadWebinars();
   }
 
+  // ── Cue AI Instruction actions ──
+  async function loadCueInstructions() {
+    setCueLoading(true);
+    const res = await fetch('/api/admin/cue-instructions');
+    if (res.ok) setCueInstructions(await res.json());
+    setCueLoading(false);
+  }
+
+  async function addCueInstruction(type: 'do' | 'dont', text: string) {
+    const setter = type === 'do' ? setAddingDo : setAddingDont;
+    setter(true);
+    await fetch('/api/admin/cue-instructions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type, instruction: text }),
+    });
+    if (type === 'do') setNewDoText(''); else setNewDontText('');
+    await loadCueInstructions();
+    setter(false);
+  }
+
+  async function toggleCueInstruction(id: string, active: boolean) {
+    await fetch(`/api/admin/cue-instructions/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ active: !active }),
+    });
+    loadCueInstructions();
+  }
+
+  async function deleteCueInstruction(id: string) {
+    if (!confirm('Delete this instruction?')) return;
+    await fetch(`/api/admin/cue-instructions/${id}`, { method: 'DELETE' });
+    loadCueInstructions();
+  }
+
   const filtered = members.filter(m =>
     m.email.includes(search.toLowerCase()) ||
     m.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -292,16 +344,20 @@ export default function AdminPage() {
       <main style={{ position: 'relative', zIndex: 1, maxWidth: 1120, margin: '0 auto', padding: '32px 24px 80px' }}>
 
         {/* Tab nav */}
-        <div style={{ display: 'flex', gap: 6, marginBottom: 28 }}>
-          {(['members', 'webinars', 'analytics'] as const).map(tab => (
-            <button key={tab} onClick={() => { setActiveTab(tab); if (tab === 'analytics') loadAnalytics(analyticsPlan); }} style={{
+        <div style={{ display: 'flex', gap: 6, marginBottom: 28, flexWrap: 'wrap' }}>
+          {(['members', 'webinars', 'analytics', 'cue-ai'] as const).map(tab => (
+            <button key={tab} onClick={() => {
+              setActiveTab(tab);
+              if (tab === 'analytics') loadAnalytics(analyticsPlan);
+              if (tab === 'cue-ai' && cueInstructions.length === 0) loadCueInstructions();
+            }} style={{
               background: activeTab === tab ? 'rgba(37,99,235,0.1)' : 'transparent',
               border: `1px solid ${activeTab === tab ? 'rgba(37,99,235,0.35)' : 'rgba(255,255,255,0.1)'}`,
               borderRadius: 7, padding: '8px 20px', fontFamily: M, fontSize: 9, fontWeight: 700,
               letterSpacing: '0.18em', textTransform: 'uppercase',
               color: activeTab === tab ? '#2563eb' : 'rgba(255,255,255,0.35)', cursor: 'pointer', transition: 'all 0.15s',
             }}>
-              {tab === 'members' ? `Members · ${members.length}` : tab === 'webinars' ? `Webinars · ${webinars.length}` : 'Analytics'}
+              {tab === 'members' ? `Members · ${members.length}` : tab === 'webinars' ? `Webinars · ${webinars.length}` : tab === 'analytics' ? 'Analytics' : 'Cue AI'}
             </button>
           ))}
         </div>
@@ -540,6 +596,105 @@ export default function AdminPage() {
             )}
           </>
         )}
+        {/* ── CUE AI TAB ────────────────────────────────────────── */}
+        {activeTab === 'cue-ai' && (
+          <>
+            <div style={{ marginBottom: 24 }}>
+              <h1 style={{ fontFamily: D, fontSize: 22, fontWeight: 700, letterSpacing: '-0.02em', margin: '0 0 6px' }}>Cue AI Training</h1>
+              <p style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.3)', margin: 0 }}>
+                Active instructions are injected into every Cue AI conversation. Changes apply within 5 minutes.
+              </p>
+            </div>
+            {cueLoading ? (
+              <div style={{ textAlign: 'center', padding: '60px 0', fontFamily: M, fontSize: 11, color: 'rgba(37,99,235,0.4)', letterSpacing: '0.2em' }}>LOADING</div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+
+                {/* Cue DOES column */}
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 8px rgba(34,197,94,0.5)' }} />
+                    <span style={{ fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#22c55e' }}>Cue Does</span>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 12 }}>
+                    {cueInstructions.filter(i => i.type === 'do').length === 0 && (
+                      <div style={{ padding: '16px', background: 'rgba(34,197,94,0.03)', border: '1px dashed rgba(34,197,94,0.15)', borderRadius: 8, fontFamily: S, fontSize: 12, color: 'rgba(255,255,255,0.2)', textAlign: 'center' }}>
+                        No DO instructions yet
+                      </div>
+                    )}
+                    {cueInstructions.filter(i => i.type === 'do').map(instr => (
+                      <div key={instr.id} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, background: instr.active ? 'rgba(34,197,94,0.04)' : 'rgba(255,255,255,0.02)', border: `1px solid ${instr.active ? 'rgba(34,197,94,0.18)' : 'rgba(255,255,255,0.06)'}`, borderRadius: 8, padding: '10px 12px' }}>
+                        <button onClick={() => toggleCueInstruction(instr.id, instr.active)} title={instr.active ? 'Deactivate' : 'Activate'} style={{ flexShrink: 0, width: 20, height: 20, borderRadius: 4, background: instr.active ? '#22c55e' : 'transparent', border: `1px solid ${instr.active ? '#22c55e' : 'rgba(255,255,255,0.15)'}`, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          {instr.active && <span style={{ color: '#fff', fontSize: 10 }}>✓</span>}
+                        </button>
+                        <span style={{ flex: 1, fontFamily: S, fontSize: 13, color: instr.active ? '#fff' : 'rgba(255,255,255,0.3)', lineHeight: 1.5 }}>{instr.instruction}</span>
+                        <button onClick={() => deleteCueInstruction(instr.id)} style={{ flexShrink: 0, background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(239,68,68,0.4)', fontSize: 14, padding: '0 2px' }}
+                          onMouseEnter={e => { e.currentTarget.style.color = '#ef4444'; }} onMouseLeave={e => { e.currentTarget.style.color = 'rgba(239,68,68,0.4)'; }}>×</button>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <input
+                      placeholder="Add a DO instruction…"
+                      value={newDoText}
+                      onChange={e => setNewDoText(e.target.value)}
+                      onKeyDown={e => { if (e.key === 'Enter' && newDoText.trim()) addCueInstruction('do', newDoText.trim()); }}
+                      maxLength={500}
+                      style={{ ...F, flex: 1 }} onFocus={FO} onBlur={FB}
+                    />
+                    <button
+                      onClick={() => { if (newDoText.trim()) addCueInstruction('do', newDoText.trim()); }}
+                      disabled={addingDo || !newDoText.trim()}
+                      style={{ height: 40, background: addingDo || !newDoText.trim() ? 'rgba(34,197,94,0.1)' : '#22c55e', border: 'none', borderRadius: 7, padding: '0 16px', fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', color: addingDo || !newDoText.trim() ? 'rgba(34,197,94,0.4)' : '#fff', cursor: addingDo || !newDoText.trim() ? 'not-allowed' : 'pointer' }}>
+                      {addingDo ? '...' : 'Add'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Cue DOESN'T column */}
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#ef4444', boxShadow: '0 0 8px rgba(239,68,68,0.4)' }} />
+                    <span style={{ fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#ef4444' }}>{"Cue Doesn't"}</span>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 12 }}>
+                    {cueInstructions.filter(i => i.type === 'dont').length === 0 && (
+                      <div style={{ padding: '16px', background: "rgba(239,68,68,0.03)", border: '1px dashed rgba(239,68,68,0.15)', borderRadius: 8, fontFamily: S, fontSize: 12, color: 'rgba(255,255,255,0.2)', textAlign: 'center' }}>
+                        No DON&apos;T instructions yet
+                      </div>
+                    )}
+                    {cueInstructions.filter(i => i.type === 'dont').map(instr => (
+                      <div key={instr.id} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, background: instr.active ? "rgba(239,68,68,0.04)" : 'rgba(255,255,255,0.02)', border: `1px solid ${instr.active ? 'rgba(239,68,68,0.18)' : 'rgba(255,255,255,0.06)'}`, borderRadius: 8, padding: '10px 12px' }}>
+                        <button onClick={() => toggleCueInstruction(instr.id, instr.active)} title={instr.active ? 'Deactivate' : 'Activate'} style={{ flexShrink: 0, width: 20, height: 20, borderRadius: 4, background: instr.active ? '#ef4444' : 'transparent', border: `1px solid ${instr.active ? '#ef4444' : 'rgba(255,255,255,0.15)'}`, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          {instr.active && <span style={{ color: '#fff', fontSize: 10 }}>✓</span>}
+                        </button>
+                        <span style={{ flex: 1, fontFamily: S, fontSize: 13, color: instr.active ? '#fff' : 'rgba(255,255,255,0.3)', lineHeight: 1.5 }}>{instr.instruction}</span>
+                        <button onClick={() => deleteCueInstruction(instr.id)} style={{ flexShrink: 0, background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(239,68,68,0.4)', fontSize: 14, padding: '0 2px' }}
+                          onMouseEnter={e => { e.currentTarget.style.color = '#ef4444'; }} onMouseLeave={e => { e.currentTarget.style.color = 'rgba(239,68,68,0.4)'; }}>×</button>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <input
+                      placeholder="Add a DON'T instruction…"
+                      value={newDontText}
+                      onChange={e => setNewDontText(e.target.value)}
+                      onKeyDown={e => { if (e.key === 'Enter' && newDontText.trim()) addCueInstruction('dont', newDontText.trim()); }}
+                      maxLength={500}
+                      style={{ ...F, flex: 1 }} onFocus={FO} onBlur={FB}
+                    />
+                    <button
+                      onClick={() => { if (newDontText.trim()) addCueInstruction('dont', newDontText.trim()); }}
+                      disabled={addingDont || !newDontText.trim()}
+                      style={{ height: 40, background: addingDont || !newDontText.trim() ? "rgba(239,68,68,0.1)" : '#ef4444', border: 'none', borderRadius: 7, padding: '0 16px', fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', color: addingDont || !newDontText.trim() ? "rgba(239,68,68,0.4)" : '#fff', cursor: addingDont || !newDontText.trim() ? 'not-allowed' : 'pointer' }}>
+                      {addingDont ? '...' : 'Add'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
+        )}
       </main>
 
       {/* ── Add Member Modal ── */}
@@ -565,7 +720,7 @@ export default function AdminPage() {
             {addError && <p style={{ fontFamily: M, fontSize: 10, color: '#ef4444', marginTop: 10, letterSpacing: '0.06em' }}>{addError}</p>}
             <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
               <button onClick={() => setShowAdd(false)} style={{ flex: 1, height: 40, background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 7, fontFamily: M, fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}>Cancel</button>
-              <button onClick={addMember} disabled={addLoading || !addEmail || !addPassword} style={{ flex: 2, height: 40, background: addLoading || !addEmail || !addPassword ? 'rgba(37,99,235,0.15)' : '#2563eb', border: 'none', borderRadius: 7, fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: addLoading || !addEmail || !addPassword ? 'rgba(37,99,235,0.4)' : '#000', cursor: addLoading || !addEmail || !addPassword ? 'not-allowed' : 'pointer' }}>
+              <button onClick={addMember} disabled={addLoading || !addEmail || !addPassword} style={{ flex: 2, height: 40, background: addLoading || !addEmail || !addPassword ? 'rgba(37,99,235,0.15)' : '#2563eb', border: 'none', borderRadius: 7, fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: addLoading || !addEmail || !addPassword ? 'rgba(37,99,235,0.4)' : '#fff', cursor: addLoading || !addEmail || !addPassword ? 'not-allowed' : 'pointer' }}>
                 {addLoading ? '...' : 'Add Member'}
               </button>
             </div>
@@ -598,7 +753,7 @@ export default function AdminPage() {
             </div>
             <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
               <button onClick={() => setSelected(null)} style={{ flex: 1, height: 40, background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 7, fontFamily: M, fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}>Cancel</button>
-              <button onClick={saveEdit} disabled={editLoading} style={{ flex: 2, height: 40, background: editLoading ? 'rgba(37,99,235,0.15)' : '#2563eb', border: 'none', borderRadius: 7, fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: editLoading ? 'rgba(37,99,235,0.4)' : '#000', cursor: editLoading ? 'not-allowed' : 'pointer' }}>
+              <button onClick={saveEdit} disabled={editLoading} style={{ flex: 2, height: 40, background: editLoading ? 'rgba(37,99,235,0.15)' : '#2563eb', border: 'none', borderRadius: 7, fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: editLoading ? 'rgba(37,99,235,0.4)' : '#fff', cursor: editLoading ? 'not-allowed' : 'pointer' }}>
                 {editLoading ? '...' : 'Save Changes'}
               </button>
             </div>
@@ -633,7 +788,7 @@ export default function AdminPage() {
             {wError && <p style={{ fontFamily: M, fontSize: 10, color: '#ef4444', marginTop: 8, letterSpacing: '0.06em' }}>{wError}</p>}
             <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
               <button onClick={() => setShowWebinarModal(false)} style={{ flex: 1, height: 40, background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 7, fontFamily: M, fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}>Cancel</button>
-              <button onClick={saveWebinar} disabled={wSaving || !wTitle.trim() || !wScheduledAt} style={{ flex: 2, height: 40, background: wSaving || !wTitle.trim() || !wScheduledAt ? 'rgba(37,99,235,0.15)' : '#2563eb', border: 'none', borderRadius: 7, fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: wSaving || !wTitle.trim() || !wScheduledAt ? 'rgba(37,99,235,0.4)' : '#000', cursor: wSaving || !wTitle.trim() || !wScheduledAt ? 'not-allowed' : 'pointer' }}>
+              <button onClick={saveWebinar} disabled={wSaving || !wTitle.trim() || !wScheduledAt} style={{ flex: 2, height: 40, background: wSaving || !wTitle.trim() || !wScheduledAt ? 'rgba(37,99,235,0.15)' : '#2563eb', border: 'none', borderRadius: 7, fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: wSaving || !wTitle.trim() || !wScheduledAt ? 'rgba(37,99,235,0.4)' : '#fff', cursor: wSaving || !wTitle.trim() || !wScheduledAt ? 'not-allowed' : 'pointer' }}>
                 {wSaving ? '...' : editingWebinar ? 'Save Changes' : 'Schedule Call'}
               </button>
             </div>
