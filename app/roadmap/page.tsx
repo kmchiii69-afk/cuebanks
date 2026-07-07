@@ -992,7 +992,7 @@ function CalendlyWidget() {
               <button onClick={() => setOpen(false)} style={{ background: "none", border: "none", color: "var(--muted)", cursor: "pointer", fontSize: 20, lineHeight: 1, padding: "0 4px", flexShrink: 0, marginLeft: 16 }}>✕</button>
             </div>
             <iframe
-              src="https://calendly.com/filip-wsacademyfx?background_color=080a10&text_color=ffffff&primary_color=f9ff3c"
+              src="https://calendly.com/alex-wsacademyfx?background_color=080a10&text_color=ffffff&primary_color=2563eb"
               style={{ width: "100%", height: 580, border: "none", display: "block" }}
               title="Book your 1-on-1 call"
             />

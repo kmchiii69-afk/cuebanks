@@ -788,7 +788,7 @@ export default function PortalPage() {
                   {/* Calendly embed */}
                   <div style={{ borderRadius: 10, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)', background: '#fff', minHeight: 580 }}>
                     <iframe
-                      src="https://calendly.com/filip-wsacademyfx?background_color=ffffff&text_color=111111&primary_color=000000"
+                      src="https://calendly.com/alex-wsacademyfx?background_color=ffffff&text_color=111111&primary_color=000000"
                       style={{ width: '100%', height: 580, border: 'none', display: 'block' }}
                       title="Book your onboarding call"
                     />
