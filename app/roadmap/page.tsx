@@ -362,8 +362,7 @@ const PHASES: Phase[] = [
       },
       {
         label: "Risk Management 101",
-        note: "Cue usually risks 5–15% per trade, depending on his confidence, the confluence, and the cushion in his account. He always says \"The most confident person in the room will make the most amount of money.\"",
-        videos: [{ id: "160573172", label: "Risk Management 101" }],
+        note: "Cue usually risks 5–15% per trade, depending on his confidence, the confluence, and the cushion in his account. He always says \"The most confident person in the room will make the most amount of money.\"\n\nVideo coming soon — check back shortly.",
       },
       {
         label: "Risk Management — Homework",
@@ -408,6 +407,7 @@ const PHASES: Phase[] = [
       {
         label: "Identifying the Trend",
         note: "Higher high points, higher low points — that's a bullish market. Lower highs, lower lows — that's bearish. Structure is always first.",
+        videos: [{ id: "1162341882", hash: "e9c9f5a402", label: "Identifying the Trend" }],
       },
       {
         label: "Cue's Tips",
@@ -471,7 +471,7 @@ const PHASES: Phase[] = [
           { id: "208979674", label: "Market Structure 2.0" },
           { id: "157785913", label: "Market Structure 1.0" },
         ],
-        images: ["/images/market-patterns.png"],
+        images: ["/images/ms-chart-1.png"],
       },
       {
         label: "Market Structure Homework",
@@ -513,7 +513,7 @@ const PHASES: Phase[] = [
       {
         label: "Drawing Trendlines",
         note: "Always draw trendlines from wick to wick. If you can't walk in it, it's invalid. If that line is too steep, it's forced — it's gonna break, guaranteed waste of time. You want a nice angle.",
-        videos: [{ id: "1162341882", hash: "e9c9f5a402", label: "Drawing Trendlines" }],
+        videos: [{ id: "1162341491", label: "Drawing Trendlines 2.0" }],
         images: [
           "/images/gbpjpy-tl-1.png",
           "/images/tl-us30-1.png",
@@ -541,10 +541,13 @@ const PHASES: Phase[] = [
         tag: "Homework",
         note: "Draw 10 trendlines and 10 counter trendlines as shown above.",
         images: [
-          "/images/gbpjpy-tl-2.png",
-          "/images/gbpjpy-tl-3.png",
-          "/images/gbpjpy-tl-4.png",
-          "/images/gbpjpy-tl-5.png",
+          "/images/tl-hw-1.png",
+          "/images/tl-hw-2.png",
+          "/images/tl-hw-3.png",
+          "/images/tl-hw-4.png",
+          "/images/tl-hw-5.png",
+          "/images/tl-hw-6.png",
+          "/images/tl-hw-7.png",
         ],
       },
       {
@@ -608,6 +611,7 @@ const PHASES: Phase[] = [
         label: "Top Down Analysis — Cue's Exact Flow",
         note: "H4 for 30% of your time, M5 for 60%, H1 or M30 for the last 10%. Run through these steps every session before you touch a lower timeframe entry.",
         doc: TOP_DOWN_DOC,
+        images: ["/images/top-down-pdf-1.png"],
       },
       {
         label: "Yes & No Trade Checklist",
@@ -617,6 +621,11 @@ const PHASES: Phase[] = [
           "/images/checklist-yes.png",
           "/images/checklist-no.png",
         ],
+      },
+      {
+        label: "Major Market Patterns",
+        note: "Study these patterns until you can identify them in real time. These are the recurring setups that show up across all pairs — know what they look like before you see them live.",
+        images: ["/images/major-market-patterns.png"],
       },
       {
         label: "Identify Where You Need to Improve",

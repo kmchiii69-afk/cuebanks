@@ -14,7 +14,7 @@ export const revalidate = 1800;
 
 export async function GET() {
   try {
-    const r = await fetch('https://cdn-nfs.faireconomy.media/ff_calendar_thisweek.json', {
+    const r = await fetch('https://nfs.faireconomy.media/ff_calendar_thisweek.json', {
       headers: { 'User-Agent': 'Mozilla/5.0 (compatible; WSAPortal/1.0)' },
       signal: AbortSignal.timeout(8000),
     });
