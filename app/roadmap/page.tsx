@@ -362,7 +362,8 @@ const PHASES: Phase[] = [
       },
       {
         label: "Risk Management 101",
-        note: "Cue usually risks 5–15% per trade, depending on his confidence, the confluence, and the cushion in his account. He always says \"The most confident person in the room will make the most amount of money.\"\n\nVideo coming soon — check back shortly.",
+        note: "Cue usually risks 5–15% per trade, depending on his confidence, the confluence, and the cushion in his account. He always says \"The most confident person in the room will make the most amount of money.\"",
+        videos: [{ id: "160573172", label: "Risk Management 101" }],
       },
       {
         label: "Risk Management — Homework",
