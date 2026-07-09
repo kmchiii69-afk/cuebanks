@@ -310,8 +310,6 @@ export default function InnerCirclePage() {
     return () => ro.disconnect();
   }, [tier]);
 
-  useEffect(() => { setPriceOverride(null); }, [tier]);
-
   const isBasic    = tier === "basic";
   const isPremium  = tier === "premium";
   const isStandard = tier === "standard";
