@@ -131,7 +131,7 @@ export default function PortalPage() {
 
   // Onboarding
   const [onboarding, setOnboarding] = useState(false);
-  const [onboardStep, setOnboardStep] = useState<0 | 1 | 2 | 3 | 4>(0); // 0=video, 1=contract, 2=calendly, 3=goal, 4=tour
+  const [onboardStep, setOnboardStep] = useState<0 | 1 | 2 | 3 | 4 | 5>(0); // 0=video, 1=contract, 2=discord, 3=calendly, 4=goal, 5=tour
   const [goalText, setGoalText] = useState('');
   const [savingGoal, setSavingGoal] = useState(false);
   const [tourStep, setTourStep] = useState(0);
@@ -243,7 +243,7 @@ export default function PortalPage() {
     });
     setMember(m => m ? { ...m, goal: goalText.trim(), onboarded: true } : m);
     setSavingGoal(false);
-    setOnboardStep(4);
+    setOnboardStep(5);
   }
 
   function finishOnboarding() {
@@ -915,7 +915,7 @@ export default function PortalPage() {
           {onboardStep === 1 && (
             <div style={{ width: '100%', maxWidth: 760, display: 'flex', flexDirection: 'column', gap: 20 }}>
               <div>
-                <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(37,99,235,0.5)', textTransform: 'uppercase', marginBottom: 10 }}>Step 1 of 4 · Sign Your Contract</div>
+                <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(37,99,235,0.5)', textTransform: 'uppercase', marginBottom: 10 }}>Step 1 of 5 · Sign Your Contract</div>
                 <h2 style={{ ...D, fontSize: 24, fontWeight: 700, letterSpacing: '-0.02em', color: '#fff', margin: '0 0 8px' }}>Before your call — sign your contract.</h2>
                 <p style={{ ...S, fontSize: 14, color: 'rgba(255,255,255,0.5)', margin: 0, lineHeight: 1.65 }}>
                   This is required before your onboarding call. Please complete it now so your call can go straight into strategy.
@@ -956,12 +956,49 @@ export default function PortalPage() {
             </div>
           )}
 
-          {/* Step 2: Onboarding Call Booking */}
-          {onboardStep === 2 && (
+          {/* Step 2: Join Discord */}
+          {onboardStep === 2 && (() => {
+            const discordLink = member?.plan === '15k' ? 'https://discord.gg/dVASy9WRF' : member?.plan === '7.5k' ? 'https://discord.gg/gr2k4WdYv' : 'https://discord.gg/6MJ48hfJ3';
+            const planLabel = member?.plan === '15k' ? '15K Inner Circle' : member?.plan === '7.5k' ? '7.5K Inner Circle' : '5K';
+            return (
+              <div style={{ width: '100%', maxWidth: 560, display: 'flex', flexDirection: 'column', gap: 24 }}>
+                <div>
+                  <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(37,99,235,0.5)', textTransform: 'uppercase', marginBottom: 10 }}>Step 2 of 5 · Join Your Community</div>
+                  <h2 style={{ ...D, fontSize: 26, fontWeight: 700, letterSpacing: '-0.03em', color: '#fff', margin: '0 0 8px' }}>Get into Discord now.</h2>
+                  <p style={{ ...S, fontSize: 14, color: 'rgba(255,255,255,0.45)', margin: 0, lineHeight: 1.65 }}>
+                    Your community is already active. Your 1-on-1 channel, the team, weekly announcements — it&apos;s all in there. Join before your onboarding call so you&apos;re set up and ready.
+                  </p>
+                </div>
+                <div style={{ background: 'rgba(88,101,242,0.07)', border: '1px solid rgba(88,101,242,0.25)', borderRadius: 14, padding: '28px 32px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, textAlign: 'center' }}>
+                  <div style={{ width: 56, height: 56, borderRadius: 16, background: 'rgba(88,101,242,0.15)', border: '1px solid rgba(88,101,242,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <svg width="28" height="22" viewBox="0 0 28 22" fill="none"><path d="M23.7 1.8A23.2 23.2 0 0 0 17.9.1a15.7 15.7 0 0 0-.7 1.5 21.5 21.5 0 0 0-6.4 0A15.7 15.7 0 0 0 10.1.1 23.2 23.2 0 0 0 4.3 1.8C.6 7.4-.4 12.9.1 18.3a23.4 23.4 0 0 0 7.1 3.6 17.4 17.4 0 0 0 1.5-2.4 15.2 15.2 0 0 1-2.4-1.1l.6-.4a16.7 16.7 0 0 0 14.2 0l.6.4a15.2 15.2 0 0 1-2.4 1.1 17.4 17.4 0 0 0 1.5 2.4 23.4 23.4 0 0 0 7.1-3.6c.6-6.2-1.1-11.6-4.2-16.5ZM9.4 15c-1.4 0-2.5-1.3-2.5-2.8s1.1-2.8 2.5-2.8 2.5 1.3 2.5 2.8S10.8 15 9.4 15Zm9.2 0c-1.4 0-2.5-1.3-2.5-2.8s1.1-2.8 2.5-2.8 2.5 1.3 2.5 2.8-1.1 2.8-2.5 2.8Z" fill="#5865F2"/></svg>
+                  </div>
+                  <div>
+                    <div style={{ ...D, fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4 }}>WSA {planLabel} Discord</div>
+                    <div style={{ ...S, fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>Your private community server</div>
+                  </div>
+                  <a href={discordLink} target="_blank" rel="noopener noreferrer"
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: '#5865F2', borderRadius: 9, padding: '13px 32px', ...M, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#fff', textDecoration: 'none', transition: 'opacity 0.15s' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = '0.85'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1'; }}>
+                    <svg width="18" height="14" viewBox="0 0 28 22" fill="none"><path d="M23.7 1.8A23.2 23.2 0 0 0 17.9.1a15.7 15.7 0 0 0-.7 1.5 21.5 21.5 0 0 0-6.4 0A15.7 15.7 0 0 0 10.1.1 23.2 23.2 0 0 0 4.3 1.8C.6 7.4-.4 12.9.1 18.3a23.4 23.4 0 0 0 7.1 3.6 17.4 17.4 0 0 0 1.5-2.4 15.2 15.2 0 0 1-2.4-1.1l.6-.4a16.7 16.7 0 0 0 14.2 0l.6.4a15.2 15.2 0 0 1-2.4 1.1 17.4 17.4 0 0 0 1.5 2.4 23.4 23.4 0 0 0 7.1-3.6c.6-6.2-1.1-11.6-4.2-16.5ZM9.4 15c-1.4 0-2.5-1.3-2.5-2.8s1.1-2.8 2.5-2.8 2.5 1.3 2.5 2.8S10.8 15 9.4 15Zm9.2 0c-1.4 0-2.5-1.3-2.5-2.8s1.1-2.8 2.5-2.8 2.5 1.3 2.5 2.8-1.1 2.8-2.5 2.8Z" fill="#fff"/></svg>
+                    Join Discord Server
+                  </a>
+                </div>
+                <div style={{ display: 'flex', gap: 12 }}>
+                  <button onClick={() => setOnboardStep(1)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '10px 18px', ...M, fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', cursor: 'pointer' }}>← Back</button>
+                  <button onClick={() => setOnboardStep(3)} style={{ flex: 1, background: '#2563eb', border: 'none', borderRadius: 8, padding: '12px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#fff', cursor: 'pointer' }}>{"I'm In Discord →"}</button>
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* Step 3: Onboarding Call Booking */}
+          {onboardStep === 3 && (
             <div style={{ width: '100%', maxWidth: 880, display: 'flex', flexDirection: 'column', gap: 0 }}>
               {/* Header */}
               <div style={{ marginBottom: 20 }}>
-                <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(37,99,235,0.5)', textTransform: 'uppercase', marginBottom: 12 }}>Step 2 of 4 · Book Your Onboarding Call</div>
+                <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(37,99,235,0.5)', textTransform: 'uppercase', marginBottom: 12 }}>Step 3 of 5 · Book Your Onboarding Call</div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 0 }}>
                   <div>
                     <h2 style={{ ...D, fontSize: 22, fontWeight: 700, letterSpacing: '-0.02em', color: '#fff', margin: '0 0 10px' }}>Your first call with the team.</h2>
@@ -996,14 +1033,14 @@ export default function PortalPage() {
                 </div>
               </div>
               <div style={{ display: 'flex', gap: 12, paddingTop: 4 }}>
-                <button onClick={() => setOnboardStep(1)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '10px 18px', ...M, fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', cursor: 'pointer' }}>← Back</button>
-                <button onClick={() => setOnboardStep(3)} style={{ flex: 1, background: '#2563eb', border: 'none', borderRadius: 8, padding: '12px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#fff', cursor: 'pointer' }}>{"I've Booked My Call →"}</button>
+                <button onClick={() => setOnboardStep(2)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '10px 18px', ...M, fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', cursor: 'pointer' }}>← Back</button>
+                <button onClick={() => setOnboardStep(4)} style={{ flex: 1, background: '#2563eb', border: 'none', borderRadius: 8, padding: '12px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#fff', cursor: 'pointer' }}>{"I've Booked My Call →"}</button>
               </div>
             </div>
           )}
 
-          {/* Step 3: Goal Form */}
-          {onboardStep === 3 && (
+          {/* Step 4: Goal Form */}
+          {onboardStep === 4 && (
             <div style={{ width: '100%', maxWidth: 560, display: 'flex', flexDirection: 'column', gap: 24 }}>
               {/* Thank you card */}
               <div style={{ background: 'rgba(34,197,94,0.06)', border: '1px solid rgba(34,197,94,0.2)', borderRadius: 10, padding: '16px 20px', display: 'flex', alignItems: 'flex-start', gap: 14 }}>
@@ -1014,7 +1051,7 @@ export default function PortalPage() {
                 </div>
               </div>
               <div>
-                <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(37,99,235,0.5)', textTransform: 'uppercase', marginBottom: 10 }}>Step 3 of 4 · Set Your Goal</div>
+                <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(37,99,235,0.5)', textTransform: 'uppercase', marginBottom: 10 }}>Step 4 of 5 · Set Your Goal</div>
                 <h2 style={{ ...D, fontSize: 26, fontWeight: 700, letterSpacing: '-0.03em', color: '#fff', margin: '0 0 8px' }}>What do you want to achieve in 4 months?</h2>
                 <p style={{ ...S, fontSize: 14, color: 'rgba(255,255,255,0.38)', margin: 0, lineHeight: 1.55 }}>Be specific. This goal lives on your portal so you see it every time you log in. It&apos;s your why.</p>
               </div>
@@ -1028,7 +1065,7 @@ export default function PortalPage() {
                 onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; }}
               />
               <div style={{ display: 'flex', gap: 12 }}>
-                <button onClick={() => setOnboardStep(2)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '10px 18px', ...M, fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', cursor: 'pointer' }}>← Back</button>
+                <button onClick={() => setOnboardStep(3)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '10px 18px', ...M, fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', cursor: 'pointer' }}>← Back</button>
                 <button
                   onClick={submitGoal}
                   disabled={savingGoal || !goalText.trim()}
@@ -1040,11 +1077,11 @@ export default function PortalPage() {
             </div>
           )}
 
-          {/* Step 4: App Tour */}
-          {onboardStep === 4 && (
+          {/* Step 5: App Tour */}
+          {onboardStep === 5 && (
             <div style={{ width: '100%', maxWidth: 520, display: 'flex', flexDirection: 'column', gap: 24 }}>
               <div>
-                <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(37,99,235,0.5)', textTransform: 'uppercase', marginBottom: 10 }}>Step 4 of 4 · Quick Tour</div>
+                <div style={{ ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', color: 'rgba(37,99,235,0.5)', textTransform: 'uppercase', marginBottom: 10 }}>Step 5 of 5 · Quick Tour</div>
                 <h2 style={{ ...D, fontSize: 24, fontWeight: 700, letterSpacing: '-0.03em', color: '#fff', margin: '0 0 4px' }}>{TOUR_STEPS[tourStep].icon} {TOUR_STEPS[tourStep].title}</h2>
               </div>
 
