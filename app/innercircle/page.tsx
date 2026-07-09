@@ -288,6 +288,8 @@ const COVER_CONTENT: Record<Tier, { headline: React.ReactNode; sub: string; stat
 export default function InnerCirclePage() {
   const [active, setActive] = useState("cover");
   const [tier, setTier] = useState<Tier>("standard");
+  const [priceOverride, setPriceOverride] = useState<string | null>(null);
+  const [editingPrice, setEditingPrice] = useState(false);
 
   useEffect(() => {
     const obs = new IntersectionObserver(
@@ -308,10 +310,12 @@ export default function InnerCirclePage() {
     return () => ro.disconnect();
   }, [tier]);
 
+  useEffect(() => { setPriceOverride(null); }, [tier]);
+
   const isBasic    = tier === "basic";
   const isPremium  = tier === "premium";
   const isStandard = tier === "standard";
-  const price = TIER_PRICES[tier];
+  const price = priceOverride ?? TIER_PRICES[tier];
   const cover = COVER_CONTENT[tier];
 
   const included = isBasic ? INCLUDED_BASIC : isPremium ? INCLUDED_PREMIUM : INCLUDED_STANDARD;
@@ -683,7 +687,18 @@ export default function InnerCirclePage() {
           <div className="ic-reveal" style={{ marginTop: 36, padding: "28px 32px", border: "1px solid rgba(37,99,235,0.15)", background: "rgba(37,99,235,0.03)" }}>
             <div style={{ display: "flex", alignItems: "baseline", gap: 16, marginBottom: 12, flexWrap: "wrap" }}>
               <span style={{ fontFamily: mono, fontSize: 10, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: acid }}>· {TIER_LABELS[tier]} ·</span>
-              <span style={{ fontFamily: display, fontSize: 40, fontWeight: 800, letterSpacing: "-0.05em", color: bone }}>{price}</span>
+              {editingPrice ? (
+                <input
+                  autoFocus
+                  value={price}
+                  onChange={e => setPriceOverride(e.target.value)}
+                  onBlur={() => setEditingPrice(false)}
+                  onKeyDown={e => { if (e.key === "Enter") setEditingPrice(false); }}
+                  style={{ fontFamily: display, fontSize: 40, fontWeight: 800, letterSpacing: "-0.05em", color: bone, background: "transparent", border: "none", outline: "none", padding: 0, margin: 0, width: `${Math.max(price.length, 3)}ch` }}
+                />
+              ) : (
+                <span onClick={() => setEditingPrice(true)} title="Click to edit" style={{ fontFamily: display, fontSize: 40, fontWeight: 800, letterSpacing: "-0.05em", color: bone, cursor: "text" }}>{price}</span>
+              )}
             </div>
             <p style={{ fontFamily: body, fontSize: 17, lineHeight: 1.75, color: "rgba(255,255,255,0.42)", maxWidth: 580, margin: "0 0 20px" }}>
               {isBasic
