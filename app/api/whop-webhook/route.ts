@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { memberExists, createMember } from '@/lib/db';
+import type { Plan } from '@/lib/db';
+import { generatePassword, sendWelcomeEmail } from '@/lib/email';
 
 const DISCORD_WEBHOOK_PAYMENTS = process.env.DISCORD_WEBHOOK_PAYMENTS!;
 
@@ -29,6 +32,14 @@ interface WhopPayload {
   };
 }
 
+function detectPlan(productName: string, planName?: string): Plan {
+  const s = `${productName} ${planName ?? ''}`.toLowerCase();
+  if (s.includes('15k') || s.includes('15,000') || s.includes('15000')) return '15k';
+  if (s.includes('7.5k') || s.includes('7,500') || s.includes('7500')) return '7.5k';
+  if (s.includes('low') || s.includes('ticket')) return 'low_ticket';
+  return '5k';
+}
+
 function formatAmount(cents: number, currency = 'usd'): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -56,19 +67,38 @@ export async function POST(req: NextRequest) {
     const user     = d?.membership?.user ?? d?.user;
     const product  = d?.membership?.product ?? d?.product;
 
-    const name         = user?.name || user?.username || 'Unknown';
-    const email        = user?.email || '—';
+    const name         = user?.name || user?.username || '';
+    const email        = user?.email || '';
     const product_name = product?.name || product?.title || d?.plan?.name || 'WSA';
     const rawAmount    = d?.final_amount ?? d?.checkout?.final_amount ?? d?.amount ?? d?.subtotal;
     const currency     = d?.currency ?? d?.checkout?.currency ?? 'usd';
     const amount       = rawAmount != null ? formatAmount(rawAmount, currency) : '—';
 
+    // Auto-create member account + send welcome email if we have a real email
+    if (email && email !== '—') {
+      try {
+        const exists = await memberExists(email);
+        if (!exists) {
+          const plan = detectPlan(product_name, d?.plan?.name);
+          const password = generatePassword();
+          await createMember({ email, password, name: name || '', plan });
+          await sendWelcomeEmail({ to: email, name: name || '', password, plan });
+          console.log('[whop] Created member + sent welcome email:', email, plan);
+        } else {
+          console.log('[whop] Member already exists, skipping creation:', email);
+        }
+      } catch (err) {
+        // Don't fail the webhook if member creation or email fails
+        console.error('[whop] Member creation / email error:', err);
+      }
+    }
+
     const embed = {
       embeds: [{
         title: `💸 Payment Received`,
         description: [
-          `**Name:** ${name}`,
-          `**Email:** ${email}`,
+          `**Name:** ${name || 'Unknown'}`,
+          `**Email:** ${email || '—'}`,
           `**Product:** ${product_name}`,
           `**Amount:** ${amount}`,
         ].join('\n'),

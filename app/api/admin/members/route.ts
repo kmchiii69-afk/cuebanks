@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthUser } from '@/lib/auth';
 import { getAllMembers, createMember, memberExists, Plan } from '@/lib/db';
+import { sendWelcomeEmail } from '@/lib/email';
 
 async function requireAdmin() {
   const auth = await getAuthUser();
@@ -27,9 +28,16 @@ export async function POST(req: NextRequest) {
   const exists = await memberExists(email);
   if (exists) return NextResponse.json({ error: 'Member already exists' }, { status: 409 });
 
-  const validPlans: Plan[] = ['5k', '7.5k', '15k'];
+  const validPlans: Plan[] = ['5k', '7.5k', '15k', 'low_ticket'];
   const memberPlan: Plan = validPlans.includes(plan) ? plan : '5k';
   const member = await createMember({ email, password, name, role, cohort, plan: memberPlan });
+
+  // Send welcome email (non-blocking — don't fail the request if email fails)
+  if (role !== 'admin') {
+    sendWelcomeEmail({ to: email, name: name || '', password, plan: memberPlan })
+      .catch(err => console.error('[admin] Welcome email error:', err));
+  }
+
   const { password_hash: _, ...safe } = member;
   return NextResponse.json(safe, { status: 201 });
 }
