@@ -367,7 +367,7 @@ export default function InnerCirclePage() {
             <div className="ic-reveal" style={{ marginTop: 40, display: "inline-flex", alignItems: "center", gap: 10, background: "rgba(37,99,235,0.06)", border: "1px solid rgba(37,99,235,0.2)", padding: "10px 20px" }}>
               <div style={{ width: 4, height: 4, borderRadius: "50%", background: acid, flexShrink: 0 }} />
               <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(37,99,235,0.7)" }}>
-                4-Month Boot Camp · Cohort-Based · Starts July 5th
+                4-Month Boot Camp · Cohort-Based · Enrolling Now
               </span>
             </div>
           )}

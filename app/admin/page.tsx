@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-const PHASE_LABELS = ['—', 'Set', 'Execute', 'Phase 1', 'Phase 2', 'Phase 3', 'Phase 4', 'Bonus'];
+const PHASE_LABELS = ['—', 'Set', 'Execute', 'Phase 1', 'Phase 2', 'Phase 3', 'Phase 4', 'Bonus', 'Complete ✓'];
 
 type Plan = '5k' | '7.5k' | '15k';
 
