@@ -123,10 +123,11 @@ export default function AdminPage() {
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   // Analytics
-  interface AnalyticRow { id: string; member_email: string; plan: string; question: string; created_at: string; }
+  interface AnalyticRow { id: string; member_email: string; plan: string; question: string; answer: string; created_at: string; }
   const [analytics, setAnalytics] = useState<AnalyticRow[]>([]);
   const [analyticsLoading, setAnalyticsLoading] = useState(false);
   const [analyticsPlan, setAnalyticsPlan] = useState('all');
+  const [expandedRow, setExpandedRow] = useState<string | null>(null);
 
   // Cue AI Instructions
   const [cueInstructions, setCueInstructions] = useState<CueInstruction[]>([]);
@@ -611,14 +612,35 @@ export default function AdminPage() {
                     <span key={h} style={{ fontFamily: M, fontSize: 8, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.22)' }}>{h}</span>
                   ))}
                 </div>
-                {analytics.map((row, i) => (
-                  <div key={row.id} style={{ display: 'grid', gridTemplateColumns: '80px 180px 1fr 110px', gap: 14, padding: '11px 14px', borderBottom: '1px solid rgba(255,255,255,0.04)', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)', alignItems: 'flex-start' }}>
-                    <span style={{ fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: row.plan === '15k' ? '#2563eb' : row.plan === '7.5k' ? '#f97316' : row.plan === 'low_ticket' ? '#a855f7' : 'rgba(255,255,255,0.4)', background: row.plan === '15k' ? 'rgba(37,99,235,0.07)' : row.plan === '7.5k' ? 'rgba(249,115,22,0.07)' : row.plan === 'low_ticket' ? 'rgba(168,85,247,0.07)' : 'rgba(255,255,255,0.04)', padding: '3px 8px', borderRadius: 4, display: 'inline-block' }}>{row.plan === 'low_ticket' ? 'Low Ticket' : row.plan}</span>
-                    <span style={{ fontFamily: S, fontSize: 11, color: 'rgba(255,255,255,0.4)', wordBreak: 'break-word' }}>{row.member_email}</span>
-                    <span style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.75)', lineHeight: 1.5, wordBreak: 'break-word' }}>{row.question}</span>
-                    <span style={{ fontFamily: M, fontSize: 9, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.04em' }}>{new Date(row.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                  </div>
-                ))}
+                {analytics.map((row, i) => {
+                  const isExpanded = expandedRow === row.id;
+                  return (
+                    <div key={row.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)' }}>
+                      <div
+                        onClick={() => setExpandedRow(isExpanded ? null : row.id)}
+                        style={{ display: 'grid', gridTemplateColumns: '80px 180px 1fr 110px 20px', gap: 14, padding: '11px 14px', alignItems: 'flex-start', cursor: 'pointer', transition: 'background 0.1s' }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.025)'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
+                      >
+                        <span style={{ fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: row.plan === '15k' ? '#2563eb' : row.plan === '7.5k' ? '#f97316' : row.plan === 'low_ticket' ? '#a855f7' : 'rgba(255,255,255,0.4)', background: row.plan === '15k' ? 'rgba(37,99,235,0.07)' : row.plan === '7.5k' ? 'rgba(249,115,22,0.07)' : row.plan === 'low_ticket' ? 'rgba(168,85,247,0.07)' : 'rgba(255,255,255,0.04)', padding: '3px 8px', borderRadius: 4, display: 'inline-block' }}>{row.plan === 'low_ticket' ? 'Low Ticket' : row.plan}</span>
+                        <span style={{ fontFamily: S, fontSize: 11, color: 'rgba(255,255,255,0.4)', wordBreak: 'break-word' }}>{row.member_email}</span>
+                        <span style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.75)', lineHeight: 1.5, wordBreak: 'break-word' }}>{row.question}</span>
+                        <span style={{ fontFamily: M, fontSize: 9, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.04em' }}>{new Date(row.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                        <span style={{ fontFamily: M, fontSize: 10, color: 'rgba(255,255,255,0.2)', transition: 'transform 0.15s', display: 'inline-block', transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)' }}>›</span>
+                      </div>
+                      {isExpanded && (
+                        <div style={{ margin: '0 14px 14px', padding: '16px 18px', background: 'rgba(37,99,235,0.05)', border: '1px solid rgba(37,99,235,0.12)', borderLeft: '3px solid rgba(37,99,235,0.35)', borderRadius: '0 6px 6px 0' }}>
+                          <div style={{ fontFamily: M, fontSize: 8, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(37,99,235,0.5)', marginBottom: 10 }}>Cue AI Response</div>
+                          {row.answer ? (
+                            <p style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 1.7, margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{row.answer}</p>
+                          ) : (
+                            <p style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.2)', margin: 0, fontStyle: 'italic' }}>No answer saved — this question was asked before the answer logging was added.</p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
                 <div style={{ padding: '10px 14px', fontFamily: M, fontSize: 9, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.1em' }}>{analytics.length} questions shown · max 1000</div>
               </div>
             )}

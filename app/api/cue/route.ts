@@ -191,13 +191,7 @@ export async function POST(req: NextRequest) {
     return new Response(JSON.stringify({ error: "no valid messages" }), { status: 400 });
   }
 
-  // Save question to analytics (fire-and-forget — don't block the stream)
   const lastUserMsg = [...cleaned].reverse().find(m => m.role === "user");
-  if (lastUserMsg) {
-    getMember(authUser.email).then(member => {
-      saveChatAnalytic(authUser.email, member?.plan ?? '5k', lastUserMsg.content).catch(() => {});
-    }).catch(() => {});
-  }
 
   const instructionAppendix = await getInstructionAppendix().catch(() => "");
   const systemPrompt = SYSTEM_PROMPT + instructionAppendix;
@@ -207,6 +201,7 @@ export async function POST(req: NextRequest) {
   const stream = new ReadableStream({
     async start(controller) {
       const enc = new TextEncoder();
+      let fullAnswer = '';
       try {
         const s = client.messages.stream({
           model: "claude-opus-4-8",
@@ -216,10 +211,17 @@ export async function POST(req: NextRequest) {
         });
         for await (const event of s) {
           if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
+            fullAnswer += event.delta.text;
             controller.enqueue(enc.encode(event.delta.text));
           }
         }
         controller.close();
+        // Save question + full answer after stream completes
+        if (lastUserMsg) {
+          getMember(authUser.email).then(member => {
+            saveChatAnalytic(authUser.email, member?.plan ?? '5k', lastUserMsg.content, fullAnswer).catch(() => {});
+          }).catch(() => {});
+        }
       } catch (err) {
         controller.enqueue(enc.encode(`\n\n[${err instanceof Error ? err.message : "Error"}]`));
         controller.close();

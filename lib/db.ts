@@ -251,11 +251,12 @@ export async function saveChatMessages(
   await db().from(CHAT_HISTORY_TABLE).insert(rows);
 }
 
-export async function saveChatAnalytic(email: string, plan: string, question: string): Promise<void> {
+export async function saveChatAnalytic(email: string, plan: string, question: string, answer = ''): Promise<void> {
   await db().from(CHAT_ANALYTICS_TABLE).insert({
     member_email: email.toLowerCase().trim(),
     plan,
     question,
+    answer,
   });
 }
 
@@ -329,13 +330,14 @@ export interface AnalyticRow {
   member_email: string;
   plan: string;
   question: string;
+  answer: string;
   created_at: string;
 }
 
 export async function getChatAnalytics(plan?: string): Promise<AnalyticRow[]> {
   let q = db()
     .from(CHAT_ANALYTICS_TABLE)
-    .select('id, member_email, plan, question, created_at')
+    .select('id, member_email, plan, question, answer, created_at')
     .order('created_at', { ascending: false })
     .limit(1000);
   if (plan && plan !== 'all') q = q.eq('plan', plan);
