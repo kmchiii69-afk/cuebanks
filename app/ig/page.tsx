@@ -1,11 +1,18 @@
 "use client";
 
-import Script from "next/script";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function IGPage() {
   const router = useRouter();
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://embed.typeform.com/next/embed.js';
+    script.async = true;
+    document.body.appendChild(script);
+    return () => { document.body.removeChild(script); };
+  }, []);
 
   useEffect(() => {
     const handler = (e: MessageEvent) => {
@@ -113,7 +120,6 @@ export default function IGPage() {
           }}
         >
           <div data-tf-live="01KWAVJAM69YPMV554NVRT3Z58" style={{ minHeight: 560 }} />
-          <Script src="//embed.typeform.com/next/embed.js" strategy="afterInteractive" />
         </div>
       </section>
 
