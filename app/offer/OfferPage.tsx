@@ -213,6 +213,14 @@ function WinsCarousel() {
 }
 
 function PricingCard({ featured, name, price, term, lead, features }: { featured?: boolean; name: string; price: string; term: string; lead: string; features: string[] }) {
+  const [editing, setEditing] = useState(false);
+  const [displayPrice, setDisplayPrice] = useState(price);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (editing && inputRef.current) inputRef.current.focus();
+  }, [editing]);
+
   return (
     <div style={{ position: "relative", height: "100%", background: "var(--bg)", border: featured ? "1px solid var(--acid)" : "1px solid var(--line)", borderTop: `3px solid ${featured ? "var(--acid)" : "var(--line-2)"}`, borderRadius: 16, padding: "34px 32px", display: "flex", flexDirection: "column", boxShadow: featured ? "0 0 80px rgba(37,99,235,0.10)" : "none", overflow: "hidden" }}>
       {featured && <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(600px 300px at 50% 0%, rgba(37,99,235,0.08), transparent 60%)" }} />}
@@ -222,7 +230,22 @@ function PricingCard({ featured, name, price, term, lead, features }: { featured
           {featured && <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", color: "#000", background: "var(--acid)", padding: "4px 10px", borderRadius: 6 }}>Limited</span>}
         </div>
         <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 12 }}>
-          <span style={{ fontFamily: "var(--font-display)", fontSize: 52, fontWeight: 800, color: "var(--bone)", letterSpacing: "-0.03em", lineHeight: 1 }}>{price}</span>
+          {editing ? (
+            <input
+              ref={inputRef}
+              value={displayPrice}
+              onChange={e => setDisplayPrice(e.target.value)}
+              onBlur={() => setEditing(false)}
+              onKeyDown={e => { if (e.key === 'Enter') setEditing(false); }}
+              style={{ fontFamily: "var(--font-display)", fontSize: 52, fontWeight: 800, color: "var(--bone)", letterSpacing: "-0.03em", lineHeight: 1, background: "transparent", border: "none", outline: "none", width: `${Math.max(displayPrice.length, 3)}ch`, padding: 0, margin: 0 }}
+            />
+          ) : (
+            <span
+              onClick={() => setEditing(true)}
+              title="Click to edit price"
+              style={{ fontFamily: "var(--font-display)", fontSize: 52, fontWeight: 800, color: "var(--bone)", letterSpacing: "-0.03em", lineHeight: 1, cursor: "text" }}
+            >{displayPrice}</span>
+          )}
           <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--ash)" }}>· {term}</span>
         </div>
         <p style={{ fontFamily: "var(--font-body)", fontSize: 15, lineHeight: 1.55, color: "var(--ash)", margin: "0 0 22px" }}>{lead}</p>
