@@ -19,9 +19,6 @@ export default function TosPage() {
           <h1 style={{ fontSize: 36, fontWeight: 700, lineHeight: 1.2, margin: "0 0 12px" }}>
             Terms of Service
           </h1>
-          <p style={{ fontSize: 14, color: "var(--ash)", margin: 0 }}>
-            Effective Date: July 1, 2026 &nbsp;·&nbsp; Last Updated: July 9, 2026
-          </p>
         </div>
 
         {/* Content */}
