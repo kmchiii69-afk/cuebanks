@@ -110,7 +110,7 @@ export default function IGPage() {
       </section>
 
       {/* TYPEFORM EMBED */}
-      <section style={{ maxWidth: 860, margin: "0 auto", padding: "0 24px 80px" }}>
+      <section style={{ maxWidth: 860, margin: "0 auto", padding: "0 24px 48px" }}>
         <div
           style={{
             border: "1px solid var(--line)",
@@ -122,6 +122,27 @@ export default function IGPage() {
           <div data-tf-live="01KWAVJAM69YPMV554NVRT3Z58" style={{ minHeight: 560 }} />
         </div>
       </section>
+
+      {/* FOOTER */}
+      <footer
+        style={{
+          borderTop: "1px solid var(--line)",
+          padding: "24px 48px",
+          textAlign: "center",
+          fontSize: 12,
+          color: "var(--ash)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 16,
+        }}
+      >
+        <span>© {new Date().getFullYear()} Wall Street Academy LLC. All rights reserved.</span>
+        <span style={{ opacity: 0.3 }}>·</span>
+        <a href="/tos" style={{ color: "var(--ash)", textDecoration: "underline", textUnderlineOffset: 3 }}>
+          Terms of Service
+        </a>
+      </footer>
 
     </div>
   );

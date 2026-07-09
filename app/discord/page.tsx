@@ -1,11 +1,18 @@
 "use client";
 
-import Script from "next/script";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function DiscordPage() {
   const router = useRouter();
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://embed.typeform.com/next/embed.js';
+    script.async = true;
+    document.body.appendChild(script);
+    return () => { document.body.removeChild(script); };
+  }, []);
 
   useEffect(() => {
     const handler = (e: MessageEvent) => {
@@ -106,7 +113,7 @@ export default function DiscordPage() {
       </section>
 
       {/* TYPEFORM EMBED */}
-      <section style={{ maxWidth: 860, margin: "0 auto", padding: "0 24px 80px" }}>
+      <section style={{ maxWidth: 860, margin: "0 auto", padding: "0 24px 48px" }}>
         <div
           style={{
             border: "1px solid var(--line)",
@@ -116,9 +123,29 @@ export default function DiscordPage() {
           }}
         >
           <div data-tf-live="01KWCF1M21WH4PSANSSHFK3MQQ" style={{ minHeight: 560 }} />
-          <Script src="//embed.typeform.com/next/embed.js" strategy="afterInteractive" />
         </div>
       </section>
+
+      {/* FOOTER */}
+      <footer
+        style={{
+          borderTop: "1px solid var(--line)",
+          padding: "24px 48px",
+          textAlign: "center",
+          fontSize: 12,
+          color: "var(--ash)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 16,
+        }}
+      >
+        <span>© {new Date().getFullYear()} Wall Street Academy LLC. All rights reserved.</span>
+        <span style={{ opacity: 0.3 }}>·</span>
+        <a href="/tos" style={{ color: "var(--ash)", textDecoration: "underline", textUnderlineOffset: 3 }}>
+          Terms of Service
+        </a>
+      </footer>
 
     </div>
   );
