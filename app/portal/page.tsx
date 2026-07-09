@@ -111,6 +111,14 @@ export default function PortalPage() {
 
   const [openSessions, setOpenSessions] = useState<boolean[]>([false, false, false, false]);
   const [nowUtc, setNowUtc] = useState('');
+  const [utcH, setUtcH] = useState(0);
+  const [utcM, setUtcM] = useState(0);
+
+  // Position size calculator
+  const [calcBalance, setCalcBalance] = useState('10000');
+  const [calcRisk, setCalcRisk] = useState(1);
+  const [calcSL, setCalcSL] = useState('');
+  const [calcPair, setCalcPair] = useState('EUR/USD');
 
   const [calEvents, setCalEvents] = useState<CalEvent[]>([]);
   const [calLoading, setCalLoading] = useState(true);
@@ -164,6 +172,7 @@ export default function PortalPage() {
       const h = now.getUTCHours(), m = now.getUTCMinutes();
       setOpenSessions(SESSIONS.map(s => isOpen(s, h, m)));
       setNowUtc(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')} UTC`);
+      setUtcH(h); setUtcM(m);
     }
     tick();
     const id = setInterval(tick, 30000);
@@ -277,6 +286,54 @@ export default function PortalPage() {
   function fmtRecDate(iso: string) {
     return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   }
+
+  // ── Trading tools ──────────────────────────────────────────────────────────
+  const PIP_VALUES: Record<string, number> = {
+    'EUR/USD': 10, 'GBP/USD': 10, 'AUD/USD': 10, 'NZD/USD': 10,
+    'USD/JPY': 6.7, 'USD/CAD': 7.4, 'USD/CHF': 11.1,
+    'EUR/JPY': 6.7, 'GBP/JPY': 6.7, 'AUD/JPY': 6.7,
+    'EUR/GBP': 12.6, 'EUR/CAD': 7.4, 'GBP/CAD': 7.4,
+  };
+  const CALC_PAIRS = Object.keys(PIP_VALUES);
+  const dollarRisk = (parseFloat(calcBalance) || 0) * (calcRisk / 100);
+  const pipVal = PIP_VALUES[calcPair] ?? 10;
+  const slPips = parseFloat(calcSL) || 0;
+  const lotSize = slPips > 0 ? dollarRisk / (slPips * pipVal) : 0;
+
+  // Upcoming session events for countdown
+  function getCountdownEvents() {
+    const nowMin = utcH * 60 + utcM;
+    type Evt = { label: string; minsUntil: number; color: string; isOverlap?: boolean };
+    const evts: Evt[] = [];
+    for (const s of SESSIONS) {
+      const openMin = s.utcOpen * 60;
+      const closeMin = s.utcClose * 60;
+      const open = isOpen(s, utcH, utcM);
+      if (!open) {
+        let d = openMin - nowMin; if (d <= 0) d += 1440;
+        evts.push({ label: `${s.name} opens`, minsUntil: d, color: s.color });
+      } else {
+        let d = closeMin - nowMin; if (d <= 0) d += 1440;
+        evts.push({ label: `${s.name} closes`, minsUntil: d, color: s.color });
+      }
+    }
+    // NY/LON overlap 13:00–17:00 UTC
+    const ovStart = 13 * 60, ovEnd = 17 * 60;
+    const inOv = nowMin >= ovStart && nowMin < ovEnd;
+    if (inOv) {
+      let d = ovEnd - nowMin; if (d <= 0) d += 1440;
+      evts.push({ label: 'NY/LON overlap ends', minsUntil: d, color: '#2563eb', isOverlap: true });
+    } else {
+      let d = ovStart - nowMin; if (d <= 0) d += 1440;
+      evts.push({ label: 'NY/LON overlap starts', minsUntil: d, color: '#2563eb', isOverlap: true });
+    }
+    return evts.sort((a, b) => a.minsUntil - b.minsUntil).slice(0, 5);
+  }
+  function fmtMins(mins: number) {
+    const h = Math.floor(mins / 60), m = mins % 60;
+    return h > 0 ? `${h}h ${String(m).padStart(2,'0')}m` : `${m}m`;
+  }
+  const countdownEvts = getCountdownEvents();
 
   return (
     <div style={{ minHeight: '100vh', background: '#000', color: '#fff', position: 'relative' }}>
@@ -477,6 +534,100 @@ export default function PortalPage() {
                 </div>
               );
             })}
+          </div>
+        </div>
+
+        {/* ── TRADING TOOLS ────────────────────────────────── */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
+
+          {/* Session Countdown */}
+          <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '20px 20px' }}>
+            <div style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginBottom: 14 }}>Session Countdown</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+              {countdownEvts.map((evt, i) => (
+                <div key={evt.label} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', borderRadius: 8, background: i === 0 ? `${evt.color}12` : 'rgba(255,255,255,0.02)', border: `1px solid ${i === 0 ? `${evt.color}30` : 'rgba(255,255,255,0.05)'}`, transition: 'all 0.2s' }}>
+                  <span style={{ width: 7, height: 7, borderRadius: '50%', background: i === 0 ? evt.color : 'rgba(255,255,255,0.15)', flexShrink: 0, boxShadow: i === 0 ? `0 0 8px ${evt.color}70` : 'none' }} />
+                  <span style={{ ...S, fontSize: 12, color: i === 0 ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.35)', flex: 1 }}>{evt.label}</span>
+                  <span style={{ ...M, fontSize: i === 0 ? 14 : 11, fontWeight: 700, color: i === 0 ? evt.color : 'rgba(255,255,255,0.25)', letterSpacing: '0.02em', flexShrink: 0 }}>{fmtMins(evt.minsUntil)}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{ marginTop: 12, paddingTop: 10, borderTop: '1px solid rgba(255,255,255,0.05)', ...S, fontSize: 11, color: 'rgba(255,255,255,0.2)' }}>
+              All times UTC · Updates every 30 seconds
+            </div>
+          </div>
+
+          {/* Position Size Calculator */}
+          <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '20px 20px' }}>
+            <div style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginBottom: 14 }}>Position Size Calculator</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+
+              {/* Balance + Pair row */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                <div>
+                  <div style={{ ...M, fontSize: 7.5, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 5 }}>Account Balance ($)</div>
+                  <input
+                    type="number" value={calcBalance} onChange={e => setCalcBalance(e.target.value)}
+                    style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 7, padding: '8px 11px', color: '#fff', ...M, fontSize: 13, outline: 'none', boxSizing: 'border-box' }}
+                    onFocus={e => { e.currentTarget.style.borderColor = 'rgba(37,99,235,0.4)'; }}
+                    onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
+                  />
+                </div>
+                <div>
+                  <div style={{ ...M, fontSize: 7.5, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 5 }}>Pair</div>
+                  <select value={calcPair} onChange={e => setCalcPair(e.target.value)}
+                    style={{ width: '100%', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 7, padding: '8px 11px', color: '#fff', ...M, fontSize: 12, outline: 'none', boxSizing: 'border-box', cursor: 'pointer' }}>
+                    {CALC_PAIRS.map(p => <option key={p} value={p} style={{ background: '#111' }}>{p}</option>)}
+                  </select>
+                </div>
+              </div>
+
+              {/* Risk % */}
+              <div>
+                <div style={{ ...M, fontSize: 7.5, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 5 }}>Risk %</div>
+                <div style={{ display: 'flex', gap: 6 }}>
+                  {[0.5, 1, 2, 3].map(r => (
+                    <button key={r} onClick={() => setCalcRisk(r)}
+                      style={{ flex: 1, padding: '7px 0', borderRadius: 6, border: `1px solid ${calcRisk === r ? 'rgba(37,99,235,0.5)' : 'rgba(255,255,255,0.08)'}`, background: calcRisk === r ? 'rgba(37,99,235,0.12)' : 'rgba(255,255,255,0.03)', color: calcRisk === r ? '#2563eb' : 'rgba(255,255,255,0.4)', ...M, fontSize: 11, fontWeight: 700, cursor: 'pointer', transition: 'all 0.15s' }}>
+                      {r}%
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Stop Loss */}
+              <div>
+                <div style={{ ...M, fontSize: 7.5, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 5 }}>Stop Loss (pips)</div>
+                <input
+                  type="number" value={calcSL} onChange={e => setCalcSL(e.target.value)} placeholder="e.g. 20"
+                  style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 7, padding: '8px 11px', color: '#fff', ...M, fontSize: 13, outline: 'none', boxSizing: 'border-box' }}
+                  onFocus={e => { e.currentTarget.style.borderColor = 'rgba(37,99,235,0.4)'; }}
+                  onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
+                />
+              </div>
+
+              {/* Output */}
+              <div style={{ marginTop: 2, padding: '14px 16px', borderRadius: 9, background: lotSize > 0 ? 'rgba(37,99,235,0.06)' : 'rgba(255,255,255,0.02)', border: `1px solid ${lotSize > 0 ? 'rgba(37,99,235,0.2)' : 'rgba(255,255,255,0.06)'}`, transition: 'all 0.2s' }}>
+                {lotSize > 0 ? (
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
+                    {[
+                      { label: 'Lot Size', value: lotSize.toFixed(2), sub: 'standard' },
+                      { label: 'Mini Lots', value: (lotSize * 10).toFixed(1), sub: '× 0.1' },
+                      { label: 'Dollar Risk', value: `$${dollarRisk.toFixed(0)}`, sub: `${calcRisk}% of bal.` },
+                    ].map(item => (
+                      <div key={item.label} style={{ textAlign: 'center' }}>
+                        <div style={{ ...D, fontSize: 18, fontWeight: 700, color: '#2563eb', lineHeight: 1.1 }}>{item.value}</div>
+                        <div style={{ ...M, fontSize: 7, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: 3 }}>{item.label}</div>
+                        <div style={{ ...M, fontSize: 7, color: 'rgba(255,255,255,0.18)', marginTop: 1 }}>{item.sub}</div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div style={{ textAlign: 'center', ...S, fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>Enter balance, risk %, and stop loss to calculate</div>
+                )}
+              </div>
+              <div style={{ ...M, fontSize: 7.5, color: 'rgba(255,255,255,0.18)', letterSpacing: '0.04em', lineHeight: 1.6 }}>Pip values approx. for USD accounts · Standard lot = 100,000 units</div>
+            </div>
           </div>
         </div>
 
