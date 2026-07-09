@@ -33,6 +33,7 @@ export interface Member {
   expires_at: string | null; // ISO timestamp, null = no expiry (admins)
   goal: string;
   onboarded: boolean;
+  portal_unlocked: boolean;
 }
 
 export type PublicMember = Omit<Member, 'password_hash'>;
@@ -92,6 +93,7 @@ export async function createMember(input: {
     expires_at: expiresAt,
     goal: '',
     onboarded: false,
+    portal_unlocked: isAdmin,
   };
   const { data, error } = await db().from(TABLE).insert(record).select().single();
   if (error) throw error;
@@ -125,6 +127,13 @@ export async function validateCredentials(email: string, password: string): Prom
   if (member.role !== 'admin' && member.expires_at && new Date(member.expires_at) < new Date()) return null;
   const valid = await bcrypt.compare(password, member.password_hash);
   return valid ? member : null;
+}
+
+export async function deleteMember(email: string): Promise<void> {
+  await db()
+    .from(TABLE)
+    .delete()
+    .eq('email', email.toLowerCase().trim());
 }
 
 export async function recordLogin(email: string): Promise<void> {

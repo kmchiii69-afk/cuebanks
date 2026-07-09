@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthUser } from '@/lib/auth';
-import { updateMember, updatePassword, getMember } from '@/lib/db';
+import { updateMember, updatePassword, getMember, deleteMember } from '@/lib/db';
 
 async function requireAdmin() {
   const auth = await getAuthUser();
@@ -43,6 +43,6 @@ export async function DELETE(
 
   const { email } = await params;
   const decoded = decodeURIComponent(email);
-  await updateMember(decoded, { active: false });
+  await deleteMember(decoded);
   return NextResponse.json({ ok: true });
 }

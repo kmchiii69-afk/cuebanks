@@ -22,6 +22,8 @@ interface Member {
   plan: Plan;
   expires_at: string | null;
   goal: string;
+  onboarded: boolean;
+  portal_unlocked: boolean;
 }
 
 interface CueInstruction {
@@ -116,6 +118,9 @@ export default function AdminPage() {
   const [editActive, setEditActive] = useState(true);
   const [editPlan, setEditPlan] = useState<Plan>('5k');
   const [editLoading, setEditLoading] = useState(false);
+  const [unlockLoading, setUnlockLoading] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState('');
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   // Analytics
   interface AnalyticRow { id: string; member_email: string; plan: string; question: string; created_at: string; }
@@ -206,7 +211,30 @@ export default function AdminPage() {
   function openEdit(m: Member) {
     setSelected(m); setEditName(m.name); setEditCohort(m.cohort);
     setEditNotes(m.notes); setEditPassword(''); setEditActive(m.active);
-    setEditPlan(m.plan ?? '5k');
+    setEditPlan(m.plan ?? '5k'); setDeleteConfirm('');
+  }
+
+  async function unlockPortal() {
+    if (!selected) return;
+    setUnlockLoading(true);
+    await fetch(`/api/admin/members/${encodeURIComponent(selected.email)}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ portal_unlocked: true }),
+    });
+    setSelected(null);
+    loadMembers();
+    setUnlockLoading(false);
+  }
+
+  async function handleDelete() {
+    if (!selected || deleteConfirm !== 'DELETE') return;
+    setDeleteLoading(true);
+    await fetch(`/api/admin/members/${encodeURIComponent(selected.email)}`, { method: 'DELETE' });
+    setSelected(null);
+    setDeleteConfirm('');
+    loadMembers();
+    setDeleteLoading(false);
   }
 
   async function saveEdit() {
@@ -759,6 +787,56 @@ export default function AdminPage() {
                 {editLoading ? '...' : 'Save Changes'}
               </button>
             </div>
+
+            {/* Unlock portal access */}
+            {selected.role !== 'admin' && !selected.portal_unlocked && (
+              <div style={{ marginTop: 16, padding: '16px 0 0', borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+                <div style={{ fontFamily: M, fontSize: 8, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(34,197,94,0.5)', marginBottom: 8 }}>Portal Access</div>
+                <div style={{ fontFamily: S, fontSize: 12, color: 'rgba(255,255,255,0.3)', marginBottom: 12 }}>
+                  Member has completed onboarding but hasn&apos;t had their call yet. Click to unlock the full portal.
+                </div>
+                <button
+                  onClick={unlockPortal}
+                  disabled={unlockLoading}
+                  style={{ width: '100%', height: 40, background: unlockLoading ? 'rgba(34,197,94,0.08)' : 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.3)', borderRadius: 7, fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: unlockLoading ? 'rgba(34,197,94,0.3)' : '#22c55e', cursor: unlockLoading ? 'not-allowed' : 'pointer' }}
+                >
+                  {unlockLoading ? '...' : '🔓 Unlock Full Portal Access'}
+                </button>
+              </div>
+            )}
+            {selected.role !== 'admin' && selected.portal_unlocked && (
+              <div style={{ marginTop: 16, padding: '16px 0 0', borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+                <div style={{ fontFamily: S, fontSize: 12, color: 'rgba(34,197,94,0.5)', display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span>●</span> Portal access is active
+                </div>
+              </div>
+            )}
+
+            {/* Danger zone — delete member */}
+            <div style={{ marginTop: 16, padding: '16px 0 0', borderTop: '1px solid rgba(239,68,68,0.15)' }}>
+              <div style={{ fontFamily: M, fontSize: 8, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(239,68,68,0.4)', marginBottom: 8 }}>Danger Zone</div>
+              <div style={{ fontFamily: S, fontSize: 12, color: 'rgba(255,255,255,0.25)', marginBottom: 10 }}>
+                Permanently deletes this member and all their data. Type <span style={{ fontFamily: M, color: 'rgba(239,68,68,0.6)' }}>DELETE</span> to confirm.
+              </div>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <input
+                  placeholder="Type DELETE to confirm"
+                  value={deleteConfirm}
+                  onChange={e => setDeleteConfirm(e.target.value)}
+                  style={{ ...F, flex: 1, borderColor: deleteConfirm === 'DELETE' ? 'rgba(239,68,68,0.4)' : 'rgba(255,255,255,0.08)', fontSize: 12 }}
+                  onFocus={e => { e.currentTarget.style.borderColor = 'rgba(239,68,68,0.35)'; }}
+                  onBlur={e => { e.currentTarget.style.borderColor = deleteConfirm === 'DELETE' ? 'rgba(239,68,68,0.4)' : 'rgba(255,255,255,0.08)'; }}
+                />
+                <button
+                  onClick={handleDelete}
+                  disabled={deleteConfirm !== 'DELETE' || deleteLoading}
+                  style={{ height: 40, padding: '0 18px', background: deleteConfirm === 'DELETE' ? 'rgba(239,68,68,0.15)' : 'rgba(255,255,255,0.03)', border: `1px solid ${deleteConfirm === 'DELETE' ? 'rgba(239,68,68,0.4)' : 'rgba(255,255,255,0.08)'}`, borderRadius: 7, fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: deleteConfirm === 'DELETE' ? '#ef4444' : 'rgba(255,255,255,0.18)', cursor: deleteConfirm === 'DELETE' ? 'pointer' : 'not-allowed', transition: 'all 0.15s', whiteSpace: 'nowrap' }}
+                >
+                  {deleteLoading ? '...' : 'Delete'}
+                </button>
+              </div>
+            </div>
+
           </div>
         </div>
       )}
