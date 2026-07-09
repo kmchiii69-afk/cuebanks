@@ -158,8 +158,8 @@ export default function PortalPage() {
         const ck = localStorage.getItem(`wsa-ck-${data.email}-${todayKey()}`);
         setChecklist(ck ? JSON.parse(ck) : {});
         setNotes(localStorage.getItem(`wsa-notes-${data.email}`) || '');
-        // Show onboarding if member hasn't set a goal yet
-        if (!data.onboarded || !data.goal) setOnboarding(true);
+        // Show onboarding if member hasn't set a goal yet (not for low_ticket — no contract/calendar)
+        if (data.plan !== 'low_ticket' && (!data.onboarded || !data.goal)) setOnboarding(true);
         setLoading(false);
       })
       .catch(() => router.replace('/login'));
