@@ -14,7 +14,7 @@ export function db() {
 
 const TABLE = 'wsa_members';
 
-export type Plan = '5k' | '7.5k' | '15k';
+export type Plan = '5k' | '7.5k' | '15k' | 'low_ticket';
 
 export interface Member {
   id: string;

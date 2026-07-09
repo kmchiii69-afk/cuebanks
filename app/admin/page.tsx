@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 
 const PHASE_LABELS = ['—', 'Set', 'Execute', 'Phase 1', 'Phase 2', 'Phase 3', 'Phase 4', 'Bonus', 'Complete ✓'];
 
-type Plan = '5k' | '7.5k' | '15k';
+type Plan = '5k' | '7.5k' | '15k' | 'low_ticket';
 
 interface Member {
   id: string;
@@ -398,7 +398,7 @@ export default function AdminPage() {
                         <td style={{ padding: '12px 14px', fontFamily: S, fontSize: 13, color: m.active ? '#fff' : 'rgba(255,255,255,0.28)' }}>{m.name || '—'}</td>
                         <td style={{ padding: '12px 14px', fontFamily: S, fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>{m.email}</td>
                         <td style={{ padding: '12px 14px' }}>
-                          <span style={{ fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: m.plan === '15k' ? '#2563eb' : m.plan === '7.5k' ? '#f97316' : 'rgba(255,255,255,0.4)', background: m.plan === '15k' ? 'rgba(37,99,235,0.08)' : m.plan === '7.5k' ? 'rgba(249,115,22,0.08)' : 'rgba(255,255,255,0.04)', padding: '3px 8px', borderRadius: 4 }}>{m.plan || '5k'}</span>
+                          <span style={{ fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: m.plan === '15k' ? '#2563eb' : m.plan === '7.5k' ? '#f97316' : m.plan === 'low_ticket' ? '#a855f7' : 'rgba(255,255,255,0.4)', background: m.plan === '15k' ? 'rgba(37,99,235,0.08)' : m.plan === '7.5k' ? 'rgba(249,115,22,0.08)' : m.plan === 'low_ticket' ? 'rgba(168,85,247,0.08)' : 'rgba(255,255,255,0.04)', padding: '3px 8px', borderRadius: 4 }}>{m.plan === 'low_ticket' ? 'Low Ticket' : m.plan || '5k'}</span>
                         </td>
                         <td style={{ padding: '12px 14px', fontFamily: M, fontSize: 10, color: m.expires_at && new Date(m.expires_at) < new Date() ? '#ef4444' : 'rgba(255,255,255,0.3)' }}>
                           {m.expires_at ? new Date(m.expires_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
@@ -563,9 +563,9 @@ export default function AdminPage() {
                 <p style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.3)', margin: 0 }}>Questions members have asked, filtered by plan tier</p>
               </div>
               <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                {(['all', '5k', '7.5k', '15k'] as const).map(p => (
+                {(['all', 'low_ticket', '5k', '7.5k', '15k'] as const).map(p => (
                   <button key={p} onClick={() => { setAnalyticsPlan(p); loadAnalytics(p); }} style={{ background: analyticsPlan === p ? 'rgba(37,99,235,0.1)' : 'transparent', border: `1px solid ${analyticsPlan === p ? 'rgba(37,99,235,0.35)' : 'rgba(255,255,255,0.1)'}`, borderRadius: 7, padding: '6px 16px', fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: analyticsPlan === p ? '#2563eb' : 'rgba(255,255,255,0.35)', cursor: 'pointer' }}>
-                    {p === 'all' ? 'All' : p}
+                    {p === 'all' ? 'All' : p === 'low_ticket' ? 'Low Ticket' : p}
                   </button>
                 ))}
               </div>
@@ -585,7 +585,7 @@ export default function AdminPage() {
                 </div>
                 {analytics.map((row, i) => (
                   <div key={row.id} style={{ display: 'grid', gridTemplateColumns: '80px 180px 1fr 110px', gap: 14, padding: '11px 14px', borderBottom: '1px solid rgba(255,255,255,0.04)', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)', alignItems: 'flex-start' }}>
-                    <span style={{ fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: row.plan === '15k' ? '#2563eb' : row.plan === '7.5k' ? '#f97316' : 'rgba(255,255,255,0.4)', background: row.plan === '15k' ? 'rgba(37,99,235,0.07)' : row.plan === '7.5k' ? 'rgba(249,115,22,0.07)' : 'rgba(255,255,255,0.04)', padding: '3px 8px', borderRadius: 4, display: 'inline-block' }}>{row.plan}</span>
+                    <span style={{ fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: row.plan === '15k' ? '#2563eb' : row.plan === '7.5k' ? '#f97316' : row.plan === 'low_ticket' ? '#a855f7' : 'rgba(255,255,255,0.4)', background: row.plan === '15k' ? 'rgba(37,99,235,0.07)' : row.plan === '7.5k' ? 'rgba(249,115,22,0.07)' : row.plan === 'low_ticket' ? 'rgba(168,85,247,0.07)' : 'rgba(255,255,255,0.04)', padding: '3px 8px', borderRadius: 4, display: 'inline-block' }}>{row.plan === 'low_ticket' ? 'Low Ticket' : row.plan}</span>
                     <span style={{ fontFamily: S, fontSize: 11, color: 'rgba(255,255,255,0.4)', wordBreak: 'break-word' }}>{row.member_email}</span>
                     <span style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.75)', lineHeight: 1.5, wordBreak: 'break-word' }}>{row.question}</span>
                     <span style={{ fontFamily: M, fontSize: 9, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.04em' }}>{new Date(row.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
@@ -712,6 +712,7 @@ export default function AdminPage() {
                 <option value="admin">Admin</option>
               </select>
               <select value={addPlan} onChange={e => setAddPlan(e.target.value as Plan)} style={{ ...F, appearance: 'none' as const }}>
+                <option value="low_ticket">Low Ticket — Cue AI only · 4 months</option>
                 <option value="5k">5K — Roadmap + Cue AI</option>
                 <option value="7.5k">7.5K — + Group Calls & Webinars</option>
                 <option value="15k">15K — + 1-on-1 with Cue</option>
@@ -742,6 +743,7 @@ export default function AdminPage() {
               <input placeholder="Notes (internal)" value={editNotes} onChange={e => setEditNotes(e.target.value)} style={F} onFocus={FO} onBlur={FB} />
               <input placeholder="New password (leave blank to keep)" type="password" value={editPassword} onChange={e => setEditPassword(e.target.value)} style={F} onFocus={FO} onBlur={FB} />
               <select value={editPlan} onChange={e => setEditPlan(e.target.value as Plan)} style={{ ...F, appearance: 'none' as const }}>
+                <option value="low_ticket">Low Ticket — Cue AI only · 4 months</option>
                 <option value="5k">5K — Roadmap + Cue AI</option>
                 <option value="7.5k">7.5K — + Group Calls & Webinars</option>
                 <option value="15k">15K — + 1-on-1 with Cue</option>
