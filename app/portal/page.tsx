@@ -669,7 +669,7 @@ export default function PortalPage() {
               <div style={{ ...S, fontSize: 12, color: 'rgba(255,255,255,0.35)', marginTop: 3 }}>Response within 24 hours during business days.</div>
             </div>
             <a
-              href="mailto:filip@wsacademyfx.com"
+              href="mailto:alex@wsacademyfx.com"
               style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(37,99,235,0.12)', border: '1px solid rgba(37,99,235,0.35)', borderRadius: 8, padding: '10px 18px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(37,99,235,1)', textDecoration: 'none', flexShrink: 0, transition: 'background 0.15s, border-color 0.15s' }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(37,99,235,0.22)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(37,99,235,0.6)'; }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(37,99,235,0.12)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(37,99,235,0.35)'; }}
