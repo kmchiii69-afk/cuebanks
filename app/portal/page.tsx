@@ -337,6 +337,7 @@ export default function PortalPage() {
 
   // ── Trading tools ──────────────────────────────────────────────────────────
   const PIP_VALUES: Record<string, number> = {
+    'XAU/USD': 1,  // gold: 1 pip = $0.01/oz, standard lot = 100oz → $1/pip
     'EUR/USD': 10, 'GBP/USD': 10, 'AUD/USD': 10, 'NZD/USD': 10,
     'USD/JPY': 6.7, 'USD/CAD': 7.4, 'USD/CHF': 11.1,
     'EUR/JPY': 6.7, 'GBP/JPY': 6.7, 'AUD/JPY': 6.7,
@@ -674,7 +675,7 @@ export default function PortalPage() {
                   <div style={{ textAlign: 'center', ...S, fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>Enter balance, risk %, and stop loss to calculate</div>
                 )}
               </div>
-              <div style={{ ...M, fontSize: 7.5, color: 'rgba(255,255,255,0.18)', letterSpacing: '0.04em', lineHeight: 1.6 }}>Pip values approx. for USD accounts · Standard lot = 100,000 units</div>
+              <div style={{ ...M, fontSize: 7.5, color: 'rgba(255,255,255,0.18)', letterSpacing: '0.04em', lineHeight: 1.6 }}>Pip values approx. for USD accounts · Standard lot = 100,000 units · XAU/USD: 1 pip = $0.01 move (100 oz lot)</div>
             </div>
           </div>
         </div>
