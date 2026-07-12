@@ -58,6 +58,15 @@ const SESSIONS = [
   { name: 'Sydney',   utcOpen: 22, utcClose: 7,  overnight: true,  color: '#22c55e', abbr: 'SYD' },
 ];
 
+const TZ_OPTIONS = [
+  { key: 'UTC', label: 'UTC',            iana: 'UTC' },
+  { key: 'GMT', label: 'GMT (London)',   iana: 'Europe/London' },
+  { key: 'EST', label: 'EST (New York)', iana: 'America/New_York' },
+  { key: 'PST', label: 'PST (LA)',       iana: 'America/Los_Angeles' },
+  { key: 'SYD', label: 'AEST (Sydney)',  iana: 'Australia/Sydney' },
+  { key: 'TKY', label: 'JST (Tokyo)',    iana: 'Asia/Tokyo' },
+];
+
 const CHECKLIST = [
   { id: 'topdown',   label: 'Top-down analysis',        sub: 'Daily → H4 → H1 all reviewed'             },
   { id: 'events',    label: 'Economic events reviewed',  sub: 'High-impact news noted for today'          },
@@ -111,15 +120,18 @@ export default function PortalPage() {
   const [savingPhase, setSavingPhase] = useState(false);
 
   const [openSessions, setOpenSessions] = useState<boolean[]>([false, false, false, false]);
-  const [nowUtc, setNowUtc] = useState('');
+  const [nowDate, setNowDate] = useState<Date | null>(null);
   const [utcH, setUtcH] = useState(0);
   const [utcM, setUtcM] = useState(0);
+  const [dashTz, setDashTz] = useState('UTC');
 
   // Position size calculator
   const [calcBalance, setCalcBalance] = useState('10000');
   const [calcRisk, setCalcRisk] = useState(1);
   const [calcSL, setCalcSL] = useState('');
   const [calcPair, setCalcPair] = useState('EUR/USD');
+  const [calcCurrency, setCalcCurrency] = useState('USD');
+  const [fxRates, setFxRates] = useState<Record<string, number>>({ USD: 1 });
 
   const [calEvents, setCalEvents] = useState<CalEvent[]>([]);
   const [calLoading, setCalLoading] = useState(true);
@@ -159,6 +171,8 @@ export default function PortalPage() {
         const ck = localStorage.getItem(`wsa-ck-${data.email}-${todayKey()}`);
         setChecklist(ck ? JSON.parse(ck) : {});
         setNotes(localStorage.getItem(`wsa-notes-${data.email}`) || '');
+        const savedTz = localStorage.getItem(`wsa-tz-${data.email}`);
+        if (savedTz && TZ_OPTIONS.some(t => t.key === savedTz)) setDashTz(savedTz);
         // Show onboarding only if: not low_ticket, not already portal-unlocked by admin, and hasn't completed onboarding steps
         if (data.plan !== 'low_ticket' && !data.portal_unlocked && (!data.onboarded || !data.goal)) setOnboarding(true);
         setLoading(false);
@@ -172,7 +186,7 @@ export default function PortalPage() {
       const now = new Date();
       const h = now.getUTCHours(), m = now.getUTCMinutes();
       setOpenSessions(SESSIONS.map(s => isOpen(s, h, m)));
-      setNowUtc(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')} UTC`);
+      setNowDate(now);
       setUtcH(h); setUtcM(m);
     }
     tick();
@@ -186,6 +200,14 @@ export default function PortalPage() {
       .then(r => r.json())
       .then(data => setWebinars(Array.isArray(data) ? data : []))
       .catch(() => setWebinars([]));
+  }, []);
+
+  // FX rates (for position size calculator currency conversion)
+  useEffect(() => {
+    fetch('/api/fx')
+      .then(r => r.json())
+      .then(data => setFxRates(data?.rates && typeof data.rates === 'object' ? data.rates : { USD: 1 }))
+      .catch(() => setFxRates({ USD: 1 }));
   }, []);
 
   // Economic calendar
@@ -420,18 +442,29 @@ export default function PortalPage() {
   }
 
   // ── Trading tools ──────────────────────────────────────────────────────────
-  const PIP_VALUES: Record<string, number> = {
-    'XAU/USD': 1,  // gold: 1 pip = $0.01/oz, standard lot = 100oz → $1/pip
-    'EUR/USD': 10, 'GBP/USD': 10, 'AUD/USD': 10, 'NZD/USD': 10,
-    'USD/JPY': 6.7, 'USD/CAD': 7.4, 'USD/CHF': 11.1,
-    'EUR/JPY': 6.7, 'GBP/JPY': 6.7, 'AUD/JPY': 6.7,
-    'EUR/GBP': 12.6, 'EUR/CAD': 7.4, 'GBP/CAD': 7.4,
+  // Quote currency per pair — pip value is computed live from this + fxRates, not hardcoded,
+  // so it stays accurate for any account currency (mirrors how myfxbook's calculator works).
+  const QUOTE_CCY: Record<string, string> = {
+    'XAU/USD': 'USD', 'EUR/USD': 'USD', 'GBP/USD': 'USD', 'AUD/USD': 'USD', 'NZD/USD': 'USD',
+    'USD/JPY': 'JPY', 'USD/CAD': 'CAD', 'USD/CHF': 'CHF',
+    'EUR/JPY': 'JPY', 'GBP/JPY': 'JPY', 'AUD/JPY': 'JPY',
+    'EUR/GBP': 'GBP', 'EUR/CAD': 'CAD', 'GBP/CAD': 'CAD',
   };
-  const CALC_PAIRS = Object.keys(PIP_VALUES);
-  const dollarRisk = (parseFloat(calcBalance) || 0) * (calcRisk / 100);
-  const pipVal = PIP_VALUES[calcPair] ?? 10;
+  const CALC_PAIRS = Object.keys(QUOTE_CCY);
+  const CALC_CURRENCIES = ['USD', 'GBP', 'EUR', 'AUD', 'CAD'];
+  const CURRENCY_SYMBOLS: Record<string, string> = { USD: '$', GBP: '£', EUR: '€', AUD: 'A$', CAD: 'C$' };
+  const currencySymbol = CURRENCY_SYMBOLS[calcCurrency] ?? '$';
+  // Pip value per standard lot, in the pair's quote currency (gold: 100oz lot, $0.01/oz pip; FX: 100k units)
+  const quoteCcy = QUOTE_CCY[calcPair] ?? 'USD';
+  const pipValueQuote = calcPair === 'XAU/USD' ? 1 : (quoteCcy === 'JPY' ? 0.01 : 0.0001) * 100000;
+  // fxRates are USD-based (1 USD = fxRates[ccy] units of ccy) — convert quote-currency pip value
+  // to the selected account currency via USD as the common intermediary.
+  const rateQuote = fxRates[quoteCcy] ?? 1;
+  const rateAccount = fxRates[calcCurrency] ?? 1;
+  const accountRisk = (parseFloat(calcBalance) || 0) * (calcRisk / 100);
+  const pipVal = (pipValueQuote / rateQuote) * rateAccount;
   const slPips = parseFloat(calcSL) || 0;
-  const lotSize = slPips > 0 ? dollarRisk / (slPips * pipVal) : 0;
+  const lotSize = slPips > 0 ? accountRisk / (slPips * pipVal) : 0;
 
   // Upcoming session events for countdown
   function getCountdownEvents() {
@@ -467,6 +500,20 @@ export default function PortalPage() {
     return h > 0 ? `${h}h ${String(m).padStart(2,'0')}m` : `${m}m`;
   }
   const countdownEvts = getCountdownEvents();
+
+  // ── Timezone display (session open/close logic above stays UTC-based; this only reformats labels)
+  const activeTz = TZ_OPTIONS.find(t => t.key === dashTz) ?? TZ_OPTIONS[0];
+  function fmtHourInTz(utcHour: number): string {
+    if (!nowDate) return `${String(utcHour).padStart(2, '0')}:00`;
+    const d = new Date(nowDate);
+    d.setUTCHours(utcHour, 0, 0, 0);
+    return d.toLocaleTimeString('en-GB', { timeZone: activeTz.iana, hour: '2-digit', minute: '2-digit', hour12: false });
+  }
+  const nowInTz = nowDate ? nowDate.toLocaleTimeString('en-GB', { timeZone: activeTz.iana, hour: '2-digit', minute: '2-digit', hour12: false }) : '';
+  function changeTz(tz: string) {
+    setDashTz(tz);
+    if (member) localStorage.setItem(`wsa-tz-${member.email}`, tz);
+  }
 
   return (
     <div style={{ minHeight: '100vh', background: '#000', color: '#fff', position: 'relative' }}>
@@ -506,7 +553,7 @@ export default function PortalPage() {
               </div>
             ))}
           </div>
-          {nowUtc && <span style={{ ...M, fontSize: 8, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.1em' }}>{nowUtc}</span>}
+          {nowInTz && <span style={{ ...M, fontSize: 8, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.1em' }}>{nowInTz} {dashTz}</span>}
           {member?.name && <span style={{ ...S, fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>{member.name.split(' ')[0]}</span>}
           <button onClick={logout} disabled={loggingOut} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 5, padding: '6px 14px', ...M, fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', cursor: 'pointer', transition: 'all 0.15s' }}
             onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.22)'; e.currentTarget.style.color = 'rgba(255,255,255,0.65)'; }}
@@ -566,7 +613,13 @@ export default function PortalPage() {
 
           {/* Market Sessions */}
           <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '20px 18px' }}>
-            <div style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginBottom: 12 }}>Market Sessions · UTC</div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+              <div style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase' }}>Market Sessions</div>
+              <select value={dashTz} onChange={e => changeTz(e.target.value)}
+                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 5, padding: '3px 6px', color: 'rgba(255,255,255,0.5)', ...M, fontSize: 8, letterSpacing: '0.06em', outline: 'none', cursor: 'pointer' }}>
+                {TZ_OPTIONS.map(t => <option key={t.key} value={t.key} style={{ background: '#111' }}>{t.label}</option>)}
+              </select>
+            </div>
 
             {overlap && (
               <div style={{ background: 'rgba(37,99,235,0.07)', border: '1px solid rgba(37,99,235,0.22)', borderRadius: 7, padding: '7px 11px', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 7 }}>
@@ -587,7 +640,7 @@ export default function PortalPage() {
                         <span style={{ ...M, fontSize: 8, color: open ? s.color : 'rgba(255,255,255,0.15)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{open ? 'OPEN' : 'CLOSED'}</span>
                       </div>
                       <div style={{ ...M, fontSize: 7.5, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.04em' }}>
-                        {String(s.utcOpen).padStart(2,'0')}:00 – {String(s.utcClose).padStart(2,'0')}:00 UTC
+                        {fmtHourInTz(s.utcOpen)} – {fmtHourInTz(s.utcClose)} {dashTz}
                       </div>
                     </div>
                   </div>
@@ -596,7 +649,7 @@ export default function PortalPage() {
             </div>
             <div style={{ marginTop: 12, paddingTop: 10, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
               <div style={{ ...S, fontSize: 11.5, color: 'rgba(255,255,255,0.35)', lineHeight: 1.55 }}>
-                Best window: <span style={{ color: '#2563eb' }}>1pm – 5pm UTC</span><br />
+                Best window: <span style={{ color: '#2563eb' }}>{fmtHourInTz(13)} – {fmtHourInTz(17)} {dashTz}</span><br />
                 <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)' }}>London / NY overlap · peak liquidity</span>
               </div>
             </div>
@@ -686,7 +739,7 @@ export default function PortalPage() {
               ))}
             </div>
             <div style={{ marginTop: 12, paddingTop: 10, borderTop: '1px solid rgba(255,255,255,0.05)', ...S, fontSize: 11, color: 'rgba(255,255,255,0.2)' }}>
-              All times UTC · Updates every 30 seconds
+              Updates every 30 seconds
             </div>
           </div>
 
@@ -695,10 +748,17 @@ export default function PortalPage() {
             <div style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginBottom: 14 }}>Position Size Calculator</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
 
-              {/* Balance + Pair row */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+              {/* Currency + Balance row */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: 8 }}>
                 <div>
-                  <div style={{ ...M, fontSize: 7.5, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 5 }}>Account Balance ($)</div>
+                  <div style={{ ...M, fontSize: 7.5, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 5 }}>Account Currency</div>
+                  <select value={calcCurrency} onChange={e => setCalcCurrency(e.target.value)}
+                    style={{ width: '100%', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 7, padding: '8px 11px', color: '#fff', ...M, fontSize: 12, outline: 'none', boxSizing: 'border-box', cursor: 'pointer' }}>
+                    {CALC_CURRENCIES.map(c => <option key={c} value={c} style={{ background: '#111' }}>{c}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <div style={{ ...M, fontSize: 7.5, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 5 }}>Account Balance ({currencySymbol})</div>
                   <input
                     type="number" value={calcBalance} onChange={e => setCalcBalance(e.target.value)}
                     style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 7, padding: '8px 11px', color: '#fff', ...M, fontSize: 13, outline: 'none', boxSizing: 'border-box' }}
@@ -706,13 +766,15 @@ export default function PortalPage() {
                     onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
                   />
                 </div>
-                <div>
-                  <div style={{ ...M, fontSize: 7.5, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 5 }}>Pair</div>
-                  <select value={calcPair} onChange={e => setCalcPair(e.target.value)}
-                    style={{ width: '100%', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 7, padding: '8px 11px', color: '#fff', ...M, fontSize: 12, outline: 'none', boxSizing: 'border-box', cursor: 'pointer' }}>
-                    {CALC_PAIRS.map(p => <option key={p} value={p} style={{ background: '#111' }}>{p}</option>)}
-                  </select>
-                </div>
+              </div>
+
+              {/* Pair */}
+              <div>
+                <div style={{ ...M, fontSize: 7.5, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 5 }}>Pair</div>
+                <select value={calcPair} onChange={e => setCalcPair(e.target.value)}
+                  style={{ width: '100%', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 7, padding: '8px 11px', color: '#fff', ...M, fontSize: 12, outline: 'none', boxSizing: 'border-box', cursor: 'pointer' }}>
+                  {CALC_PAIRS.map(p => <option key={p} value={p} style={{ background: '#111' }}>{p}</option>)}
+                </select>
               </div>
 
               {/* Risk % */}
@@ -746,7 +808,7 @@ export default function PortalPage() {
                     {[
                       { label: 'Lot Size', value: lotSize.toFixed(2), sub: 'standard' },
                       { label: 'Mini Lots', value: (lotSize * 10).toFixed(1), sub: '× 0.1' },
-                      { label: 'Dollar Risk', value: `$${dollarRisk.toFixed(0)}`, sub: `${calcRisk}% of bal.` },
+                      { label: 'Amount Risked', value: `${currencySymbol}${accountRisk.toFixed(0)}`, sub: `${calcRisk}% of bal.` },
                     ].map(item => (
                       <div key={item.label} style={{ textAlign: 'center' }}>
                         <div style={{ ...D, fontSize: 18, fontWeight: 700, color: '#2563eb', lineHeight: 1.1 }}>{item.value}</div>
