@@ -34,6 +34,9 @@ export interface Member {
   goal: string;
   onboarded: boolean;
   portal_unlocked: boolean;
+  skip_contract: boolean;
+  reset_token_hash: string | null;
+  reset_token_expires: number | null; // epoch ms
 }
 
 export type PublicMember = Omit<Member, 'password_hash'>;
@@ -71,6 +74,7 @@ export async function createMember(input: {
   role?: 'member' | 'admin';
   cohort?: string;
   plan?: Plan;
+  skip_contract?: boolean;
 }): Promise<Member> {
   const email = input.email.toLowerCase().trim();
   const password_hash = await bcrypt.hash(input.password, 12);
@@ -94,6 +98,9 @@ export async function createMember(input: {
     goal: '',
     onboarded: false,
     portal_unlocked: isAdmin,
+    skip_contract: input.skip_contract ?? false,
+    reset_token_hash: null,
+    reset_token_expires: null,
   };
   const { data, error } = await db().from(TABLE).insert(record).select().single();
   if (error) throw error;
@@ -118,6 +125,20 @@ export async function updatePassword(email: string, newPassword: string): Promis
   await db()
     .from(TABLE)
     .update({ password_hash: hash })
+    .eq('email', email.toLowerCase().trim());
+}
+
+export async function setResetToken(email: string, tokenHash: string, expiresAt: number): Promise<void> {
+  await db()
+    .from(TABLE)
+    .update({ reset_token_hash: tokenHash, reset_token_expires: expiresAt })
+    .eq('email', email.toLowerCase().trim());
+}
+
+export async function clearResetToken(email: string): Promise<void> {
+  await db()
+    .from(TABLE)
+    .update({ reset_token_hash: null, reset_token_expires: null })
     .eq('email', email.toLowerCase().trim());
 }
 

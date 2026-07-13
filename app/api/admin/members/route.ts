@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
   const auth = await requireAdmin();
   if (!auth) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
-  const { email, password, name, role, cohort, plan } = await req.json();
+  const { email, password, name, role, cohort, plan, skip_contract } = await req.json();
   if (!email || !password) {
     return NextResponse.json({ error: 'Email and password required' }, { status: 400 });
   }
@@ -30,11 +30,11 @@ export async function POST(req: NextRequest) {
 
   const validPlans: Plan[] = ['5k', '7.5k', '15k', 'low_ticket'];
   const memberPlan: Plan = validPlans.includes(plan) ? plan : '5k';
-  const member = await createMember({ email, password, name, role, cohort, plan: memberPlan });
+  const member = await createMember({ email, password, name, role, cohort, plan: memberPlan, skip_contract: !!skip_contract });
 
   // Send welcome email (non-blocking — don't fail the request if email fails)
   if (role !== 'admin') {
-    sendWelcomeEmail({ to: email, name: name || '', password, plan: memberPlan })
+    sendWelcomeEmail({ to: email, name: name || '', password, plan: memberPlan, skipContract: !!skip_contract })
       .catch(err => console.error('[admin] Welcome email error:', err));
   }
 

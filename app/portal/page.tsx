@@ -18,6 +18,7 @@ interface Member {
   goal: string;
   onboarded: boolean;
   portal_unlocked: boolean;
+  skip_contract: boolean;
 }
 
 interface CalEvent {
@@ -142,6 +143,14 @@ export default function PortalPage() {
   const [notes, setNotes] = useState('');
   const [notesSaved, setNotesSaved] = useState(false);
 
+  // Change password
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [pwSaving, setPwSaving] = useState(false);
+  const [pwError, setPwError] = useState('');
+  const [pwSaved, setPwSaved] = useState(false);
+
   // Onboarding
   const [onboarding, setOnboarding] = useState(false);
   const [onboardStep, setOnboardStep] = useState<0 | 1 | 2 | 3 | 4 | 5>(0); // 0=video, 1=contract, 2=discord, 3=calendly, 4=goal, 5=tour
@@ -254,6 +263,32 @@ export default function PortalPage() {
     localStorage.setItem(`wsa-notes-${member.email}`, notes);
     setNotesSaved(true);
     setTimeout(() => setNotesSaved(false), 2000);
+  }
+
+  async function changePassword() {
+    setPwError('');
+    if (!currentPassword || !newPassword || !confirmPassword) { setPwError('Fill in all fields'); return; }
+    if (newPassword.length < 8) { setPwError('New password must be at least 8 characters'); return; }
+    if (newPassword !== confirmPassword) { setPwError("New passwords don't match"); return; }
+    setPwSaving(true);
+    try {
+      const res = await fetch('/api/portal/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentPassword, newPassword }),
+      });
+      if (res.ok) {
+        setCurrentPassword(''); setNewPassword(''); setConfirmPassword('');
+        setPwSaved(true);
+        setTimeout(() => setPwSaved(false), 2500);
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setPwError(data.error || 'Failed to update password');
+      }
+    } catch {
+      setPwError('Connection error');
+    }
+    setPwSaving(false);
   }
 
   async function submitGoal() {
@@ -1029,6 +1064,40 @@ export default function PortalPage() {
           </div>
         )}
 
+        {/* ── Change Password ──────────────────────────────── */}
+        <div style={{ marginTop: 14, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '20px 20px' }}>
+          <div style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginBottom: 14 }}>Change Password</div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10 }}>
+            <input
+              type="password" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)}
+              placeholder="Current password" autoComplete="current-password"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 7, padding: '10px 12px', color: '#fff', ...S, fontSize: 13, outline: 'none', boxSizing: 'border-box' }}
+              onFocus={e => { e.currentTarget.style.borderColor = 'rgba(37,99,235,0.4)'; }}
+              onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
+            />
+            <input
+              type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)}
+              placeholder="New password (min. 8 chars)" autoComplete="new-password"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 7, padding: '10px 12px', color: '#fff', ...S, fontSize: 13, outline: 'none', boxSizing: 'border-box' }}
+              onFocus={e => { e.currentTarget.style.borderColor = 'rgba(37,99,235,0.4)'; }}
+              onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
+            />
+            <input
+              type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}
+              placeholder="Confirm new password" autoComplete="new-password"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 7, padding: '10px 12px', color: '#fff', ...S, fontSize: 13, outline: 'none', boxSizing: 'border-box' }}
+              onFocus={e => { e.currentTarget.style.borderColor = 'rgba(37,99,235,0.4)'; }}
+              onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
+            />
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 12 }}>
+            <button onClick={changePassword} disabled={pwSaving} style={{ background: pwSaved ? 'rgba(34,197,94,0.09)' : 'rgba(37,99,235,0.1)', border: `1px solid ${pwSaved ? 'rgba(34,197,94,0.25)' : 'rgba(37,99,235,0.3)'}`, borderRadius: 7, padding: '9px 20px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: pwSaved ? '#22c55e' : '#2563eb', cursor: pwSaving ? 'not-allowed' : 'pointer', transition: 'all 0.2s' }}>
+              {pwSaving ? '...' : pwSaved ? '✓ Updated' : 'Update Password'}
+            </button>
+            {pwError && <span style={{ ...S, fontSize: 12, color: '#ef4444' }}>{pwError}</span>}
+          </div>
+        </div>
+
       </main>
 
       {/* ── ONBOARDING OVERLAY ──────────────────────────────── */}
@@ -1051,8 +1120,8 @@ export default function PortalPage() {
                 />
               </div>
               <div style={{ display: 'flex', gap: 12 }}>
-                <button onClick={() => setOnboardStep(1)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 8, padding: '10px 22px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', cursor: 'pointer' }}>Skip video</button>
-                <button onClick={() => setOnboardStep(1)} style={{ background: '#2563eb', border: 'none', borderRadius: 8, padding: '10px 28px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#fff', cursor: 'pointer' }}>{"I'm Ready →"}</button>
+                <button onClick={() => setOnboardStep(member?.skip_contract ? 2 : 1)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 8, padding: '10px 22px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', cursor: 'pointer' }}>Skip video</button>
+                <button onClick={() => setOnboardStep(member?.skip_contract ? 2 : 1)} style={{ background: '#2563eb', border: 'none', borderRadius: 8, padding: '10px 28px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#fff', cursor: 'pointer' }}>{"I'm Ready →"}</button>
               </div>
             </div>
           )}
@@ -1132,7 +1201,7 @@ export default function PortalPage() {
                   </a>
                 </div>
                 <div style={{ display: 'flex', gap: 12 }}>
-                  <button onClick={() => setOnboardStep(1)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '10px 18px', ...M, fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', cursor: 'pointer' }}>← Back</button>
+                  <button onClick={() => setOnboardStep(member?.skip_contract ? 0 : 1)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '10px 18px', ...M, fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', cursor: 'pointer' }}>← Back</button>
                   <button onClick={() => setOnboardStep(3)} style={{ flex: 1, background: '#2563eb', border: 'none', borderRadius: 8, padding: '12px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#fff', cursor: 'pointer' }}>{"I'm In Discord →"}</button>
                 </div>
               </div>

@@ -24,6 +24,7 @@ interface Member {
   goal: string;
   onboarded: boolean;
   portal_unlocked: boolean;
+  skip_contract: boolean;
 }
 
 interface CueInstruction {
@@ -108,6 +109,7 @@ export default function AdminPage() {
   const [addCohort, setAddCohort] = useState('');
   const [addRole, setAddRole] = useState<'member' | 'admin'>('member');
   const [addPlan, setAddPlan] = useState<Plan>('5k');
+  const [addSkipContract, setAddSkipContract] = useState(false);
   const [addLoading, setAddLoading] = useState(false);
   const [addError, setAddError] = useState('');
 
@@ -117,6 +119,7 @@ export default function AdminPage() {
   const [editPassword, setEditPassword] = useState('');
   const [editActive, setEditActive] = useState(true);
   const [editPlan, setEditPlan] = useState<Plan>('5k');
+  const [editSkipContract, setEditSkipContract] = useState(false);
   const [editLoading, setEditLoading] = useState(false);
   const [unlockLoading, setUnlockLoading] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState('');
@@ -196,11 +199,11 @@ export default function AdminPage() {
     const res = await fetch('/api/admin/members', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: addEmail, password: addPassword, name: addName, cohort: addCohort, role: addRole, plan: addPlan }),
+      body: JSON.stringify({ email: addEmail, password: addPassword, name: addName, cohort: addCohort, role: addRole, plan: addPlan, skip_contract: addSkipContract }),
     });
     if (res.ok) {
       setShowAdd(false);
-      setAddEmail(''); setAddName(''); setAddPassword(''); setAddCohort(''); setAddRole('member'); setAddPlan('5k');
+      setAddEmail(''); setAddName(''); setAddPassword(''); setAddCohort(''); setAddRole('member'); setAddPlan('5k'); setAddSkipContract(false);
       loadMembers();
     } else {
       const d = await res.json().catch(() => ({}));
@@ -212,7 +215,7 @@ export default function AdminPage() {
   function openEdit(m: Member) {
     setSelected(m); setEditName(m.name); setEditCohort(m.cohort);
     setEditNotes(m.notes); setEditPassword(''); setEditActive(m.active);
-    setEditPlan(m.plan ?? '5k'); setDeleteConfirm('');
+    setEditPlan(m.plan ?? '5k'); setEditSkipContract(m.skip_contract ?? false); setDeleteConfirm('');
   }
 
   async function unlockPortal() {
@@ -241,7 +244,7 @@ export default function AdminPage() {
   async function saveEdit() {
     if (!selected) return;
     setEditLoading(true);
-    const body: Record<string, unknown> = { name: editName, cohort: editCohort, notes: editNotes, active: editActive, plan: editPlan };
+    const body: Record<string, unknown> = { name: editName, cohort: editCohort, notes: editNotes, active: editActive, plan: editPlan, skip_contract: editSkipContract };
     if (editPassword) body.password = editPassword;
     await fetch(`/api/admin/members/${encodeURIComponent(selected.email)}`, {
       method: 'PATCH',
@@ -767,6 +770,10 @@ export default function AdminPage() {
                 <option value="7.5k">7.5K — + Group Calls & Webinars</option>
                 <option value="15k">15K — + 1-on-1 with Cue</option>
               </select>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
+                <input type="checkbox" checked={addSkipContract} onChange={e => setAddSkipContract(e.target.checked)} style={{ accentColor: '#2563eb', width: 14, height: 14 }} />
+                <span style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.55)' }}>15K — No Contract (sent via chat after payment)</span>
+              </label>
             </div>
             {addError && <p style={{ fontFamily: M, fontSize: 10, color: '#ef4444', marginTop: 10, letterSpacing: '0.06em' }}>{addError}</p>}
             <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
@@ -801,6 +808,10 @@ export default function AdminPage() {
               <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
                 <input type="checkbox" checked={editActive} onChange={e => setEditActive(e.target.checked)} style={{ accentColor: '#2563eb', width: 14, height: 14 }} />
                 <span style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.55)' }}>Active (can log in)</span>
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
+                <input type="checkbox" checked={editSkipContract} onChange={e => setEditSkipContract(e.target.checked)} style={{ accentColor: '#2563eb', width: 14, height: 14 }} />
+                <span style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.55)' }}>15K — No Contract (sent via chat after payment)</span>
               </label>
             </div>
             <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>

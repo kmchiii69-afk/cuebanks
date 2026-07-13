@@ -21,6 +21,7 @@ export async function sendWelcomeEmail(opts: {
   name: string;
   password: string;
   plan: Plan;
+  skipContract?: boolean;
 }): Promise<void> {
   if (!RESEND_API_KEY) {
     console.warn('[email] RESEND_API_KEY not set — skipping welcome email to', opts.to);
@@ -36,7 +37,7 @@ export async function sendWelcomeEmail(opts: {
     : `<p style="margin:0 0 8px;color:#94a3b8;">Once you're in, complete your onboarding steps:</p>
        <ol style="margin:8px 0 0;padding-left:20px;color:#94a3b8;line-height:1.8;">
          <li>Watch the welcome video</li>
-         <li>Sign your member contract</li>
+         ${opts.skipContract ? '' : '<li>Sign your member contract</li>'}
          <li>Join the members-only Discord</li>
          <li>Book your onboarding call</li>
          <li>Set your trading goal</li>
@@ -140,4 +141,97 @@ export async function sendWelcomeEmail(opts: {
 
   const data = await res.json() as { id?: string };
   console.log('[email] Welcome email sent to', opts.to, '— id:', data.id);
+}
+
+export async function sendPasswordResetEmail(opts: {
+  to: string;
+  name: string;
+  resetUrl: string;
+}): Promise<void> {
+  if (!RESEND_API_KEY) {
+    console.warn('[email] RESEND_API_KEY not set — skipping password reset email to', opts.to);
+    return;
+  }
+
+  const displayName = opts.name ? opts.name.split(' ')[0] : 'there';
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Reset your Wall Street Academy password</title>
+</head>
+<body style="margin:0;padding:0;background:#0a0a0f;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#0a0a0f;padding:40px 16px;">
+  <tr><td align="center">
+    <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
+
+      <!-- Header -->
+      <tr><td style="padding-bottom:32px;text-align:center;">
+        <span style="display:inline-block;font-size:11px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#2563eb;font-family:monospace;">
+          · Wall Street Academy ·
+        </span>
+      </td></tr>
+
+      <!-- Card -->
+      <tr><td style="background:#111118;border:1px solid #1e1e2e;border-top:2px solid #2563eb;padding:40px 36px;border-radius:2px;">
+
+        <p style="margin:0 0 24px;font-size:22px;font-weight:700;color:#f8fafc;letter-spacing:-0.02em;">
+          Reset your password
+        </p>
+
+        <p style="margin:0 0 8px;color:#94a3b8;font-size:15px;line-height:1.6;">
+          Hey ${displayName}, we got a request to reset the password on your account. Click below to choose a new one.
+        </p>
+
+        <!-- CTA -->
+        <div style="margin:28px 0;text-align:center;">
+          <a href="${opts.resetUrl}" style="display:inline-block;background:#2563eb;color:#fff;text-decoration:none;font-size:14px;font-weight:700;letter-spacing:0.04em;padding:14px 40px;border-radius:2px;">
+            Reset Password →
+          </a>
+        </div>
+
+        <p style="margin:0;color:#64748b;font-size:13px;line-height:1.6;">
+          This link expires in 1 hour. If you didn't request this, you can safely ignore this email — your password won't change.
+        </p>
+
+      </td></tr>
+
+      <!-- Footer -->
+      <tr><td style="padding-top:28px;text-align:center;">
+        <p style="margin:0;font-size:12px;color:#334155;line-height:1.6;">
+          Wall Street Academy LLC · ${LOGIN_URL}<br/>
+          Questions? Reply to this email or contact <a href="mailto:alex@wsacademyfx.com" style="color:#334155;">alex@wsacademyfx.com</a>
+        </p>
+      </td></tr>
+
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>`;
+
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${RESEND_API_KEY}`,
+    },
+    body: JSON.stringify({
+      from: FROM,
+      to: [opts.to],
+      subject: 'Reset your Wall Street Academy password',
+      html,
+    }),
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    console.error('[email] Resend error:', err);
+    throw new Error(`Email send failed: ${err}`);
+  }
+
+  const data = await res.json() as { id?: string };
+  console.log('[email] Password reset email sent to', opts.to, '— id:', data.id);
 }
