@@ -8,7 +8,7 @@
 
 import { NextRequest } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
-import { getFreebieLead, incrementFreebieQuestions } from "@/lib/db";
+import { getFreebieLead, incrementFreebieQuestions, saveFreebieQA } from "@/lib/db";
 import { rateLimit } from "@/lib/rate-limit";
 import { CUE_SYSTEM_PROMPT, getInstructionAppendix } from "@/lib/cue-prompt";
 
@@ -77,6 +77,7 @@ export async function POST(req: NextRequest) {
   const stream = new ReadableStream({
     async start(controller) {
       const enc = new TextEncoder();
+      let fullAnswer = "";
       try {
         const s = client.messages.stream({
           model: "claude-opus-4-8",
@@ -86,10 +87,12 @@ export async function POST(req: NextRequest) {
         });
         for await (const event of s) {
           if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
+            fullAnswer += event.delta.text;
             controller.enqueue(enc.encode(event.delta.text));
           }
         }
         controller.close();
+        saveFreebieQA(cleanEmail, cleanQuestion, fullAnswer).catch(() => {});
       } catch (err) {
         controller.enqueue(enc.encode(`\n\n[${err instanceof Error ? err.message : "Error"}]`));
         controller.close();

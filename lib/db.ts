@@ -380,6 +380,15 @@ export interface FreebieLead {
   phone: string;
   experience: TradingExperience | '';
   questions_asked: number;
+  clicked_cta: boolean;
+  created_at: string;
+}
+
+export interface FreebieQA {
+  id: string;
+  email: string;
+  question: string;
+  answer: string;
   created_at: string;
 }
 
@@ -426,4 +435,33 @@ export async function incrementFreebieQuestions(email: string): Promise<void> {
     .from(FREEBIE_LEADS_TABLE)
     .update({ questions_asked: lead.questions_asked + 1 })
     .eq('email', email.toLowerCase().trim());
+}
+
+export async function markFreebieCtaClicked(email: string): Promise<void> {
+  await db()
+    .from(FREEBIE_LEADS_TABLE)
+    .update({ clicked_cta: true })
+    .eq('email', email.toLowerCase().trim());
+}
+
+export async function getAllFreebieLeads(): Promise<FreebieLead[]> {
+  const { data } = await db()
+    .from(FREEBIE_LEADS_TABLE)
+    .select('*')
+    .order('created_at', { ascending: false });
+  return (data ?? []) as FreebieLead[];
+}
+
+const FREEBIE_QA_TABLE = 'wsa_freebie_qa';
+
+export async function saveFreebieQA(email: string, question: string, answer: string): Promise<void> {
+  await db().from(FREEBIE_QA_TABLE).insert({ email: email.toLowerCase().trim(), question, answer });
+}
+
+export async function getAllFreebieQA(): Promise<FreebieQA[]> {
+  const { data } = await db()
+    .from(FREEBIE_QA_TABLE)
+    .select('*')
+    .order('created_at', { ascending: true });
+  return (data ?? []) as FreebieQA[];
 }

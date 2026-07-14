@@ -59,13 +59,16 @@ export default function FreebiePage() {
   const [optInError, setOptInError] = useState("");
 
   const [answers, setAnswers] = useState<Record<number, Answer>>({});
+  const [customQuestions, setCustomQuestions] = useState<Answer[]>([]);
+  const [customInput, setCustomInput] = useState("");
+  const [customLoading, setCustomLoading] = useState(false);
   const [questionsAsked, setQuestionsAsked] = useState(0);
   const [limitError, setLimitError] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [answers]);
+  }, [answers, customQuestions]);
 
   function selectExperience(v: Experience) {
     setExperience(v);
@@ -148,6 +151,60 @@ export default function FreebiePage() {
     }
   }
 
+  async function askCustomQuestion(e?: FormEvent) {
+    e?.preventDefault();
+    const question = customInput.trim();
+    if (!question || questionsAsked >= LIMIT || customLoading) return;
+    setCustomLoading(true);
+    setCustomInput("");
+    setLimitError("");
+    const itemIndex = customQuestions.length;
+    setCustomQuestions((prev) => [...prev, { question, content: "", streaming: true }]);
+
+    function updateItem(patch: Partial<Answer>) {
+      setCustomQuestions((prev) => {
+        const copy = [...prev];
+        copy[itemIndex] = { ...copy[itemIndex], ...patch };
+        return copy;
+      });
+    }
+
+    try {
+      const res = await fetch("/api/freebie/cue", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, question }),
+      });
+
+      if (!res.ok || !res.body) {
+        const data = await res.json().catch(() => ({}));
+        if (res.status === 403) {
+          setLimitError(data.message || "You've used all 3 free questions.");
+          setCustomQuestions((prev) => prev.slice(0, itemIndex));
+        } else {
+          updateItem({ content: "Something went wrong. Try again.", streaming: false });
+        }
+        setCustomLoading(false);
+        return;
+      }
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let content = "";
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        content += decoder.decode(value, { stream: true });
+        updateItem({ content, streaming: true });
+      }
+      updateItem({ content, streaming: false });
+      setQuestionsAsked((n) => n + 1);
+    } catch {
+      updateItem({ content: "Connection error. Try again.", streaming: false });
+    }
+    setCustomLoading(false);
+  }
+
   const allAsked = questionsAsked >= LIMIT;
   const canSubmitContact = !!firstName.trim() && !!phone.trim() && !!email.trim() && !!experience;
 
@@ -165,14 +222,9 @@ export default function FreebiePage() {
       {/* HERO */}
       <section style={{ maxWidth: 640, margin: "0 auto", padding: "56px 24px 32px", textAlign: "left" }}>
         {!experience ? (
-          <>
-            <p style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", fontSize: 18, lineHeight: 1.7, color: "var(--ash)", margin: "0 0 20px", fontWeight: 400 }}>
-              I&rsquo;ve been reading through what you&rsquo;ve been telling me. Most of you are trying to fix the wrong thing. Not your fault — nobody really explains this part.
-            </p>
-            <p style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", fontSize: 18, lineHeight: 1.7, color: "var(--bone)", margin: 0, fontWeight: 500 }}>
-              I trained an AI on 12 years of my calls. Ask it these 3 things and it&rsquo;ll tell you where your trading&rsquo;s actually leaking. No catch.
-            </p>
-          </>
+          <p style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", fontSize: 18, lineHeight: 1.7, color: "var(--bone)", margin: 0, fontWeight: 500 }}>
+            I need to understand you first so my second brain can actually help you.
+          </p>
         ) : (
           <p style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", fontSize: 18, lineHeight: 1.7, color: "var(--bone)", margin: 0, fontWeight: 500 }}>
             {EXPERIENCE_COPY[experience]}
@@ -277,6 +329,46 @@ export default function FreebiePage() {
               );
             })}
 
+            {customQuestions.map((item, i) => (
+              <div key={`custom-${i}`} style={{ border: "1px solid var(--line)", background: "var(--bg-1)", borderRadius: 8, overflow: "hidden" }}>
+                <div style={{ padding: "16px 18px", color: "var(--bone)", fontSize: 14, lineHeight: 1.5 }}>
+                  <span style={{ color: "var(--acid)", fontFamily: "var(--font-mono)", fontSize: 11, marginRight: 8 }}>Q{i + 1}</span>
+                  {item.question}
+                </div>
+                <div style={{ padding: "0 18px 18px", borderTop: "1px solid var(--line)", marginTop: -1 }}>
+                  <p style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", fontSize: 14, lineHeight: 1.7, color: "var(--ash)", whiteSpace: "pre-wrap", margin: "14px 0 0" }}>
+                    {item.content}
+                    {item.streaming && <span style={{ opacity: 0.4 }}>▍</span>}
+                  </p>
+                </div>
+              </div>
+            ))}
+
+            {!allAsked && (
+              <form onSubmit={askCustomQuestion} style={{ display: "flex", gap: 8 }}>
+                <input
+                  type="text"
+                  placeholder="Or type your own question…"
+                  value={customInput}
+                  onChange={(e) => setCustomInput(e.target.value)}
+                  disabled={customLoading}
+                  style={{ ...inputStyle, flex: 1 }}
+                />
+                <button
+                  type="submit"
+                  disabled={!customInput.trim() || customLoading}
+                  style={{
+                    flexShrink: 0, height: 46, padding: "0 20px",
+                    background: customInput.trim() ? "var(--acid)" : "var(--bg-2)", border: "none", borderRadius: 6,
+                    fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase",
+                    color: customInput.trim() ? "#fff" : "var(--muted)", cursor: customInput.trim() ? "pointer" : "not-allowed",
+                  }}
+                >
+                  Ask
+                </button>
+              </form>
+            )}
+
             {limitError && <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--acid)", margin: 0 }}>{limitError}</p>}
 
             {allAsked && (
@@ -286,6 +378,10 @@ export default function FreebiePage() {
                 </p>
                 <a
                   href="/ig"
+                  onClick={() => {
+                    const blob = new Blob([JSON.stringify({ email })], { type: "application/json" });
+                    navigator.sendBeacon("/api/freebie/cta-click", blob);
+                  }}
                   style={{ display: "inline-block", background: "var(--acid)", color: "#fff", textDecoration: "none", fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", padding: "14px 32px", borderRadius: 6 }}
                 >
                   I Want To Work With You &amp; Change My Life In The Next 4 Months →

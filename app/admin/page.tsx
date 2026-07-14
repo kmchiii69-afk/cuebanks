@@ -47,6 +47,33 @@ interface Webinar {
   created_by: string;
 }
 
+interface FreebieLead {
+  id: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone: string;
+  experience: string;
+  questions_asked: number;
+  clicked_cta: boolean;
+  created_at: string;
+}
+
+interface FreebieQA {
+  id: string;
+  email: string;
+  question: string;
+  answer: string;
+  created_at: string;
+}
+
+const EXPERIENCE_LABELS: Record<string, string> = {
+  under_1y: 'Under a year',
+  '1_3y': '1–3 years',
+  '3_5y': '3–5 years',
+  '5y_plus': '5+ years',
+};
+
 function fmt(ts: number) {
   if (!ts) return '—';
   return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -93,7 +120,7 @@ const D = "'Sora', system-ui, sans-serif";
 
 export default function AdminPage() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<'members' | 'webinars' | 'analytics' | 'cue-ai'>('members');
+  const [activeTab, setActiveTab] = useState<'members' | 'webinars' | 'analytics' | 'cue-ai' | 'freebie'>('members');
 
   // ── Members ──
   const [members, setMembers] = useState<Member[]>([]);
@@ -135,6 +162,12 @@ export default function AdminPage() {
   // Cue AI Instructions
   const [cueInstructions, setCueInstructions] = useState<CueInstruction[]>([]);
   const [cueLoading, setCueLoading] = useState(false);
+
+  // Freebie leads
+  const [freebieLeads, setFreebieLeads] = useState<FreebieLead[]>([]);
+  const [freebieQA, setFreebieQA] = useState<FreebieQA[]>([]);
+  const [freebieLoading, setFreebieLoading] = useState(false);
+  const [expandedFreebieRow, setExpandedFreebieRow] = useState<string | null>(null);
   const [newDoText, setNewDoText] = useState('');
   const [newDontText, setNewDontText] = useState('');
   const [addingDo, setAddingDo] = useState(false);
@@ -313,6 +346,17 @@ export default function AdminPage() {
     setCueLoading(false);
   }
 
+  async function loadFreebie() {
+    setFreebieLoading(true);
+    const res = await fetch('/api/admin/freebie');
+    if (res.ok) {
+      const data = await res.json();
+      setFreebieLeads(data.leads ?? []);
+      setFreebieQA(data.qa ?? []);
+    }
+    setFreebieLoading(false);
+  }
+
   async function addCueInstruction(type: 'do' | 'dont', text: string) {
     const setter = type === 'do' ? setAddingDo : setAddingDont;
     setter(true);
@@ -377,11 +421,12 @@ export default function AdminPage() {
 
         {/* Tab nav */}
         <div style={{ display: 'flex', gap: 6, marginBottom: 28, flexWrap: 'wrap' }}>
-          {(['members', 'webinars', 'analytics', 'cue-ai'] as const).map(tab => (
+          {(['members', 'webinars', 'analytics', 'cue-ai', 'freebie'] as const).map(tab => (
             <button key={tab} onClick={() => {
               setActiveTab(tab);
               if (tab === 'analytics') loadAnalytics(analyticsPlan);
               if (tab === 'cue-ai' && cueInstructions.length === 0) loadCueInstructions();
+              if (tab === 'freebie' && freebieLeads.length === 0) loadFreebie();
             }} style={{
               background: activeTab === tab ? 'rgba(37,99,235,0.1)' : 'transparent',
               border: `1px solid ${activeTab === tab ? 'rgba(37,99,235,0.35)' : 'rgba(255,255,255,0.1)'}`,
@@ -389,7 +434,7 @@ export default function AdminPage() {
               letterSpacing: '0.18em', textTransform: 'uppercase',
               color: activeTab === tab ? '#2563eb' : 'rgba(255,255,255,0.35)', cursor: 'pointer', transition: 'all 0.15s',
             }}>
-              {tab === 'members' ? `Members · ${members.length}` : tab === 'webinars' ? `Webinars · ${webinars.length}` : tab === 'analytics' ? 'Analytics' : 'Cue AI'}
+              {tab === 'members' ? `Members · ${members.length}` : tab === 'webinars' ? `Webinars · ${webinars.length}` : tab === 'analytics' ? 'Analytics' : tab === 'cue-ai' ? 'Cue AI' : `Freebie · ${freebieLeads.length}`}
             </button>
           ))}
         </div>
@@ -744,6 +789,73 @@ export default function AdminPage() {
                     </button>
                   </div>
                 </div>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* ── FREEBIE TAB ──────────────────────────────────────── */}
+        {activeTab === 'freebie' && (
+          <>
+            <div style={{ marginBottom: 20 }}>
+              <h1 style={{ fontFamily: D, fontSize: 22, fontWeight: 700, letterSpacing: '-0.02em', margin: '0 0 3px' }}>Cue AI Freebie</h1>
+              <p style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.3)', margin: 0 }}>Everyone who opted in from the IG story · click a row to see their questions &amp; answers</p>
+            </div>
+            {freebieLoading ? (
+              <div style={{ textAlign: 'center', padding: '60px 0', fontFamily: M, fontSize: 11, color: 'rgba(37,99,235,0.4)', letterSpacing: '0.2em' }}>LOADING</div>
+            ) : freebieLeads.length === 0 ? (
+              <div style={{ padding: '40px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10, textAlign: 'center', fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.25)' }}>
+                No opt-ins yet. Leads appear here as people use the /freebie link.
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '160px 200px 120px 130px 90px 90px 110px 20px', gap: 10, padding: '8px 14px', borderBottom: '1px solid rgba(255,255,255,0.06)', marginBottom: 2 }}>
+                  {['Name', 'Email', 'Phone', 'Experience', 'Questions', 'CTA?', 'Joined', ''].map(h => (
+                    <span key={h} style={{ fontFamily: M, fontSize: 8, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.22)' }}>{h}</span>
+                  ))}
+                </div>
+                {freebieLeads.map((lead, i) => {
+                  const isExpanded = expandedFreebieRow === lead.id;
+                  const qa = freebieQA.filter(q => q.email === lead.email);
+                  return (
+                    <div key={lead.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)' }}>
+                      <div
+                        onClick={() => setExpandedFreebieRow(isExpanded ? null : lead.id)}
+                        style={{ display: 'grid', gridTemplateColumns: '160px 200px 120px 130px 90px 90px 110px 20px', gap: 10, padding: '11px 14px', alignItems: 'center', cursor: 'pointer', transition: 'background 0.1s' }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.025)'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
+                      >
+                        <span style={{ fontFamily: S, fontSize: 13, color: '#fff' }}>{`${lead.first_name} ${lead.last_name}`.trim() || '—'}</span>
+                        <span style={{ fontFamily: S, fontSize: 12, color: 'rgba(255,255,255,0.5)', wordBreak: 'break-word' }}>{lead.email}</span>
+                        <span style={{ fontFamily: S, fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>{lead.phone || '—'}</span>
+                        <span style={{ fontFamily: M, fontSize: 10, color: 'rgba(255,255,255,0.4)' }}>{EXPERIENCE_LABELS[lead.experience] || lead.experience || '—'}</span>
+                        <span style={{ fontFamily: M, fontSize: 11, fontWeight: 700, color: lead.questions_asked >= 3 ? '#22c55e' : 'rgba(255,255,255,0.4)' }}>{lead.questions_asked} / 3</span>
+                        <span style={{ fontFamily: M, fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: lead.clicked_cta ? '#22c55e' : 'rgba(255,255,255,0.2)' }}>{lead.clicked_cta ? '● Yes' : '○ No'}</span>
+                        <span style={{ fontFamily: M, fontSize: 9, color: 'rgba(255,255,255,0.22)' }}>{fmt(new Date(lead.created_at).getTime())}</span>
+                        <span style={{ fontFamily: M, fontSize: 10, color: 'rgba(255,255,255,0.2)', transition: 'transform 0.15s', display: 'inline-block', transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)' }}>›</span>
+                      </div>
+                      {isExpanded && (
+                        <div style={{ margin: '0 14px 14px', padding: '16px 18px', background: 'rgba(37,99,235,0.05)', border: '1px solid rgba(37,99,235,0.12)', borderLeft: '3px solid rgba(37,99,235,0.35)', borderRadius: '0 6px 6px 0' }}>
+                          {qa.length === 0 ? (
+                            <p style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.25)', margin: 0, fontStyle: 'italic' }}>Opted in but hasn&apos;t asked a question yet.</p>
+                          ) : (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                              {qa.map(row => (
+                                <div key={row.id}>
+                                  <div style={{ fontFamily: M, fontSize: 8, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(37,99,235,0.6)', marginBottom: 6 }}>Question</div>
+                                  <p style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.8)', lineHeight: 1.6, margin: '0 0 10px', whiteSpace: 'pre-wrap' }}>{row.question}</p>
+                                  <div style={{ fontFamily: M, fontSize: 8, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(37,99,235,0.6)', marginBottom: 6 }}>Cue AI Response</div>
+                                  <p style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 1.7, margin: 0, whiteSpace: 'pre-wrap' }}>{row.answer || <em style={{ color: 'rgba(255,255,255,0.2)' }}>No answer saved</em>}</p>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+                <div style={{ padding: '10px 14px', fontFamily: M, fontSize: 9, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.1em' }}>{freebieLeads.length} leads shown</div>
               </div>
             )}
           </>

@@ -159,9 +159,7 @@ export async function pingFreebieOptIn(lead: {
     SEPARATOR,
   ].join("\n");
 
-  // Reuses the opt-ins webhook rather than requiring a brand-new env var —
-  // this is a lower-volume lead-magnet path, not worth its own channel.
-  return postWebhook(process.env.DISCORD_WEBHOOK_OPTINS || "", { content });
+  return postWebhook(process.env.DISCORD_WEBHOOK_FREEBIE || "", { content });
 }
 
 export type QualifiedLead = {
