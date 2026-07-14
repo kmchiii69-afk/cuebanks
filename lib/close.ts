@@ -105,6 +105,51 @@ export async function findLeadByEmail(email: string): Promise<CloseLead | null> 
   return matching[0];
 }
 
+// ─── Opportunity Pipelines (separate from the flat Lead Status system
+// above — a Lead's status_id is a simple flat field, while Opportunities
+// belong to a named Pipeline with its own stages and show up on the
+// Opportunities > Pipeline kanban board in Close's UI). ──────────────
+
+type PipelineCacheEntry = { pipelineId: string; statusId: string };
+let pipelineStatusCache: CacheEntry<Map<string, PipelineCacheEntry>> | null = null;
+
+async function getPipelineStatusMap(): Promise<Map<string, PipelineCacheEntry>> {
+  if (pipelineStatusCache && pipelineStatusCache.expires > Date.now()) return pipelineStatusCache.value;
+  const data = await closeFetch<{ data: Array<{ id: string; name: string; statuses: Array<{ id: string; label: string }> }> }>("/pipeline/");
+  const map = new Map<string, PipelineCacheEntry>();
+  for (const pipeline of data.data) {
+    for (const status of pipeline.statuses) {
+      map.set(`${pipeline.name}::${status.label}`, { pipelineId: pipeline.id, statusId: status.id });
+    }
+  }
+  pipelineStatusCache = { value: map, expires: Date.now() + TTL_MS };
+  return map;
+}
+
+/** Creates an Opportunity for an existing lead in the given named pipeline +
+ * stage, so it shows up on Close's Opportunities > Pipeline board. Returns
+ * null (doesn't throw) if that pipeline/status combination doesn't exist,
+ * so callers can no-op rather than crash if it's renamed or removed. */
+export async function createOpportunityInPipeline(input: {
+  lead_id: string;
+  pipelineName: string;
+  statusLabel: string;
+  note?: string;
+}): Promise<{ opportunity_id: string } | null> {
+  const map = await getPipelineStatusMap();
+  const target = map.get(`${input.pipelineName}::${input.statusLabel}`);
+  if (!target) return null;
+  const created = await closeFetch<{ id: string }>("/opportunity/", {
+    method: "POST",
+    body: JSON.stringify({
+      lead_id: input.lead_id,
+      status_id: target.statusId,
+      note: input.note || "",
+    }),
+  });
+  return { opportunity_id: created.id };
+}
+
 export type CreateOrUpdateInput = {
   first_name: string;
   last_name: string;

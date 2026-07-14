@@ -16,7 +16,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { isValidPhoneNumber } from "libphonenumber-js";
-import { createOrUpdateLead } from "@/lib/close";
+import { createOrUpdateLead, createOpportunityInPipeline } from "@/lib/close";
 import { subscribeToForm as kitSubscribe } from "@/lib/kit";
 import { pingFreebieOptIn } from "@/lib/discord";
 import { upsertFreebieLead, TradingExperience } from "@/lib/db";
@@ -71,8 +71,20 @@ export async function POST(req: NextRequest) {
   // Fire-and-forget CRM side-effects — same pattern as /api/lead and /api/free-course.
   Promise.allSettled([
     // Distinct lead status so these don't mix into the regular sales-funnel
-    // lead statuses in Close.
-    createOrUpdateLead({ first_name, last_name, email: lead.email, phone, status: "Freebie - Opted In", source: "Cue AI Freebie" }),
+    // lead statuses in Close, plus an Opportunity in the "Freebie" pipeline
+    // (only on a genuinely new lead — not on a repeat visit) so it shows up
+    // on the Opportunities > Pipeline board, not just as a flat status.
+    createOrUpdateLead({ first_name, last_name, email: lead.email, phone, status: "Freebie - Opted In", source: "Cue AI Freebie" }).then(async (closeLead) => {
+      if (created) {
+        await createOpportunityInPipeline({
+          lead_id: closeLead.lead_id,
+          pipelineName: "Freebie",
+          statusLabel: "Opted In",
+          note: `Trading experience: ${experience}`,
+        }).catch((err) => console.error("[/api/freebie/optin] Opportunity failed:", err));
+      }
+      return closeLead;
+    }),
     kitSubscribe({ email: lead.email, first_name, last_name, phone }),
     pingFreebieOptIn({ first_name, last_name, email: lead.email, phone, experience, created }),
   ]).then(([closeRes, kitRes, discordRes]) => {
