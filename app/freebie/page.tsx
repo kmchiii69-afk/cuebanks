@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect, FormEvent } from "react";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 
 const QUESTIONS = [
   "Walk me through reading a chart top-down before an entry. Where do most people get the read wrong?",
@@ -51,9 +53,8 @@ export default function FreebiePage() {
   const [step, setStep] = useState<Step>("experience");
   const [experience, setExperience] = useState<Experience | null>(null);
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState<string | undefined>("");
   const [email, setEmail] = useState("");
   const [optInLoading, setOptInLoading] = useState(false);
   const [optInError, setOptInError] = useState("");
@@ -77,16 +78,18 @@ export default function FreebiePage() {
 
   async function handleOptIn(e?: FormEvent) {
     e?.preventDefault();
-    if (!firstName.trim() || !phone.trim() || !email.trim() || !experience || optInLoading) return;
+    if (!name.trim() || !phone?.trim() || !email.trim() || !experience || optInLoading) return;
     setOptInLoading(true);
     setOptInError("");
+    const [first_name, ...rest] = name.trim().split(/\s+/);
+    const last_name = rest.join(" ");
     try {
       const res = await fetch("/api/freebie/optin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          first_name: firstName.trim(),
-          last_name: lastName.trim(),
+          first_name,
+          last_name,
           phone: phone.trim(),
           email: email.trim(),
           experience,
@@ -94,6 +97,9 @@ export default function FreebiePage() {
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok) {
+        // Use the server's canonical email — if this phone/email was already
+        // tied to an earlier opt-in, it may differ from what was just typed.
+        setEmail(data.email ?? email.trim());
         setQuestionsAsked(data.questions_asked ?? 0);
         setStep("chat");
       } else {
@@ -206,7 +212,7 @@ export default function FreebiePage() {
   }
 
   const allAsked = questionsAsked >= LIMIT;
-  const canSubmitContact = !!firstName.trim() && !!phone.trim() && !!email.trim() && !!experience;
+  const canSubmitContact = !!name.trim() && !!phone?.trim() && !!email.trim() && !!experience;
 
   return (
     <div className="grid-bg" style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--bone)" }}>
@@ -266,11 +272,17 @@ export default function FreebiePage() {
             <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--acid)" }}>
               Where should Cue send this?
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-              <input placeholder="First name" required value={firstName} onChange={(e) => setFirstName(e.target.value)} disabled={optInLoading} autoFocus style={inputStyle} />
-              <input placeholder="Last name" value={lastName} onChange={(e) => setLastName(e.target.value)} disabled={optInLoading} style={inputStyle} />
+            <input placeholder="Name" required value={name} onChange={(e) => setName(e.target.value)} disabled={optInLoading} autoFocus style={inputStyle} />
+            <div className="qc-phone-wrap">
+              <PhoneInput
+                international
+                defaultCountry="US"
+                value={phone}
+                onChange={setPhone}
+                disabled={optInLoading}
+                placeholder="Phone"
+              />
             </div>
-            <input type="tel" placeholder="Phone" required value={phone} onChange={(e) => setPhone(e.target.value)} disabled={optInLoading} style={inputStyle} />
             <input type="email" placeholder="Email" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={optInLoading} style={inputStyle} />
             {optInError && <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--acid)", margin: 0 }}>{optInError}</p>}
             <button
@@ -384,7 +396,7 @@ export default function FreebiePage() {
                   }}
                   style={{ display: "inline-block", background: "var(--acid)", color: "#fff", textDecoration: "none", fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", padding: "14px 32px", borderRadius: 6 }}
                 >
-                  I Want To Work With You &amp; Change My Life In The Next 4 Months →
+                  I Want To Work With Cue 1-1 →
                 </a>
               </div>
             )}

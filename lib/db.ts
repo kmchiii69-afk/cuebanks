@@ -401,17 +401,35 @@ export async function getFreebieLead(email: string): Promise<FreebieLead | null>
   return (data as FreebieLead) ?? null;
 }
 
-/** Creates the lead on first opt-in; returns the existing row unchanged if they opt in again. */
+export async function getFreebieLeadByPhone(phone: string): Promise<FreebieLead | null> {
+  if (!phone) return null;
+  const { data } = await db()
+    .from(FREEBIE_LEADS_TABLE)
+    .select('*')
+    .eq('phone', phone)
+    .single();
+  return (data as FreebieLead) ?? null;
+}
+
+/**
+ * Creates the lead on first opt-in. If this email OR this phone number has
+ * already been used (even with a different email/phone the second time),
+ * returns the existing row untouched — one email and one phone number each
+ * only get the 3 free questions once, they can't reset the count by
+ * mixing-and-matching a new email with an old phone or vice versa.
+ */
 export async function upsertFreebieLead(input: {
   email: string;
   first_name: string;
   last_name: string;
   phone: string;
   experience: TradingExperience;
-}): Promise<FreebieLead> {
+}): Promise<{ lead: FreebieLead; created: boolean }> {
   const cleanEmail = input.email.toLowerCase().trim();
-  const existing = await getFreebieLead(cleanEmail);
-  if (existing) return existing;
+  const existingByEmail = await getFreebieLead(cleanEmail);
+  if (existingByEmail) return { lead: existingByEmail, created: false };
+  const existingByPhone = await getFreebieLeadByPhone(input.phone);
+  if (existingByPhone) return { lead: existingByPhone, created: false };
   const { data, error } = await db()
     .from(FREEBIE_LEADS_TABLE)
     .insert({
@@ -425,7 +443,7 @@ export async function upsertFreebieLead(input: {
     .select()
     .single();
   if (error) throw error;
-  return data as FreebieLead;
+  return { lead: data as FreebieLead, created: true };
 }
 
 export async function incrementFreebieQuestions(email: string): Promise<void> {
