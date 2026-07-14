@@ -285,10 +285,10 @@ export default function FreebiePage() {
                   That&rsquo;s the surface. Inside the Inner Circle you get the full system, not 3 questions&rsquo; worth.
                 </p>
                 <a
-                  href="/qualify"
+                  href="/ig"
                   style={{ display: "inline-block", background: "var(--acid)", color: "#fff", textDecoration: "none", fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", padding: "14px 32px", borderRadius: 6 }}
                 >
-                  See If You Qualify →
+                  I Want To Work With You &amp; Change My Life In The Next 4 Months →
                 </a>
               </div>
             )}
