@@ -1041,60 +1041,58 @@ export default function PortalPage() {
           </div>
         </div>
 
-        {/* ── Contact Support — 5k only ─────────────────────── */}
-        {member?.plan === '5k' && (
-          <div style={{ marginTop: 14, background: 'rgba(37,99,235,0.04)', border: '1px solid rgba(37,99,235,0.18)', borderRadius: 12, padding: '18px 22px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
-            <div>
-              <div style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(37,99,235,0.7)', textTransform: 'uppercase', marginBottom: 4 }}>Support</div>
-              <div style={{ ...S, fontSize: 13, color: 'rgba(255,255,255,0.65)' }}>For any queries, reach out to your account manager.</div>
-              <div style={{ ...S, fontSize: 12, color: 'rgba(255,255,255,0.35)', marginTop: 3 }}>Response within 24 hours during business days.</div>
+        {/* ── Support + Change Password ───────────────────────── */}
+        <div style={{ display: 'grid', gridTemplateColumns: member?.plan === '5k' ? '1fr 1fr' : '1fr', gap: 14, marginTop: 14, alignItems: 'stretch' }}>
+          {member?.plan === '5k' && (
+            <div style={{ background: 'rgba(37,99,235,0.04)', border: '1px solid rgba(37,99,235,0.18)', borderRadius: 12, padding: '18px 22px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
+              <div>
+                <div style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(37,99,235,0.7)', textTransform: 'uppercase', marginBottom: 4 }}>Support</div>
+                <div style={{ ...S, fontSize: 13, color: 'rgba(255,255,255,0.65)' }}>For any queries, reach out to your account manager.</div>
+                <div style={{ ...S, fontSize: 12, color: 'rgba(255,255,255,0.35)', marginTop: 3 }}>Response within 24 hours during business days.</div>
+              </div>
+              <a
+                href="mailto:alex@wsacademyfx.com"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(37,99,235,0.12)', border: '1px solid rgba(37,99,235,0.35)', borderRadius: 8, padding: '10px 18px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(37,99,235,1)', textDecoration: 'none', flexShrink: 0, transition: 'background 0.15s, border-color 0.15s' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(37,99,235,0.22)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(37,99,235,0.6)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(37,99,235,0.12)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(37,99,235,0.35)'; }}
+              >
+                <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+                  <rect x="0.5" y="0.5" width="10" height="8" rx="1" stroke="currentColor" strokeWidth="1"/>
+                  <path d="M0.5 2L5.5 5L10.5 2" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/>
+                </svg>
+                Contact Us
+              </a>
             </div>
-            <a
-              href="mailto:alex@wsacademyfx.com"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(37,99,235,0.12)', border: '1px solid rgba(37,99,235,0.35)', borderRadius: 8, padding: '10px 18px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(37,99,235,1)', textDecoration: 'none', flexShrink: 0, transition: 'background 0.15s, border-color 0.15s' }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(37,99,235,0.22)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(37,99,235,0.6)'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(37,99,235,0.12)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(37,99,235,0.35)'; }}
-            >
-              <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
-                <rect x="0.5" y="0.5" width="10" height="8" rx="1" stroke="currentColor" strokeWidth="1"/>
-                <path d="M0.5 2L5.5 5L10.5 2" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/>
-              </svg>
-              Contact Us
-            </a>
-          </div>
-        )}
+          )}
 
-        {/* ── Change Password ──────────────────────────────── */}
-        <div style={{ marginTop: 14, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '20px 20px' }}>
-          <div style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginBottom: 14 }}>Change Password</div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10 }}>
+          {/* Change Password */}
+          <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '14px 18px', display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+            <div style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', flexShrink: 0 }}>Change<br/>Password</div>
             <input
               type="password" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)}
-              placeholder="Current password" autoComplete="current-password"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 7, padding: '10px 12px', color: '#fff', ...S, fontSize: 13, outline: 'none', boxSizing: 'border-box' }}
+              placeholder="Current" autoComplete="current-password"
+              style={{ flex: '1 1 90px', minWidth: 0, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 6, padding: '8px 10px', color: '#fff', ...S, fontSize: 12, outline: 'none', boxSizing: 'border-box' }}
               onFocus={e => { e.currentTarget.style.borderColor = 'rgba(37,99,235,0.4)'; }}
               onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
             />
             <input
               type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)}
-              placeholder="New password (min. 8 chars)" autoComplete="new-password"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 7, padding: '10px 12px', color: '#fff', ...S, fontSize: 13, outline: 'none', boxSizing: 'border-box' }}
+              placeholder="New (min. 8)" autoComplete="new-password"
+              style={{ flex: '1 1 90px', minWidth: 0, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 6, padding: '8px 10px', color: '#fff', ...S, fontSize: 12, outline: 'none', boxSizing: 'border-box' }}
               onFocus={e => { e.currentTarget.style.borderColor = 'rgba(37,99,235,0.4)'; }}
               onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
             />
             <input
               type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}
-              placeholder="Confirm new password" autoComplete="new-password"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 7, padding: '10px 12px', color: '#fff', ...S, fontSize: 13, outline: 'none', boxSizing: 'border-box' }}
+              placeholder="Confirm" autoComplete="new-password"
+              style={{ flex: '1 1 90px', minWidth: 0, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 6, padding: '8px 10px', color: '#fff', ...S, fontSize: 12, outline: 'none', boxSizing: 'border-box' }}
               onFocus={e => { e.currentTarget.style.borderColor = 'rgba(37,99,235,0.4)'; }}
               onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
             />
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 12 }}>
-            <button onClick={changePassword} disabled={pwSaving} style={{ background: pwSaved ? 'rgba(34,197,94,0.09)' : 'rgba(37,99,235,0.1)', border: `1px solid ${pwSaved ? 'rgba(34,197,94,0.25)' : 'rgba(37,99,235,0.3)'}`, borderRadius: 7, padding: '9px 20px', ...M, fontSize: 9, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: pwSaved ? '#22c55e' : '#2563eb', cursor: pwSaving ? 'not-allowed' : 'pointer', transition: 'all 0.2s' }}>
-              {pwSaving ? '...' : pwSaved ? '✓ Updated' : 'Update Password'}
+            <button onClick={changePassword} disabled={pwSaving} style={{ flexShrink: 0, background: pwSaved ? 'rgba(34,197,94,0.09)' : 'rgba(37,99,235,0.1)', border: `1px solid ${pwSaved ? 'rgba(34,197,94,0.25)' : 'rgba(37,99,235,0.3)'}`, borderRadius: 6, padding: '9px 14px', ...M, fontSize: 8.5, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: pwSaved ? '#22c55e' : '#2563eb', cursor: pwSaving ? 'not-allowed' : 'pointer', transition: 'all 0.2s', whiteSpace: 'nowrap' }}>
+              {pwSaving ? '...' : pwSaved ? '✓ Updated' : 'Update'}
             </button>
-            {pwError && <span style={{ ...S, fontSize: 12, color: '#ef4444' }}>{pwError}</span>}
+            {pwError && <span style={{ ...S, fontSize: 11, color: '#ef4444', flexBasis: '100%' }}>{pwError}</span>}
           </div>
         </div>
 
