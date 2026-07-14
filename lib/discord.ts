@@ -128,6 +128,42 @@ export async function pingOptIn(lead: {
   });
 }
 
+const EXPERIENCE_LABELS: Record<string, string> = {
+  under_1y: "Under a year",
+  "1_3y": "1–3 years",
+  "3_5y": "3–5 years",
+  "5y_plus": "5+ years",
+};
+
+export async function pingFreebieOptIn(lead: {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  experience: string;
+  created?: boolean;
+}) {
+  const isNew = lead.created !== false;
+  const header = isNew
+    ? "🎁 **NEW Cue AI Freebie Opt-In**"
+    : "🌀 **(Opted In Again) Cue AI Freebie**";
+  const fullName = `${lead.first_name} ${lead.last_name}`.trim() || "—";
+
+  const content = [
+    header,
+    "",
+    `**Name:** ${fullName}`,
+    `**Email:** ${lead.email || "—"}`,
+    `**Phone:** ${lead.phone || "—"}`,
+    `**Trading experience:** ${EXPERIENCE_LABELS[lead.experience] || lead.experience || "—"}`,
+    SEPARATOR,
+  ].join("\n");
+
+  // Reuses the opt-ins webhook rather than requiring a brand-new env var —
+  // this is a lower-volume lead-magnet path, not worth its own channel.
+  return postWebhook(process.env.DISCORD_WEBHOOK_OPTINS || "", { content });
+}
+
 export type QualifiedLead = {
   first_name: string;
   last_name: string;

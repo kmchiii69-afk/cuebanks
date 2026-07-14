@@ -365,3 +365,65 @@ export async function getChatAnalytics(plan?: string): Promise<AnalyticRow[]> {
   const { data } = await q;
   return (data ?? []) as AnalyticRow[];
 }
+
+// ─── Cue AI Freebie (public lead magnet — "ask Cue AI 3 questions") ───────────
+
+const FREEBIE_LEADS_TABLE = 'wsa_freebie_leads';
+
+export type TradingExperience = 'under_1y' | '1_3y' | '3_5y' | '5y_plus';
+
+export interface FreebieLead {
+  id: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone: string;
+  experience: TradingExperience | '';
+  questions_asked: number;
+  created_at: string;
+}
+
+export async function getFreebieLead(email: string): Promise<FreebieLead | null> {
+  const { data } = await db()
+    .from(FREEBIE_LEADS_TABLE)
+    .select('*')
+    .eq('email', email.toLowerCase().trim())
+    .single();
+  return (data as FreebieLead) ?? null;
+}
+
+/** Creates the lead on first opt-in; returns the existing row unchanged if they opt in again. */
+export async function upsertFreebieLead(input: {
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone: string;
+  experience: TradingExperience;
+}): Promise<FreebieLead> {
+  const cleanEmail = input.email.toLowerCase().trim();
+  const existing = await getFreebieLead(cleanEmail);
+  if (existing) return existing;
+  const { data, error } = await db()
+    .from(FREEBIE_LEADS_TABLE)
+    .insert({
+      email: cleanEmail,
+      first_name: input.first_name,
+      last_name: input.last_name,
+      phone: input.phone,
+      experience: input.experience,
+      questions_asked: 0,
+    })
+    .select()
+    .single();
+  if (error) throw error;
+  return data as FreebieLead;
+}
+
+export async function incrementFreebieQuestions(email: string): Promise<void> {
+  const lead = await getFreebieLead(email);
+  if (!lead) return;
+  await db()
+    .from(FREEBIE_LEADS_TABLE)
+    .update({ questions_asked: lead.questions_asked + 1 })
+    .eq('email', email.toLowerCase().trim());
+}
