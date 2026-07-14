@@ -11,7 +11,7 @@ interface Member {
   id: string;
   email: string;
   name: string;
-  role: 'member' | 'admin';
+  role: 'member' | 'admin' | 'team';
   active: boolean;
   cohort: string;
   discord_id: string;
@@ -134,7 +134,7 @@ export default function AdminPage() {
   const [addName, setAddName] = useState('');
   const [addPassword, setAddPassword] = useState('');
   const [addCohort, setAddCohort] = useState('');
-  const [addRole, setAddRole] = useState<'member' | 'admin'>('member');
+  const [addRole, setAddRole] = useState<'member' | 'admin' | 'team'>('member');
   const [addPlan, setAddPlan] = useState<Plan>('5k');
   const [addSkipContract, setAddSkipContract] = useState(false);
   const [addLoading, setAddLoading] = useState(false);
@@ -188,12 +188,20 @@ export default function AdminPage() {
   const [wRecordingUrl, setWRecordingUrl] = useState('');
   const [wPublished, setWPublished] = useState(true);
 
+  const [currentUserRole, setCurrentUserRole] = useState<'admin' | 'team' | null>(null);
+  const isTeamOnly = currentUserRole === 'team';
+
+  function openAddMember() {
+    if (isTeamOnly) { setAddRole('member'); setAddPlan('low_ticket'); }
+    setShowAdd(true);
+  }
+
   useEffect(() => {
     fetch('/api/auth/me')
       .then(r => { if (!r.ok) { router.replace('/login'); return null; } return r.json(); })
       .then(u => {
-        if (u && u.role !== 'admin') { router.replace('/portal'); return; }
-        if (u) { loadMembers(); loadWebinars(); loadAnalytics('all'); }
+        if (u && u.role !== 'admin' && u.role !== 'team') { router.replace('/portal'); return; }
+        if (u) { setCurrentUserRole(u.role); loadMembers(); loadWebinars(); loadAnalytics('all'); }
       })
       .catch(() => router.replace('/login'));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -447,7 +455,7 @@ export default function AdminPage() {
                 <h1 style={{ fontFamily: D, fontSize: 22, fontWeight: 700, letterSpacing: '-0.02em', margin: '0 0 3px' }}>Members</h1>
                 <p style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.3)', margin: 0 }}>{members.length} total · {members.filter(m => m.active).length} active</p>
               </div>
-              <button onClick={() => setShowAdd(true)} style={{ background: '#2563eb', border: 'none', borderRadius: 8, padding: '10px 20px', fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#fff', cursor: 'pointer' }}
+              <button onClick={openAddMember} style={{ background: '#2563eb', border: 'none', borderRadius: 8, padding: '10px 20px', fontFamily: M, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#fff', cursor: 'pointer' }}
                 onMouseEnter={e => { e.currentTarget.style.opacity = '0.85'; }} onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}>
                 + Add Member
               </button>
@@ -872,20 +880,31 @@ export default function AdminPage() {
               <input placeholder="Full name" value={addName} onChange={e => setAddName(e.target.value)} style={F} onFocus={FO} onBlur={FB} />
               <input placeholder="Password *" type="password" value={addPassword} onChange={e => setAddPassword(e.target.value)} style={F} onFocus={FO} onBlur={FB} />
               <input placeholder="Cohort (e.g. June 2026)" value={addCohort} onChange={e => setAddCohort(e.target.value)} style={F} onFocus={FO} onBlur={FB} />
-              <select value={addRole} onChange={e => setAddRole(e.target.value as 'member' | 'admin')} style={{ ...F, appearance: 'none' as const }}>
-                <option value="member">Member</option>
-                <option value="admin">Admin</option>
-              </select>
-              <select value={addPlan} onChange={e => setAddPlan(e.target.value as Plan)} style={{ ...F, appearance: 'none' as const }}>
-                <option value="low_ticket">Low Ticket — Cue AI only · 4 months</option>
-                <option value="5k">5K — Roadmap + Cue AI</option>
-                <option value="7.5k">7.5K — + Group Calls & Webinars</option>
-                <option value="15k">15K — + 1-on-1 with Cue</option>
-              </select>
-              <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
-                <input type="checkbox" checked={addSkipContract} onChange={e => setAddSkipContract(e.target.checked)} style={{ accentColor: '#2563eb', width: 14, height: 14 }} />
-                <span style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.55)' }}>15K — No Contract (sent via chat after payment)</span>
-              </label>
+              {!isTeamOnly && (
+                <select value={addRole} onChange={e => setAddRole(e.target.value as 'member' | 'admin' | 'team')} style={{ ...F, appearance: 'none' as const }}>
+                  <option value="member">Member</option>
+                  <option value="team">Team (admin access, low-ticket only)</option>
+                  <option value="admin">Admin</option>
+                </select>
+              )}
+              {isTeamOnly ? (
+                <div style={{ ...F, display: 'flex', alignItems: 'center', color: 'rgba(255,255,255,0.4)' }}>
+                  Low Ticket — Cue AI only · 4 months
+                </div>
+              ) : (
+                <select value={addPlan} onChange={e => setAddPlan(e.target.value as Plan)} style={{ ...F, appearance: 'none' as const }}>
+                  <option value="low_ticket">Low Ticket — Cue AI only · 4 months</option>
+                  <option value="5k">5K — Roadmap + Cue AI</option>
+                  <option value="7.5k">7.5K — + Group Calls & Webinars</option>
+                  <option value="15k">15K — + 1-on-1 with Cue</option>
+                </select>
+              )}
+              {!isTeamOnly && (
+                <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
+                  <input type="checkbox" checked={addSkipContract} onChange={e => setAddSkipContract(e.target.checked)} style={{ accentColor: '#2563eb', width: 14, height: 14 }} />
+                  <span style={{ fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.55)' }}>15K — No Contract (sent via chat after payment)</span>
+                </label>
+              )}
             </div>
             {addError && <p style={{ fontFamily: M, fontSize: 10, color: '#ef4444', marginTop: 10, letterSpacing: '0.06em' }}>{addError}</p>}
             <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>

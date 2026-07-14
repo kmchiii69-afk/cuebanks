@@ -6,7 +6,7 @@ async function requireAdmin(req: NextRequest) {
   const user = await getAuthUser();
   if (!user) return null;
   const member = await getMember(user.email);
-  if (!member || member.role !== 'admin') return null;
+  if (!member || (member.role !== 'admin' && member.role !== 'team')) return null;
   return user;
 }
 

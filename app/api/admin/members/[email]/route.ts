@@ -4,7 +4,7 @@ import { updateMember, updatePassword, getMember, deleteMember } from '@/lib/db'
 
 async function requireAdmin() {
   const auth = await getAuthUser();
-  if (!auth || auth.role !== 'admin') return null;
+  if (!auth || (auth.role !== 'admin' && auth.role !== 'team')) return null;
   return auth;
 }
 
@@ -18,6 +18,12 @@ export async function PATCH(
   const { email } = await params;
   const decoded = decodeURIComponent(email);
   const body = await req.json();
+
+  // Team accounts can't grant admin/team access to anyone (including
+  // themselves) via edit — same restriction as creating new members.
+  if (auth.role === 'team' && (body.role === 'admin' || body.role === 'team')) {
+    delete body.role;
+  }
 
   if (body.password) {
     await updatePassword(decoded, body.password);

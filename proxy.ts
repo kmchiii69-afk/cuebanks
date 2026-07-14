@@ -21,7 +21,7 @@ export async function proxy(request: NextRequest) {
       const { payload } = await jwtVerify(token, SECRET);
       const role = payload.role as string;
       if (ADMIN_ONLY_PAGES.some(p => path === p || path.startsWith(p + '/'))) {
-        if (role !== 'admin') {
+        if (role !== 'admin' && role !== 'team') {
           return NextResponse.redirect(new URL('/portal', request.url));
         }
       }

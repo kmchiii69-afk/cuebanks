@@ -4,7 +4,7 @@ import { updateWebinar, deleteWebinar } from '@/lib/db';
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const user = await getAuthUser();
-  if (!user || user.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!user || (user.role !== 'admin' && user.role !== 'team')) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   const { id } = await params;
   const body = await req.json().catch(() => ({}));
   const { title, description, scheduled_at, join_link, recording_url, is_published } = body;
@@ -25,7 +25,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const user = await getAuthUser();
-  if (!user || user.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!user || (user.role !== 'admin' && user.role !== 'team')) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   const { id } = await params;
   try {
     await deleteWebinar(id);

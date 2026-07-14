@@ -17,7 +17,7 @@ export const COOKIE_OPTS = {
 
 export interface AuthPayload {
   email: string;
-  role: 'member' | 'admin';
+  role: 'member' | 'admin' | 'team';
 }
 
 export async function signToken(payload: AuthPayload): Promise<string> {
@@ -31,7 +31,7 @@ export async function signToken(payload: AuthPayload): Promise<string> {
 export async function verifyToken(token: string): Promise<AuthPayload | null> {
   try {
     const { payload } = await jwtVerify(token, SECRET);
-    return { email: payload.email as string, role: payload.role as 'member' | 'admin' };
+    return { email: payload.email as string, role: payload.role as 'member' | 'admin' | 'team' };
   } catch {
     return null;
   }

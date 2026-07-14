@@ -9,7 +9,7 @@ type Plan = '5k' | '7.5k' | '15k' | 'low_ticket';
 interface Member {
   email: string;
   name: string;
-  role: 'member' | 'admin';
+  role: 'member' | 'admin' | 'team';
   cohort: string;
   created_at: number;
   current_phase: number;
@@ -172,7 +172,7 @@ export default function PortalPage() {
       .then(data => {
         if (!data) return;
         // Expiry check (non-admins only)
-        if (data.role !== 'admin' && data.expires_at && new Date(data.expires_at) < new Date()) {
+        if (data.role !== 'admin' && data.role !== 'team' && data.expires_at && new Date(data.expires_at) < new Date()) {
           router.replace('/login?expired=1');
           return;
         }
@@ -315,7 +315,7 @@ export default function PortalPage() {
   );
 
   // ── Locked: onboarding done but call not yet completed ─────────────────────
-  const needsCallUnlock = member && member.role !== 'admin' && !member.portal_unlocked && (member.plan === 'low_ticket' || member.onboarded);
+  const needsCallUnlock = member && member.role !== 'admin' && member.role !== 'team' && !member.portal_unlocked && (member.plan === 'low_ticket' || member.onboarded);
   if (needsCallUnlock) return (
     <div style={{ minHeight: '100vh', background: '#000', color: '#fff', display: 'flex', flexDirection: 'column' }}>
       <nav style={{ borderBottom: '1px solid rgba(255,255,255,0.07)', padding: '0 28px', height: 62, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(0,0,0,0.95)', backdropFilter: 'blur(20px)', position: 'sticky', top: 0, zIndex: 50 }}>
@@ -446,7 +446,7 @@ export default function PortalPage() {
   );
 
   const phase = member?.current_phase ?? 0;
-  const isAdmin = member?.role === 'admin';
+  const isAdmin = member?.role === 'admin' || member?.role === 'team';
   const liveCount = openSessions.filter(Boolean).length;
   const overlap = openSessions[0] && openSessions[1]; // London + NY
   const checkDone = CHECKLIST.filter(c => checklist[c.id]).length;

@@ -21,7 +21,7 @@ export interface Member {
   email: string;
   password_hash: string;
   name: string;
-  role: 'member' | 'admin';
+  role: 'member' | 'admin' | 'team';
   active: boolean;
   cohort: string;
   discord_id: string;
@@ -71,7 +71,7 @@ export async function createMember(input: {
   email: string;
   password: string;
   name?: string;
-  role?: 'member' | 'admin';
+  role?: 'member' | 'admin' | 'team';
   cohort?: string;
   plan?: Plan;
   skip_contract?: boolean;
@@ -79,9 +79,10 @@ export async function createMember(input: {
   const email = input.email.toLowerCase().trim();
   const password_hash = await bcrypt.hash(input.password, 12);
   const now = Date.now();
-  const isAdmin = input.role === 'admin';
-  // 4 months from now for members; no expiry for admins
-  const expiresAt = isAdmin ? null : new Date(Date.now() + 4 * 30 * 24 * 60 * 60 * 1000).toISOString();
+  // Both admins and team members are staff accounts, not paying customers —
+  // no expiry, no onboarding/call-unlock gate.
+  const isStaff = input.role === 'admin' || input.role === 'team';
+  const expiresAt = isStaff ? null : new Date(Date.now() + 4 * 30 * 24 * 60 * 60 * 1000).toISOString();
   const record = {
     email,
     password_hash,
@@ -93,11 +94,11 @@ export async function createMember(input: {
     notes: '',
     created_at: now,
     last_login: 0,
-    plan: isAdmin ? '5k' : (input.plan || '5k'),
+    plan: isStaff ? '5k' : (input.plan || '5k'),
     expires_at: expiresAt,
     goal: '',
     onboarded: false,
-    portal_unlocked: isAdmin,
+    portal_unlocked: isStaff,
     skip_contract: input.skip_contract ?? false,
     reset_token_hash: null,
     reset_token_expires: null,
@@ -145,7 +146,7 @@ export async function clearResetToken(email: string): Promise<void> {
 export async function validateCredentials(email: string, password: string): Promise<Member | null> {
   const member = await getMember(email);
   if (!member || !member.active) return null;
-  if (member.role !== 'admin' && member.expires_at && new Date(member.expires_at) < new Date()) return null;
+  if (member.role !== 'admin' && member.role !== 'team' && member.expires_at && new Date(member.expires_at) < new Date()) return null;
   const valid = await bcrypt.compare(password, member.password_hash);
   return valid ? member : null;
 }
