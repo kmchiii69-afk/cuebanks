@@ -822,6 +822,12 @@ export default function PortalPage() {
                       {r}%
                     </button>
                   ))}
+                  <input
+                    type="number" step="0.1" min="0" placeholder="Custom"
+                    value={[0.5, 1, 2, 3].includes(calcRisk) ? '' : calcRisk}
+                    onChange={e => { const v = parseFloat(e.target.value); setCalcRisk(Number.isFinite(v) ? v : 0); }}
+                    style={{ flex: 1, minWidth: 0, padding: '7px 6px', borderRadius: 6, border: `1px solid ${![0.5, 1, 2, 3].includes(calcRisk) ? 'rgba(37,99,235,0.5)' : 'rgba(255,255,255,0.08)'}`, background: ![0.5, 1, 2, 3].includes(calcRisk) ? 'rgba(37,99,235,0.12)' : 'rgba(255,255,255,0.03)', color: '#fff', ...M, fontSize: 11, fontWeight: 700, outline: 'none', textAlign: 'center', boxSizing: 'border-box' }}
+                  />
                 </div>
               </div>
 
@@ -914,10 +920,10 @@ export default function PortalPage() {
         )}
 
         {/* ── ROW 5: Economic Calendar + Checklist + Notes ─── */}
-        <div style={{ display: 'grid', gridTemplateColumns: member?.plan === '5k' ? '380px' : '1fr 380px', gap: 14 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 14 }}>
 
-          {/* Economic Calendar — 7.5k and 15k only */}
-          {member?.plan !== '5k' && <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '20px 20px' }}>
+          {/* Economic Calendar — all plans */}
+          <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '20px 20px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
               <div>
                 <div style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginBottom: 4 }}>Economic Calendar</div>
@@ -980,7 +986,7 @@ export default function PortalPage() {
                 <a href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener noreferrer" style={{ ...M, fontSize: 8, color: 'rgba(37,99,235,0.4)', textDecoration: 'none', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Full Calendar →</a>
               </div>
             )}
-          </div>}
+          </div>
 
           {/* Right column: Checklist + Notes */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>

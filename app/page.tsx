@@ -61,6 +61,13 @@ body = body.replace(
   ""
 );
 
+// New headline: "The Inner Circle is open again" + a short subheading tagline.
+body = body.replace(
+  `<h1>From <span class="hl">Target shelves</span> to six-figure weeks.</h1>`,
+  `<h1>The Inner Circle is <span class="hl">open again.</span></h1>
+      <p class="sub">Let's change the game for Forex.</p>`
+);
+
 // Move the stat/results strip further down the page (right before the final
 // CTA, as a last proof point) and put the same inline Typeform used on /ig
 // directly under the hero, so people can apply without leaving the page.
