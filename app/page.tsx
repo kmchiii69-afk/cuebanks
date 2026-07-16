@@ -55,6 +55,62 @@ body = body.replace(
     </div>`
 );
 
+// Simplify the hero — drop the long subtext, keep just the headline + trust line.
+body = body.replace(
+  `      <p class="sub">The mechanical, rule-based system I refined over 10 years to trade just <span class="blue">2–5 focused hours a day</span> — no hype, no get-rich-quick lies, just structure.</p>\n`,
+  ""
+);
+
+// Move the stat/results strip further down the page (right before the final
+// CTA, as a last proof point) and put the same inline Typeform used on /ig
+// directly under the hero, so people can apply without leaving the page.
+const METRICS_BLOCK = `<!-- METRICS -->
+<section class="metrics">
+  <div class="wrap">
+    <div class="grid">
+      <div class="metric"><div class="num">10<span>+</span></div><div class="lab">Years live trading experience</div></div>
+      <div class="metric"><div class="num">$500K</div><div class="lab">Documented in 5 days, posted live</div></div>
+      <div class="metric"><div class="num">10,000<span>+</span></div><div class="lab">Traders mentored worldwide</div></div>
+      <div class="metric"><div class="num">2–5<span>hrs</span></div><div class="lab">Focused trading per day</div></div>
+    </div>
+  </div>
+</section>`;
+
+body = body.replace(
+  `</section>
+
+${METRICS_BLOCK}
+
+<!-- STUDENT SPOTLIGHT -->`,
+  `</section>
+
+<!-- APPLY FORM -->
+<section class="sec" id="apply-form">
+  <div class="wrap">
+    <div class="sec-head reveal" style="text-align:center;margin:0 auto 36px;max-width:640px">
+      <div class="eyebrow" style="justify-content:center;display:flex">Apply Now</div>
+      <h2>Go through this and find out if you're a fit.</h2>
+    </div>
+    <div style="max-width:860px;margin:0 auto;border:1px solid var(--line);border-top:2px solid var(--blue);border-radius:14px;overflow:hidden;background:var(--panel)">
+      <div data-tf-live="${TYPEFORM_ID}" style="min-height:560px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- STUDENT SPOTLIGHT -->`
+);
+
+body = body.replace(
+  `<!-- VIDEO TESTIMONIALS -->
+
+<!-- FINAL CTA -->`,
+  `<!-- VIDEO TESTIMONIALS -->
+
+${METRICS_BLOCK}
+
+<!-- FINAL CTA -->`
+);
+
 export default function HomePage() {
   return (
     <>
