@@ -1,5 +1,6 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import bcrypt from 'bcryptjs';
+import type { PhaseProgress } from './phases';
 
 let _client: SupabaseClient | null = null;
 export function db() {
@@ -29,6 +30,7 @@ export interface Member {
   created_at: number;
   last_login: number;
   current_phase: number;
+  phase_progress: PhaseProgress;
   plan: Plan;
   expires_at: string | null; // ISO timestamp, null = no expiry (admins)
   goal: string;

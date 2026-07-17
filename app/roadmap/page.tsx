@@ -4,6 +4,14 @@ import Link from "next/link";
 import { useState, useRef, useEffect, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Globe from "@/components/ui/globe";
+import {
+  PHASES as PHASE_DEFS,
+  TOTAL_PHASES,
+  getPhase,
+  isPhaseComplete,
+  isPhaseUnlocked,
+  type PhaseProgress,
+} from "@/lib/phases";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type Video = { id?: string; hash?: string; label: string; href?: string };
@@ -1374,16 +1382,6 @@ const GLOBE_POS = [
   { left: 60, top: 65, scale: 2.2, opacity: 0.26 }, // bonus
 ];
 
-const PROGRESS_PHASES = [
-  { num: 'SET', title: 'Set',               duration: 'Week 2–3'   },
-  { num: 'EXE', title: 'Execute',           duration: 'Week 4'     },
-  { num: '01',  title: 'Phase 1 — Launch', duration: 'Week 5'     },
-  { num: '02',  title: 'Phase 2',           duration: 'Week 6–7'   },
-  { num: '03',  title: 'Phase 3',           duration: 'Week 7–10'  },
-  { num: '04',  title: 'Phase 4',           duration: 'Week 11–14' },
-  { num: '★',   title: 'Bonus',             duration: 'Week 14–21' },
-];
-
 function fmt(ts: number) {
   if (!ts) return '—';
   return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -1404,11 +1402,13 @@ export default function RoadmapPage() {
   const heroRef = useRef<HTMLElement>(null);
 
   // ── Auth + member state ──
-  const [member, setMember] = useState<{ email: string; name: string; cohort: string; created_at: number; current_phase: number } | null>(null);
+  const [member, setMember] = useState<{ email: string; name: string; cohort: string; created_at: number; current_phase: number; phase_progress: PhaseProgress } | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [savingPhase, setSavingPhase] = useState(false);
   const [notes, setNotes] = useState('');
   const [notesSaved, setNotesSaved] = useState(false);
+  const [homeworkChecked, setHomeworkChecked] = useState<Record<number, boolean>>({});
+  const [completingPhase, setCompletingPhase] = useState<number | null>(null);
+  const [completeError, setCompleteError] = useState<Record<number, string>>({});
 
   useEffect(() => {
     fetch('/api/auth/me')
@@ -1422,16 +1422,27 @@ export default function RoadmapPage() {
       .catch(() => router.replace('/login'));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  async function setPhase(phase: number) {
-    if (!member || savingPhase) return;
-    setSavingPhase(true);
-    await fetch('/api/portal/progress', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phase }),
-    });
-    setMember(m => m ? { ...m, current_phase: phase } : m);
-    setSavingPhase(false);
+  async function markPhaseComplete(phaseId: number) {
+    if (!member || completingPhase) return;
+    const def = getPhase(phaseId);
+    if (def?.hasHomework && !homeworkChecked[phaseId]) return;
+    setCompletingPhase(phaseId);
+    setCompleteError(e => ({ ...e, [phaseId]: '' }));
+    try {
+      const res = await fetch('/api/portal/phase-complete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phaseId, homeworkConfirmed: def?.hasHomework ? true : undefined }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setCompleteError(e => ({ ...e, [phaseId]: data.error || 'Something went wrong' }));
+        return;
+      }
+      setMember(m => m ? { ...m, phase_progress: data.phase_progress ?? m.phase_progress, current_phase: data.current_phase ?? m.current_phase } : m);
+    } finally {
+      setCompletingPhase(null);
+    }
   }
 
   function saveNotes() {
@@ -1573,24 +1584,23 @@ export default function RoadmapPage() {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "rgba(255,255,255,0.3)", letterSpacing: "0.2em", textTransform: "uppercase" }}>16-Week Curriculum</span>
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "rgba(255,255,255,0.25)", letterSpacing: "0.1em" }}>
-              {(member?.current_phase ?? 0) === 0 ? 'Not started' : (member?.current_phase ?? 0) >= 7 ? 'Complete' : `Phase ${member?.current_phase} of 7`}
+              {(member?.current_phase ?? 0) <= 1 && !isPhaseComplete(member?.phase_progress, 1) ? 'Not started' : isPhaseComplete(member?.phase_progress, TOTAL_PHASES) ? 'Complete' : `Phase ${member?.current_phase} of ${TOTAL_PHASES}`}
             </span>
           </div>
           <div style={{ height: 3, background: "rgba(255,255,255,0.07)", borderRadius: 2, overflow: "hidden" }}>
-            <div style={{ height: "100%", width: `${((member?.current_phase ?? 0) / 7) * 100}%`, background: "var(--acid)", borderRadius: 2, transition: "width 0.4s ease" }} />
+            <div style={{ height: "100%", width: `${(((member?.current_phase ?? 1) - 1) / TOTAL_PHASES) * 100}%`, background: "var(--acid)", borderRadius: 2, transition: "width 0.4s ease" }} />
           </div>
         </div>
 
         {/* Phase list */}
         <div style={{ padding: "8px 20px 4px", display: "flex", flexDirection: "column", gap: 3, flexShrink: 0 }}>
-          {PROGRESS_PHASES.map((ph, i) => {
-            const phaseNum = i + 1;
-            const isActive = (member?.current_phase ?? 0) === phaseNum;
-            const isDone   = (member?.current_phase ?? 0) > phaseNum;
+          {PHASE_DEFS.map((ph) => {
+            const isDone = isPhaseComplete(member?.phase_progress, ph.id);
+            const isActive = !isDone && isPhaseUnlocked(member?.phase_progress, ph.id);
             return (
               <div
-                key={ph.num}
-                onClick={() => setPhase(isActive ? 0 : phaseNum)}
+                key={ph.id}
+                onClick={() => jumpTo(ph.id - 1)}
                 style={{
                   background: isActive ? "rgba(37,99,235,0.06)" : isDone ? "rgba(34,197,94,0.04)" : "rgba(255,255,255,0.02)",
                   border: `1px solid ${isActive ? "rgba(37,99,235,0.25)" : isDone ? "rgba(34,197,94,0.15)" : "rgba(255,255,255,0.05)"}`,
@@ -1603,7 +1613,7 @@ export default function RoadmapPage() {
               >
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                   <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: isActive ? "var(--acid)" : isDone ? "#22c55e" : "rgba(255,255,255,0.2)", letterSpacing: "0.1em", flexShrink: 0, width: 18 }}>
-                    {isDone ? "✓" : ph.num}
+                    {isDone ? "✓" : isActive ? ph.num : "🔒"}
                   </span>
                   <span style={{ fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 500, color: isActive ? "#fff" : isDone ? "rgba(255,255,255,0.55)" : "rgba(255,255,255,0.45)" }}>{ph.title}</span>
                 </div>
@@ -1615,7 +1625,7 @@ export default function RoadmapPage() {
             );
           })}
           <p style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(255,255,255,0.2)", margin: "6px 0 0", textAlign: "center" }}>
-            Tap a phase to mark as current
+            Tap a phase to jump to it
           </p>
         </div>
 
@@ -1686,17 +1696,23 @@ export default function RoadmapPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             {PHASES.map((phase, i) => {
               const videoCount = phase.items.reduce((a, item) => a + (item.videos?.length ?? 0), 0);
+              const phaseId = i + 1;
+              const def = getPhase(phaseId);
+              const unlocked = isPhaseUnlocked(member?.phase_progress, phaseId);
+              const complete = isPhaseComplete(member?.phase_progress, phaseId);
+              const completion = member?.phase_progress?.[String(phaseId)];
+              const prevTitle = i > 0 ? PHASES[i - 1].title : null;
               return (
                 <div key={i} ref={el => { phaseRefs.current[i] = el; }} style={{ display: "flex", gap: 32, position: "relative", scrollMarginTop: 80 }}>
                   {/* Dot */}
                   <div style={{ flexShrink: 0, width: 56, display: "flex", flexDirection: "column", alignItems: "center", paddingTop: 32, position: "relative", zIndex: 1 }}>
-                    <div style={{ width: 36, height: 36, borderRadius: "50%", background: "#000", border: "1.5px solid rgba(37,99,235,0.6)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 20px rgba(37,99,235,0.12), 0 0 60px rgba(37,99,235,0.05)" }}>
-                      <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: "var(--acid)", letterSpacing: "0.04em" }}>{phase.num}</span>
+                    <div style={{ width: 36, height: 36, borderRadius: "50%", background: "#000", border: `1.5px solid ${complete ? "rgba(34,197,94,0.6)" : "rgba(37,99,235,0.6)"}`, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 20px rgba(37,99,235,0.12), 0 0 60px rgba(37,99,235,0.05)" }}>
+                      <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: complete ? "#22c55e" : "var(--acid)", letterSpacing: "0.04em" }}>{complete ? "✓" : unlocked ? phase.num : "🔒"}</span>
                     </div>
                   </div>
 
                   {/* Card */}
-                  <div style={{ flex: 1, background: "rgba(12,16,24,0.7)", border: "1px solid rgba(255,255,255,0.07)", borderTop: "1px solid rgba(37,99,235,0.3)", overflow: "hidden", backdropFilter: "blur(8px)", boxShadow: "0 0 0 0 transparent, 0 8px 40px rgba(0,0,0,0.5)" }}>
+                  <div style={{ flex: 1, background: "rgba(12,16,24,0.7)", border: "1px solid rgba(255,255,255,0.07)", borderTop: `1px solid ${complete ? "rgba(34,197,94,0.3)" : "rgba(37,99,235,0.3)"}`, overflow: "hidden", backdropFilter: "blur(8px)", boxShadow: "0 0 0 0 transparent, 0 8px 40px rgba(0,0,0,0.5)", opacity: unlocked ? 1 : 0.55 }}>
                     {/* Card header */}
                     <div style={{ padding: "36px 40px 24px" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
@@ -1722,6 +1738,58 @@ export default function RoadmapPage() {
                     <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", background: "rgba(37,99,235,0.03)", padding: "20px 40px", display: "flex", alignItems: "flex-start", gap: 16 }}>
                       <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: "rgba(37,99,235,0.45)", letterSpacing: "0.22em", textTransform: "uppercase", flexShrink: 0, paddingTop: 3, whiteSpace: "nowrap" }}>· After ·</div>
                       <div style={{ fontFamily: "var(--font-body)", fontWeight: 400, fontSize: 14, lineHeight: 1.7, color: "rgba(37,99,235,0.65)" }}>{phase.checkpoint}</div>
+                    </div>
+
+                    {/* Mark as Complete */}
+                    <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", padding: "20px 40px" }}>
+                      {!unlocked ? (
+                        <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.35)", letterSpacing: "0.04em" }}>
+                          🔒 Locked — complete {prevTitle} first
+                        </div>
+                      ) : complete ? (
+                        <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: 700, color: "#22c55e", letterSpacing: "0.04em" }}>
+                          ✓ Completed {completion ? fmt(new Date(completion.completedAt).getTime()) : ""}
+                          {completion?.completedBy === "admin" && <span style={{ color: "rgba(255,255,255,0.3)", fontWeight: 500 }}> · Marked by coach</span>}
+                        </div>
+                      ) : (
+                        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                          {def?.hasHomework && (
+                            <label style={{ display: "flex", alignItems: "flex-start", gap: 10, cursor: "pointer" }}>
+                              <input
+                                type="checkbox"
+                                checked={!!homeworkChecked[phaseId]}
+                                onChange={e => setHomeworkChecked(h => ({ ...h, [phaseId]: e.target.checked }))}
+                                style={{ marginTop: 3, accentColor: "#2563eb" }}
+                              />
+                              <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(255,255,255,0.6)", lineHeight: 1.5 }}>
+                                I&apos;ve submitted my homework for this phase in my private Discord channel.
+                              </span>
+                            </label>
+                          )}
+                          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                            <button
+                              onClick={() => markPhaseComplete(phaseId)}
+                              disabled={completingPhase === phaseId || (def?.hasHomework && !homeworkChecked[phaseId])}
+                              style={{
+                                alignSelf: "flex-start",
+                                background: "rgba(37,99,235,0.12)",
+                                border: "1px solid rgba(37,99,235,0.4)",
+                                borderRadius: 7, padding: "10px 20px",
+                                fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase",
+                                color: "var(--acid)",
+                                cursor: def?.hasHomework && !homeworkChecked[phaseId] ? "not-allowed" : "pointer",
+                                opacity: def?.hasHomework && !homeworkChecked[phaseId] ? 0.4 : 1,
+                                transition: "opacity 0.15s",
+                              }}
+                            >
+                              {completingPhase === phaseId ? "Marking..." : `Mark ${phase.title} Complete`}
+                            </button>
+                            {completeError[phaseId] && (
+                              <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "#ef4444" }}>{completeError[phaseId]}</span>
+                            )}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

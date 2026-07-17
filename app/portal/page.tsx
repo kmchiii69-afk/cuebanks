@@ -3,6 +3,13 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Globe from '@/components/ui/globe';
+import {
+  PHASES,
+  TOTAL_PHASES,
+  isPhaseComplete,
+  isPhaseUnlocked,
+  type PhaseProgress,
+} from '@/lib/phases';
 
 type Plan = '5k' | '7.5k' | '15k' | 'low_ticket';
 
@@ -13,6 +20,7 @@ interface Member {
   cohort: string;
   created_at: number;
   current_phase: number;
+  phase_progress: PhaseProgress;
   plan: Plan;
   expires_at: string | null;
   goal: string;
@@ -40,17 +48,6 @@ interface Webinar {
   recording_url: string;
   is_published: boolean;
 }
-
-const PHASES = [
-  { num: 'PREP', title: 'Prepare', duration: 'Week 1'     },
-  { num: 'SET',  title: 'Set',     duration: 'Week 2–3'   },
-  { num: 'EXE',  title: 'Execute', duration: 'Week 4'     },
-  { num: '01',   title: 'Phase 1', duration: 'Week 5'     },
-  { num: '02',   title: 'Phase 2', duration: 'Week 6–7'   },
-  { num: '03',   title: 'Phase 3', duration: 'Week 7–10'  },
-  { num: '04',   title: 'Phase 4', duration: 'Week 11–14' },
-  { num: '★',    title: 'Bonus',   duration: 'Week 14–21' },
-];
 
 const SESSIONS = [
   { name: 'London',   utcOpen: 8,  utcClose: 17, overnight: false, color: '#3b82f6', abbr: 'LON' },
@@ -118,7 +115,6 @@ export default function PortalPage() {
   const [member, setMember] = useState<Member | null>(null);
   const [loading, setLoading] = useState(true);
   const [loggingOut, setLoggingOut] = useState(false);
-  const [savingPhase, setSavingPhase] = useState(false);
 
   const [openSessions, setOpenSessions] = useState<boolean[]>([false, false, false, false]);
   const [nowDate, setNowDate] = useState<Date | null>(null);
@@ -237,18 +233,6 @@ export default function PortalPage() {
     setLoggingOut(true);
     await fetch('/api/auth/logout', { method: 'POST' });
     router.replace('/login');
-  }
-
-  async function setPhase(phase: number) {
-    if (!member || savingPhase) return;
-    setSavingPhase(true);
-    await fetch('/api/portal/progress', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phase }),
-    });
-    setMember(m => m ? { ...m, current_phase: phase } : m);
-    setSavingPhase(false);
   }
 
   function toggleCheck(id: string) {
@@ -446,6 +430,8 @@ export default function PortalPage() {
   );
 
   const phase = member?.current_phase ?? 0;
+  const completedPhaseCount = PHASES.filter(p => isPhaseComplete(member?.phase_progress, p.id)).length;
+  const allPhasesComplete = completedPhaseCount >= TOTAL_PHASES;
   const isAdmin = member?.role === 'admin' || member?.role === 'team';
   const liveCount = openSessions.filter(Boolean).length;
   const overlap = openSessions[0] && openSessions[1]; // London + NY
@@ -624,11 +610,11 @@ export default function PortalPage() {
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 7 }}>
               <span style={{ ...M, fontSize: 8, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.22)', textTransform: 'uppercase' }}>Curriculum Progress</span>
               <span style={{ ...M, fontSize: 8, color: 'rgba(255,255,255,0.2)' }}>
-                {phase === 0 ? 'Not started' : phase >= 8 ? 'Complete ✓' : `Phase ${phase} of 8`}
+                {phase === 0 && completedPhaseCount === 0 ? 'Not started' : allPhasesComplete ? 'Complete ✓' : `Phase ${phase} of ${TOTAL_PHASES}`}
               </span>
             </div>
             <div style={{ height: 3, background: 'rgba(255,255,255,0.07)', borderRadius: 2, marginBottom: 18, overflow: 'hidden' }}>
-              <div style={{ height: '100%', width: `${(phase / 8) * 100}%`, background: 'linear-gradient(90deg, #2563eb, #d4f700)', borderRadius: 2, transition: 'width 0.5s ease' }} />
+              <div style={{ height: '100%', width: `${(completedPhaseCount / TOTAL_PHASES) * 100}%`, background: 'linear-gradient(90deg, #2563eb, #d4f700)', borderRadius: 2, transition: 'width 0.5s ease' }} />
             </div>
 
             {/* Today at a glance */}
@@ -701,7 +687,7 @@ export default function PortalPage() {
             </div>
             <div style={{ flex: 1 }}>
               <div style={{ ...D, fontSize: 15, fontWeight: 700, color: '#2563eb', marginBottom: 2 }}>Course Roadmap</div>
-              <div style={{ ...S, fontSize: 12, color: 'rgba(255,255,255,0.38)' }}>{phase === 0 ? 'Start here — Week 0, Prepare' : phase >= 8 ? 'All phases complete' : `Phase ${phase} of 8 active`}</div>
+              <div style={{ ...S, fontSize: 12, color: 'rgba(255,255,255,0.38)' }}>{phase === 0 && completedPhaseCount === 0 ? 'Start here — Week 1, Prepare' : allPhasesComplete ? 'All phases complete' : `Phase ${phase} of ${TOTAL_PHASES} active`}</div>
             </div>
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 6.5h8M8 3.5l3 3-3 3" stroke="rgba(37,99,235,0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </a>
@@ -737,22 +723,22 @@ export default function PortalPage() {
         {/* ── ROW 3: Phase Tracker ──────────────────────────── */}
         <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '20px 20px', marginBottom: 14 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-            <span style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.22)', textTransform: 'uppercase' }}>Phase Tracker · Click to Mark</span>
+            <span style={{ ...M, fontSize: 8, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.22)', textTransform: 'uppercase' }}>Phase Tracker</span>
             <a href="/roadmap" style={{ ...M, fontSize: 8, letterSpacing: '0.14em', color: 'rgba(37,99,235,0.45)', textDecoration: 'none', textTransform: 'uppercase' }}>Open Roadmap →</a>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8,1fr)', gap: 5 }}>
-            {PHASES.map((ph, i) => {
-              const pn = i + 1;
-              const active = phase === pn;
-              const done = phase > pn;
+            {PHASES.map(ph => {
+              const done = isPhaseComplete(member?.phase_progress, ph.id);
+              const unlocked = isPhaseUnlocked(member?.phase_progress, ph.id);
+              const active = unlocked && !done;
               return (
-                <div key={ph.num} onClick={() => setPhase(active ? 0 : pn)} style={{ background: active ? 'rgba(37,99,235,0.09)' : done ? 'rgba(34,197,94,0.06)' : 'rgba(255,255,255,0.02)', border: `1px solid ${active ? 'rgba(37,99,235,0.35)' : done ? 'rgba(34,197,94,0.2)' : 'rgba(255,255,255,0.06)'}`, borderRadius: 8, padding: '9px 7px', cursor: 'pointer', transition: 'all 0.15s', textAlign: 'center' }}
+                <a key={ph.id} href="/roadmap" style={{ display: 'block', textDecoration: 'none', background: active ? 'rgba(37,99,235,0.09)' : done ? 'rgba(34,197,94,0.06)' : 'rgba(255,255,255,0.02)', border: `1px solid ${active ? 'rgba(37,99,235,0.35)' : done ? 'rgba(34,197,94,0.2)' : 'rgba(255,255,255,0.06)'}`, borderRadius: 8, padding: '9px 7px', cursor: 'pointer', transition: 'all 0.15s', textAlign: 'center' }}
                   onMouseEnter={e => { if (!active) (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.16)'; }}
                   onMouseLeave={e => { if (!active) (e.currentTarget as HTMLElement).style.borderColor = done ? 'rgba(34,197,94,0.2)' : 'rgba(255,255,255,0.06)'; }}>
-                  <div style={{ ...M, fontSize: 10, fontWeight: 700, color: active ? '#2563eb' : done ? '#22c55e' : 'rgba(255,255,255,0.22)', marginBottom: 4 }}>{done ? '✓' : ph.num}</div>
+                  <div style={{ ...M, fontSize: 10, fontWeight: 700, color: active ? '#2563eb' : done ? '#22c55e' : 'rgba(255,255,255,0.22)', marginBottom: 4 }}>{done ? '✓' : unlocked ? ph.num : '🔒'}</div>
                   <div style={{ ...S, fontSize: 10, color: active ? 'rgba(255,255,255,0.85)' : done ? 'rgba(255,255,255,0.42)' : 'rgba(255,255,255,0.28)', lineHeight: 1.3 }}>{ph.title}</div>
                   <div style={{ ...M, fontSize: 7, color: 'rgba(255,255,255,0.13)', marginTop: 3 }}>{ph.duration}</div>
-                </div>
+                </a>
               );
             })}
           </div>

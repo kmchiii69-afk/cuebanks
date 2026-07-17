@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import { useRouter } from 'next/navigation';
-
-const PHASE_LABELS = ['—', 'Set', 'Execute', 'Phase 1', 'Phase 2', 'Phase 3', 'Phase 4', 'Bonus', 'Complete ✓'];
+import { PHASES, TOTAL_PHASES, isPhaseComplete, isPhaseUnlocked, type PhaseProgress } from '@/lib/phases';
 
 type Plan = '5k' | '7.5k' | '15k' | 'low_ticket';
 
@@ -19,6 +18,7 @@ interface Member {
   created_at: number;
   last_login: number;
   current_phase: number;
+  phase_progress: PhaseProgress;
   plan: Plan;
   expires_at: string | null;
   goal: string;
@@ -151,6 +151,8 @@ export default function AdminPage() {
   const [unlockLoading, setUnlockLoading] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState('');
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [expandedMemberRow, setExpandedMemberRow] = useState<string | null>(null);
+  const [phaseActionLoading, setPhaseActionLoading] = useState<string | null>(null);
 
   // Analytics
   interface AnalyticRow { id: string; member_email: string; plan: string; question: string; answer: string; created_at: string; }
@@ -211,6 +213,24 @@ export default function AdminPage() {
     const res = await fetch('/api/admin/members');
     if (res.ok) setMembers(await res.json());
     setMembersLoading(false);
+  }
+
+  async function phaseOverride(email: string, phaseId: number, action: 'complete' | 'reopen') {
+    const key = `${email}:${phaseId}`;
+    setPhaseActionLoading(key);
+    try {
+      const res = await fetch(`/api/admin/members/${encodeURIComponent(email)}/phase-complete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phaseId, action }),
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        setMembers(ms => ms.map(m => m.email === email ? { ...m, ...updated } : m));
+      }
+    } finally {
+      setPhaseActionLoading(null);
+    }
   }
 
   async function loadWebinars() {
@@ -476,8 +496,13 @@ export default function AdminPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filtered.map(m => (
-                      <tr key={m.email} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', transition: 'background 0.1s' }}
+                    {filtered.map(m => {
+                      const isRowExpanded = expandedMemberRow === m.email;
+                      const completedCount = PHASES.filter(p => isPhaseComplete(m.phase_progress, p.id)).length;
+                      const progressLabel = completedCount === 0 ? 'Not started' : completedCount >= TOTAL_PHASES ? 'Complete ✓' : PHASES.find(p => p.id === Math.min(completedCount + 1, TOTAL_PHASES))?.title ?? `P${completedCount}`;
+                      return (
+                      <Fragment key={m.email}>
+                      <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', transition: 'background 0.1s' }}
                         onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.02)'; }}
                         onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; }}>
                         <td style={{ padding: '12px 14px', fontFamily: S, fontSize: 13, color: m.active ? '#fff' : 'rgba(255,255,255,0.28)' }}>{m.name || '—'}</td>
@@ -488,16 +513,17 @@ export default function AdminPage() {
                         <td style={{ padding: '12px 14px', fontFamily: M, fontSize: 10, color: m.expires_at && new Date(m.expires_at) < new Date() ? '#ef4444' : 'rgba(255,255,255,0.3)' }}>
                           {m.expires_at ? new Date(m.expires_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
                         </td>
-                        <td style={{ padding: '12px 14px' }}>
+                        <td style={{ padding: '12px 14px', cursor: 'pointer' }} onClick={() => setExpandedMemberRow(isRowExpanded ? null : m.email)}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                             <div style={{ display: 'flex', gap: 2 }}>
-                              {[1,2,3,4,5,6,7].map(p => (
-                                <div key={p} style={{ width: 7, height: 7, borderRadius: 2, background: (m.current_phase ?? 0) >= p ? '#2563eb' : 'rgba(255,255,255,0.07)' }} />
-                              ))}
+                              {PHASES.map(p => {
+                                const done = isPhaseComplete(m.phase_progress, p.id);
+                                const unlocked = isPhaseUnlocked(m.phase_progress, p.id);
+                                return <div key={p.id} style={{ width: 7, height: 7, borderRadius: 2, background: done ? '#22c55e' : unlocked ? '#2563eb' : 'rgba(255,255,255,0.07)' }} />;
+                              })}
                             </div>
-                            <span style={{ fontFamily: S, fontSize: 11, color: 'rgba(255,255,255,0.32)' }}>
-                              {(m.current_phase ?? 0) === 0 ? 'Not started' : PHASE_LABELS[m.current_phase ?? 0] ?? `P${m.current_phase}`}
-                            </span>
+                            <span style={{ fontFamily: S, fontSize: 11, color: 'rgba(255,255,255,0.32)' }}>{progressLabel}</span>
+                            <span style={{ fontFamily: M, fontSize: 9, color: 'rgba(255,255,255,0.2)', transition: 'transform 0.15s', display: 'inline-block', transform: isRowExpanded ? 'rotate(90deg)' : 'rotate(0deg)' }}>›</span>
                           </div>
                         </td>
                         <td style={{ padding: '12px 14px' }}>
@@ -514,7 +540,51 @@ export default function AdminPage() {
                             onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = 'rgba(255,255,255,0.32)'; }}>Edit</button>
                         </td>
                       </tr>
-                    ))}
+                      {isRowExpanded && (
+                        <tr>
+                          <td colSpan={10} style={{ padding: 0 }}>
+                            <div style={{ margin: '0 14px 14px', padding: '16px 18px', background: 'rgba(37,99,235,0.05)', border: '1px solid rgba(37,99,235,0.12)', borderLeft: '3px solid rgba(37,99,235,0.35)', borderRadius: '0 6px 6px 0' }}>
+                              <div style={{ fontFamily: M, fontSize: 8, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(37,99,235,0.5)', marginBottom: 12 }}>Roadmap Progress</div>
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                                {PHASES.map(p => {
+                                  const completion = m.phase_progress?.[String(p.id)];
+                                  const done = completion?.status === 'complete';
+                                  const unlocked = isPhaseUnlocked(m.phase_progress, p.id);
+                                  const key = `${m.email}:${p.id}`;
+                                  const busy = phaseActionLoading === key;
+                                  return (
+                                    <div key={p.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 6 }}>
+                                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                        <span style={{ fontFamily: M, fontSize: 9, fontWeight: 700, color: done ? '#22c55e' : unlocked ? '#2563eb' : 'rgba(255,255,255,0.25)', width: 16 }}>{done ? '✓' : unlocked ? p.num : '🔒'}</span>
+                                        <span style={{ fontFamily: S, fontSize: 12, color: 'rgba(255,255,255,0.75)' }}>{p.title}</span>
+                                        {completion && (
+                                          <span style={{ fontFamily: M, fontSize: 9, color: 'rgba(255,255,255,0.25)' }}>
+                                            {fmt(new Date(completion.completedAt).getTime())} · {completion.completedBy === 'admin' ? 'by coach' : 'self-reported'}
+                                          </span>
+                                        )}
+                                      </div>
+                                      <div style={{ display: 'flex', gap: 6 }}>
+                                        {done ? (
+                                          <button disabled={busy} onClick={() => phaseOverride(m.email, p.id, 'reopen')} style={{ background: 'none', border: '1px solid rgba(239,68,68,0.25)', borderRadius: 5, padding: '4px 10px', fontFamily: M, fontSize: 8, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#ef4444', cursor: busy ? 'wait' : 'pointer', opacity: busy ? 0.5 : 1 }}>
+                                            Reopen
+                                          </button>
+                                        ) : (
+                                          <button disabled={busy} onClick={() => phaseOverride(m.email, p.id, 'complete')} style={{ background: 'none', border: '1px solid rgba(37,99,235,0.3)', borderRadius: 5, padding: '4px 10px', fontFamily: M, fontSize: 8, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#2563eb', cursor: busy ? 'wait' : 'pointer', opacity: busy ? 0.5 : 1 }}>
+                                            Mark Complete (Override)
+                                          </button>
+                                        )}
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                      </Fragment>
+                      );
+                    })}
                     {filtered.length === 0 && (
                       <tr><td colSpan={10} style={{ padding: '40px 14px', textAlign: 'center', fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.2)' }}>No members found</td></tr>
                     )}
