@@ -466,7 +466,7 @@ export default function PortalPage() {
   // Quote currency per pair — pip value is computed live from this + fxRates, not hardcoded,
   // so it stays accurate for any account currency (mirrors how myfxbook's calculator works).
   const QUOTE_CCY: Record<string, string> = {
-    'XAU/USD': 'USD', 'EUR/USD': 'USD', 'GBP/USD': 'USD', 'AUD/USD': 'USD', 'NZD/USD': 'USD',
+    'XAU/USD': 'USD', 'BTC/USD': 'USD', 'EUR/USD': 'USD', 'GBP/USD': 'USD', 'AUD/USD': 'USD', 'NZD/USD': 'USD',
     'USD/JPY': 'JPY', 'USD/CAD': 'CAD', 'USD/CHF': 'CHF',
     'EUR/JPY': 'JPY', 'GBP/JPY': 'JPY', 'AUD/JPY': 'JPY',
     'EUR/GBP': 'GBP', 'EUR/CAD': 'CAD', 'GBP/CAD': 'CAD',
@@ -475,9 +475,10 @@ export default function PortalPage() {
   const CALC_CURRENCIES = ['USD', 'GBP', 'EUR', 'AUD', 'CAD'];
   const CURRENCY_SYMBOLS: Record<string, string> = { USD: '$', GBP: '£', EUR: '€', AUD: 'A$', CAD: 'C$' };
   const currencySymbol = CURRENCY_SYMBOLS[calcCurrency] ?? '$';
-  // Pip value per standard lot, in the pair's quote currency (gold: 100oz lot, $0.01/oz pip; FX: 100k units)
+  // Pip value per standard lot, in the pair's quote currency (gold: 100oz lot, $0.01/oz pip;
+  // BTC: 1 lot = 1 BTC, $1 tick; FX: 100k units)
   const quoteCcy = QUOTE_CCY[calcPair] ?? 'USD';
-  const pipValueQuote = calcPair === 'XAU/USD' ? 1 : (quoteCcy === 'JPY' ? 0.01 : 0.0001) * 100000;
+  const pipValueQuote = calcPair === 'XAU/USD' || calcPair === 'BTC/USD' ? 1 : (quoteCcy === 'JPY' ? 0.01 : 0.0001) * 100000;
   // fxRates are USD-based (1 USD = fxRates[ccy] units of ccy) — convert quote-currency pip value
   // to the selected account currency via USD as the common intermediary.
   const rateQuote = fxRates[quoteCcy] ?? 1;
