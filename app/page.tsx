@@ -61,10 +61,11 @@ body = body.replace(
   ""
 );
 
-// New headline: "The Inner Circle is open again" + a short subheading tagline.
+// New headline: ICP-centric, speaking directly to forex traders' desired
+// outcome (profitability) rather than the founder's own backstory.
 body = body.replace(
   `<h1>From <span class="hl">Target shelves</span> to six-figure weeks.</h1>`,
-  `<h1>The Inner Circle is <span class="hl">open again.</span></h1>
+  `<h1>Systems That Take <span class="hl">Forex Traders</span> to Profitability.</h1>
       <p class="sub">Let's change the game for Forex.</p>`
 );
 
