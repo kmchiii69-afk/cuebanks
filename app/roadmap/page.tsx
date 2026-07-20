@@ -1588,7 +1588,7 @@ export default function RoadmapPage() {
             </span>
           </div>
           <div style={{ height: 3, background: "rgba(255,255,255,0.07)", borderRadius: 2, overflow: "hidden" }}>
-            <div style={{ height: "100%", width: `${(((member?.current_phase ?? 1) - 1) / TOTAL_PHASES) * 100}%`, background: "var(--acid)", borderRadius: 2, transition: "width 0.4s ease" }} />
+            <div style={{ height: "100%", width: `${(PHASE_DEFS.filter(p => isPhaseComplete(member?.phase_progress, p.id)).length / TOTAL_PHASES) * 100}%`, background: "var(--acid)", borderRadius: 2, transition: "width 0.4s ease" }} />
           </div>
         </div>
 

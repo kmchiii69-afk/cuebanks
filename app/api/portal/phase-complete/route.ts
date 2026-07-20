@@ -45,6 +45,7 @@ export async function POST(req: NextRequest) {
 
   const current_phase = furthestUnlockedPhase(merged);
   const updated = await updateMember(user.email, { phase_progress: merged, current_phase });
+  if (!updated) return NextResponse.json({ error: 'Update failed' }, { status: 500 });
 
-  return NextResponse.json({ ok: true, phase_progress: updated?.phase_progress, current_phase: updated?.current_phase });
+  return NextResponse.json({ ok: true, phase_progress: updated.phase_progress, current_phase: updated.current_phase });
 }

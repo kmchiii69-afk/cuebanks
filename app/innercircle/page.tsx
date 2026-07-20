@@ -464,7 +464,7 @@ export default function InnerCirclePage() {
               { yr: "Early days",  t: "Blew four accounts. Learned psychology and risk management kill more traders than bad setups do." },
               { yr: "Years 1–5",  t: "Refined the confluence system. Built the top-down framework — Daily → H4 → H1 → M30 → M5 — as the non-negotiable process." },
               { yr: "Years 5–10", t: "Started teaching. Watched traders make the exact same mistakes repeatedly — built the curriculum to interrupt that pattern." },
-              { yr: "2025–26",    t: "Built Wall Street Academy — 6-phase roadmap, Cue AI trained on every session ever recorded, packaged from scratch." },
+              { yr: "2025–26",    t: `Built Wall Street Academy — ${TOTAL_PHASES}-phase roadmap, Cue AI trained on every session ever recorded, packaged from scratch.` },
             ].map(({ yr, t }) => (
               <div key={yr} style={{ background: "#000", padding: "22px 24px" }}>
                 <div style={{ fontFamily: mono, fontSize: 9, fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(255,255,255,0.25)", marginBottom: 10 }}>{yr}</div>
