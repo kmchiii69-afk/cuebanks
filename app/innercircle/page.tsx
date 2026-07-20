@@ -2,6 +2,13 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { CNC, CUECASTS } from "../roadmap/page";
+import { PHASES as PHASE_DEFS, TOTAL_PHASES } from "@/lib/phases";
+
+const CNC_COUNT = CNC.length;
+const CUECAST_COUNT = CUECASTS.length;
+const ARCHIVE_TOTAL = CNC_COUNT + CUECAST_COUNT;
+const HOMEWORK_PHASE_COUNT = PHASE_DEFS.filter(p => p.hasHomework).length;
 
 type Tier = "basic" | "standard" | "premium";
 
@@ -60,32 +67,44 @@ function WinMarquee({ images, reverse, height = 160 }: { images: typeof STUDENT_
   );
 }
 
-const PHASES = [
-  { num: "01", weeks: "Wk 1–2",   title: "Foundation & Mindset",    desc: "Risk management, platform setup, psychology. The most important phase. You don't start Phase 2 without this locked in." },
-  { num: "02", weeks: "Wk 2–3",   title: "Reading Price Action",    desc: "Market structure, S&R, supply and demand, the 200 and 50 EMAs. You learn to see what price is actually doing." },
-  { num: "03", weeks: "Wk 3–4",   title: "Structure + Levels",      desc: "Major market patterns, key levels, and how structure on higher timeframes controls every trade you'll ever take." },
-  { num: "04", weeks: "Wk 4–7",   title: "The Confluence System",   desc: "Fibonacci from point A to B. The stack — all confluences aligned before you enter. This is where it clicks." },
-  { num: "05", weeks: "Wk 7–10",  title: "Advanced Execution",      desc: "Break and retest, order blocks, entry models. You stop guessing and start executing with a reason." },
-  { num: "06", weeks: "Wk 10–16", title: "Live & Consistent",       desc: "Back-testing, journaling, prop firm strategy, 30-day live trading journal. The bridge from paper to live account." },
-];
+// Grounded in the same phase definitions the member roadmap and progress
+// tracking (Mark as Complete) actually run on — @/lib/phases — so what's
+// sold here always matches what's delivered in the portal.
+const PHASE_DESCRIPTIONS: Record<number, string> = {
+  1: "Set yourself up before the clock starts — risk management, platform setup, mindset. Skip this week and you show up to Week 1 already behind.",
+  2: "Master the fundamentals before you combine them: support & resistance, market structure, Fibonacci, trendlines.",
+  3: "The Confluence Series — every technical concept combined and adapted to real market conditions. Everything you've learned starts working as one system.",
+  4: "The curriculum lands here. Study it, execute in real time, review every session — no exceptions.",
+  5: "Backtest everything. Unfiltered, real-time decision-making — this is where reps turn into edge.",
+  6: "A full, honest self-evaluation: where you need the most focus, what's holding you back, what's changed since you started.",
+  7: "Advanced CueCAST deep-dives and live Chart N Chill analysis. Professional-level thinking gets locked in.",
+  8: "Every Chart N Chill and CueCAST session on demand, ongoing. The answer to your question is probably already recorded.",
+};
+
+const PHASES = PHASE_DEFS.map(p => ({
+  num: p.num,
+  weeks: p.duration.replace("Week ", "Wk ").replace(/ – /g, "–"),
+  title: p.title,
+  desc: PHASE_DESCRIPTIONS[p.id],
+}));
 
 // 16 weekly webinars — one per week, 1.5 hrs each, structured topic + Q&A at end
 const CALL_SCHEDULE_STANDARD = [
   { n: "01", type: "WEBINAR", label: "Orientation — The WSA Framework",                  when: "Week 1",  note: "Cue walks the full 16-week roadmap live. What to expect, how to work the system, and the mindset required to see it through." },
-  { n: "02", type: "WEBINAR", label: "Phase 01 — The Psychology of Losing",              when: "Week 2",  note: "Why most traders blow up before they ever develop a real edge. The mental patterns that destroy accounts — and how the system interrupts them." },
-  { n: "03", type: "WEBINAR", label: "Phase 01 — Risk Rules That Keep You Alive",        when: "Week 3",  note: "Position sizing, max loss per session, and the compounding math most traders ignore. This is what protects your capital through Phase 2–6." },
-  { n: "04", type: "WEBINAR", label: "Phase 02 — Reading Price Like Cue Reads It",       when: "Week 4",  note: "Market structure from scratch. How Cue actually sees a chart — not textbook theory. What price is doing vs. what it looks like it's doing." },
-  { n: "05", type: "WEBINAR", label: "Phase 02 — Supply, Demand & the 200/50 EMA",      when: "Week 5",  note: "How the EMAs frame everything. Supply and demand zones that matter vs. the ones retail draws wrong. Cue on live charts." },
-  { n: "06", type: "WEBINAR", label: "Phase 03 — Structure From the Top Down",           when: "Week 6",  note: "Why daily and H4 control every trade you take on the lower timeframes. How to map the higher timeframe before touching a 5-minute chart." },
-  { n: "07", type: "WEBINAR", label: "Phase 03 — The Levels That Actually Matter",       when: "Week 7",  note: "Most traders mark too many levels. Cue walks through exactly how he identifies the ones the market will react to — and why the rest are noise." },
-  { n: "08", type: "WEBINAR", label: "Phase 04 — Fibonacci From Point A to B",           when: "Week 8",  note: "How to draw a fib correctly. The levels Cue uses vs. what's taught everywhere else. What confluences look like when a setup is real." },
-  { n: "09", type: "WEBINAR", label: "Phase 04 — The Confluence Stack",                  when: "Week 9",  note: "The full qualification process. What has to align before Cue considers entering a trade. Every criteria, in sequence, on real charts." },
-  { n: "10", type: "WEBINAR", label: "Phase 05 — Break & Retest: The Entry Model",       when: "Week 10", note: "One of the highest-probability patterns in the system. How to identify it, where to wait, and when the setup actually qualifies vs. when it doesn't." },
-  { n: "11", type: "WEBINAR", label: "Phase 05 — Order Blocks & Institutional Zones",    when: "Week 11", note: "Where institutions actually leave footprints. How to identify order blocks, why they hold, and how to use them as entry zones — not just reference points." },
-  { n: "12", type: "WEBINAR", label: "Phase 05 — Trade Management: Exits Are Harder",    when: "Week 12", note: "Most traders get in right and still lose. Moving stops, partial takes, scaling out — the full management process Cue runs on every trade." },
-  { n: "13", type: "WEBINAR", label: "Phase 06 — The 100-Trade Back-Test Protocol",      when: "Week 13", note: "How to properly back-test the WSA system. What you're looking for, how to log it, and what your data should tell you before you go live." },
-  { n: "14", type: "WEBINAR", label: "Phase 06 — Journaling Your Edge",                  when: "Week 14", note: "What to record, how to analyze it, and how to use your journal to identify the patterns in your mistakes before they become habits." },
-  { n: "15", type: "WEBINAR", label: "Phase 06 — Prop Firm Strategy",                    when: "Week 15", note: "How to apply the WSA system to a funded challenge. The exact approach Cue uses — risk parameters, instrument selection, and phase management." },
+  { n: "02", type: "WEBINAR", label: "Set — The Psychology of Losing",              when: "Week 2",  note: "Why most traders blow up before they ever develop a real edge. The mental patterns that destroy accounts — and how the system interrupts them." },
+  { n: "03", type: "WEBINAR", label: "Set — Risk Rules That Keep You Alive",        when: "Week 3",  note: "Position sizing, max loss per session, and the compounding math most traders ignore. This is what protects your capital through Phase 2–6." },
+  { n: "04", type: "WEBINAR", label: "Execute — Reading Price Like Cue Reads It",       when: "Week 4",  note: "Market structure from scratch. How Cue actually sees a chart — not textbook theory. What price is doing vs. what it looks like it's doing." },
+  { n: "05", type: "WEBINAR", label: "Phase 1 — Supply, Demand & the 200/50 EMA",      when: "Week 5",  note: "How the EMAs frame everything. Supply and demand zones that matter vs. the ones retail draws wrong. Cue on live charts." },
+  { n: "06", type: "WEBINAR", label: "Phase 2 — Structure From the Top Down",           when: "Week 6",  note: "Why daily and H4 control every trade you take on the lower timeframes. How to map the higher timeframe before touching a 5-minute chart." },
+  { n: "07", type: "WEBINAR", label: "Phase 2 — The Levels That Actually Matter",       when: "Week 7",  note: "Most traders mark too many levels. Cue walks through exactly how he identifies the ones the market will react to — and why the rest are noise." },
+  { n: "08", type: "WEBINAR", label: "Phase 3 — Fibonacci From Point A to B",           when: "Week 8",  note: "How to draw a fib correctly. The levels Cue uses vs. what's taught everywhere else. What confluences look like when a setup is real." },
+  { n: "09", type: "WEBINAR", label: "Phase 3 — The Confluence Stack",                  when: "Week 9",  note: "The full qualification process. What has to align before Cue considers entering a trade. Every criteria, in sequence, on real charts." },
+  { n: "10", type: "WEBINAR", label: "Phase 3 — Break & Retest: The Entry Model",       when: "Week 10", note: "One of the highest-probability patterns in the system. How to identify it, where to wait, and when the setup actually qualifies vs. when it doesn't." },
+  { n: "11", type: "WEBINAR", label: "Phase 4 — Order Blocks & Institutional Zones",    when: "Week 11", note: "Where institutions actually leave footprints. How to identify order blocks, why they hold, and how to use them as entry zones — not just reference points." },
+  { n: "12", type: "WEBINAR", label: "Phase 4 — Trade Management: Exits Are Harder",    when: "Week 12", note: "Most traders get in right and still lose. Moving stops, partial takes, scaling out — the full management process Cue runs on every trade." },
+  { n: "13", type: "WEBINAR", label: "Phase 4 — The 100-Trade Back-Test Protocol",      when: "Week 13", note: "How to properly back-test the WSA system. What you're looking for, how to log it, and what your data should tell you before you go live." },
+  { n: "14", type: "WEBINAR", label: "Phase 4 — Journaling Your Edge",                  when: "Week 14", note: "What to record, how to analyze it, and how to use your journal to identify the patterns in your mistakes before they become habits." },
+  { n: "15", type: "WEBINAR", label: "Bonus — Prop Firm Strategy",                    when: "Week 15", note: "How to apply the WSA system to a funded challenge. The exact approach Cue uses — risk parameters, instrument selection, and phase management." },
   { n: "16", type: "WEBINAR", label: "Final Session — Consistency, Scale, What's Next",  when: "Week 16", note: "How to build a sustainable edge over months, not a hot streak. Scaling from demo to live. Group wins, live review, and next chapter mapping." },
 ];
 
@@ -93,20 +112,20 @@ const CALL_SCHEDULE_STANDARD = [
 const CALL_SCHEDULE_PREMIUM = [
   { n: "★",  type: "1-ON-1",  label: "Private Orientation Call with Cue",               when: "Week 1",         note: "Before the cohort sessions begin. Cue maps the 16-week roadmap directly to your situation, your capital, your targets. Your plan. Private.", exclusive: true },
   { n: "01", type: "WEBINAR", label: "Orientation — The WSA Framework",                 when: "Week 1",         note: "Shared cohort session. Cue walks the full roadmap live. Mindset, expectations, and how to maximize the 16 weeks ahead.", exclusive: false },
-  { n: "02", type: "WEBINAR", label: "Phase 01 — The Psychology of Losing",             when: "Week 2",         note: "Shared cohort session. The mental patterns that destroy accounts — and how the system interrupts them.", exclusive: false },
-  { n: "03", type: "WEBINAR", label: "Phase 01 — Risk Rules That Keep You Alive",       when: "Week 3",         note: "Shared cohort session. Position sizing, max loss, and the compounding math most traders ignore.", exclusive: false },
-  { n: "04", type: "WEBINAR", label: "Phase 02 — Reading Price Like Cue Reads It",      when: "Week 4",         note: "Shared cohort session. Market structure from scratch. How Cue actually sees a chart.", exclusive: false },
-  { n: "05", type: "WEBINAR", label: "Phase 02 — Supply, Demand & the 200/50 EMA",     when: "Week 5",         note: "Shared cohort session. EMAs, supply/demand zones that matter, live charts.", exclusive: false },
-  { n: "06", type: "WEBINAR", label: "Phase 03 — Structure From the Top Down",          when: "Week 6",         note: "Shared cohort session. Daily and H4 control every trade on the lower timeframes.", exclusive: false },
-  { n: "07", type: "WEBINAR", label: "Phase 03 — The Levels That Actually Matter",      when: "Week 7",         note: "Shared cohort session. How Cue identifies the levels the market will actually react to.", exclusive: false },
-  { n: "08", type: "WEBINAR", label: "Phase 04 — Fibonacci From Point A to B",          when: "Week 8",         note: "Shared cohort session. How to draw a fib correctly and what confluences look like when real.", exclusive: false },
-  { n: "09", type: "WEBINAR", label: "Phase 04 — The Confluence Stack",                 when: "Week 9",         note: "Shared cohort session. The full qualification process. Every criteria, in sequence, on real charts.", exclusive: false },
-  { n: "10", type: "WEBINAR", label: "Phase 05 — Break & Retest: The Entry Model",      when: "Week 10",        note: "Shared cohort session. One of the highest-probability patterns in the system.", exclusive: false },
-  { n: "11", type: "WEBINAR", label: "Phase 05 — Order Blocks & Institutional Zones",   when: "Week 11",        note: "Shared cohort session. Where institutions leave footprints and how to use them.", exclusive: false },
-  { n: "12", type: "WEBINAR", label: "Phase 05 — Trade Management: Exits Are Harder",   when: "Week 12",        note: "Shared cohort session. Moving stops, partial takes, and the full management process.", exclusive: false },
-  { n: "13", type: "WEBINAR", label: "Phase 06 — The 100-Trade Back-Test Protocol",     when: "Week 13",        note: "Shared cohort session. How to properly back-test the WSA system.", exclusive: false },
-  { n: "14", type: "WEBINAR", label: "Phase 06 — Journaling Your Edge",                 when: "Week 14",        note: "Shared cohort session. What to record, analyze, and learn from your data.", exclusive: false },
-  { n: "15", type: "WEBINAR", label: "Phase 06 — Prop Firm Strategy",                   when: "Week 15",        note: "Shared cohort session. How to apply the WSA system to a funded challenge.", exclusive: false },
+  { n: "02", type: "WEBINAR", label: "Set — The Psychology of Losing",             when: "Week 2",         note: "Shared cohort session. The mental patterns that destroy accounts — and how the system interrupts them.", exclusive: false },
+  { n: "03", type: "WEBINAR", label: "Set — Risk Rules That Keep You Alive",       when: "Week 3",         note: "Shared cohort session. Position sizing, max loss, and the compounding math most traders ignore.", exclusive: false },
+  { n: "04", type: "WEBINAR", label: "Execute — Reading Price Like Cue Reads It",      when: "Week 4",         note: "Shared cohort session. Market structure from scratch. How Cue actually sees a chart.", exclusive: false },
+  { n: "05", type: "WEBINAR", label: "Phase 1 — Supply, Demand & the 200/50 EMA",     when: "Week 5",         note: "Shared cohort session. EMAs, supply/demand zones that matter, live charts.", exclusive: false },
+  { n: "06", type: "WEBINAR", label: "Phase 2 — Structure From the Top Down",          when: "Week 6",         note: "Shared cohort session. Daily and H4 control every trade on the lower timeframes.", exclusive: false },
+  { n: "07", type: "WEBINAR", label: "Phase 2 — The Levels That Actually Matter",      when: "Week 7",         note: "Shared cohort session. How Cue identifies the levels the market will actually react to.", exclusive: false },
+  { n: "08", type: "WEBINAR", label: "Phase 3 — Fibonacci From Point A to B",          when: "Week 8",         note: "Shared cohort session. How to draw a fib correctly and what confluences look like when real.", exclusive: false },
+  { n: "09", type: "WEBINAR", label: "Phase 3 — The Confluence Stack",                 when: "Week 9",         note: "Shared cohort session. The full qualification process. Every criteria, in sequence, on real charts.", exclusive: false },
+  { n: "10", type: "WEBINAR", label: "Phase 3 — Break & Retest: The Entry Model",      when: "Week 10",        note: "Shared cohort session. One of the highest-probability patterns in the system.", exclusive: false },
+  { n: "11", type: "WEBINAR", label: "Phase 4 — Order Blocks & Institutional Zones",   when: "Week 11",        note: "Shared cohort session. Where institutions leave footprints and how to use them.", exclusive: false },
+  { n: "12", type: "WEBINAR", label: "Phase 4 — Trade Management: Exits Are Harder",   when: "Week 12",        note: "Shared cohort session. Moving stops, partial takes, and the full management process.", exclusive: false },
+  { n: "13", type: "WEBINAR", label: "Phase 4 — The 100-Trade Back-Test Protocol",     when: "Week 13",        note: "Shared cohort session. How to properly back-test the WSA system.", exclusive: false },
+  { n: "14", type: "WEBINAR", label: "Phase 4 — Journaling Your Edge",                 when: "Week 14",        note: "Shared cohort session. What to record, analyze, and learn from your data.", exclusive: false },
+  { n: "15", type: "WEBINAR", label: "Bonus — Prop Firm Strategy",                   when: "Week 15",        note: "Shared cohort session. How to apply the WSA system to a funded challenge.", exclusive: false },
   { n: "16", type: "WEBINAR", label: "Final Session — Consistency, Scale, What's Next", when: "Week 16",        note: "Shared cohort session. Sustainable edge, scaling from demo to live, group wins.", exclusive: false },
   { n: "★",  type: "GUESTS",  label: "Special Guest Calls",                             when: "TBA",            note: "Calls with guest traders and mentors scheduled throughout the program. Dates announced as the cohort progresses.", exclusive: true },
   { n: "★",  type: "1-ON-1",  label: "Private Final Win Call with Cue",                 when: "Week 16",        note: "After the final cohort session. Private close-out with Cue. Your wins, your gaps, your next chapter — mapped out 1-on-1.", exclusive: true },
@@ -121,32 +140,32 @@ const WINS = [
 
 // ── What's Included ─────────────────────────────────────────────────────────
 const INCLUDED_BASIC = [
-  { tag: "Core",       n: "16 wks",  title: "The 6-Phase Roadmap",     desc: "All 6 phases in exact order. Self-paced over 4 months. You don't skip phases.", exclusive: false },
+  { tag: "Core",       n: "16 wks",  title: `The ${TOTAL_PHASES}-Phase Roadmap`,     desc: `All ${TOTAL_PHASES} phases in exact order. Self-paced over 4 months. You don't skip phases.`, exclusive: false },
   { tag: "Exclusive",  n: "10+ yrs", title: "Cue AI",                  desc: "AI trained on every session ever recorded. Ask anything — get the WSA answer.", exclusive: false },
-  { tag: "Archive",    n: "90+",     title: "Chart N Chill Sessions",   desc: "Full archive of live sessions on demand. Cue on charts, real setups, real decisions.", exclusive: false },
-  { tag: "Archive",    n: "27+",     title: "CueCAST",                  desc: "Market analysis recordings. His actual weekly prep process.", exclusive: false },
-  { tag: "Structured", n: "6",       title: "Phase Drills",             desc: "Practice assignments between each phase. Training program, not a video library.", exclusive: false },
+  { tag: "Archive",    n: `${CNC_COUNT}+`,     title: "Chart N Chill Sessions",   desc: "Full archive of live sessions on demand. Cue on charts, real setups, real decisions.", exclusive: false },
+  { tag: "Archive",    n: `${CUECAST_COUNT}+`,     title: "CueCAST",                  desc: "Market analysis recordings. His actual weekly prep process.", exclusive: false },
+  { tag: "Structured", n: `${HOMEWORK_PHASE_COUNT}`,       title: "Phase Drills",             desc: "Homework required in the phases that build the core skills. Training program, not a video library.", exclusive: false },
   { tag: "Community",  n: "Active",  title: "WSA Discord",              desc: "Access to the community for the duration of the program.", exclusive: false },
 ];
 
 const INCLUDED_STANDARD = [
-  { tag: "Core",       n: "16 wks",  title: "The 6-Phase Roadmap",      desc: "All 6 phases in exact order. You complete each one before the next session.", exclusive: false },
+  { tag: "Core",       n: "16 wks",  title: `The ${TOTAL_PHASES}-Phase Roadmap`,      desc: `All ${TOTAL_PHASES} phases in exact order. You complete each one before the next session.`, exclusive: false },
   { tag: "Exclusive",  n: "10+ yrs", title: "Cue AI",                   desc: "AI trained on every session ever recorded. Most questions get answered here first.", exclusive: false },
-  { tag: "Archive",    n: "90+",     title: "Chart N Chill Sessions",    desc: "Full archive of live sessions on demand. Cue on charts, real setups.", exclusive: false },
-  { tag: "Archive",    n: "27+",     title: "CueCAST",                   desc: "Market analysis recordings. His actual weekly prep process.", exclusive: false },
-  { tag: "Structured", n: "6",       title: "Phase Drills",              desc: "Complete every drill to stay with your cohort. Accountability is built in.", exclusive: false },
-  { tag: "Live",       n: "16",      title: "Weekly Webinars",            desc: "One 90-minute webinar every week for 16 weeks. Each session covers a specific phase topic — material you won't find anywhere else.", exclusive: false },
+  { tag: "Archive",    n: `${CNC_COUNT}+`,     title: "Chart N Chill Sessions",    desc: "Full archive of live sessions on demand. Cue on charts, real setups.", exclusive: false },
+  { tag: "Archive",    n: `${CUECAST_COUNT}+`,     title: "CueCAST",                   desc: "Market analysis recordings. His actual weekly prep process.", exclusive: false },
+  { tag: "Structured", n: `${HOMEWORK_PHASE_COUNT}`,       title: "Phase Drills",              desc: "Homework required in the phases that build the core skills. Accountability is built in.", exclusive: false },
+  { tag: "Live",       n: "16",      title: "Weekly Webinars",           desc: "One 90-minute webinar every week for 16 weeks. Each session covers a specific phase topic — material you won't find anywhere else.", exclusive: false },
   { tag: "Support",    n: "Direct",  title: "1-on-1 Chat with Head CSM",  desc: "Your dedicated CSM — trained by Cue. Accountability, wins, and escalations for the full 4 months.", exclusive: false },
   { tag: "Community",  n: "Active",  title: "WSA Discord",               desc: "Access to the full community for the duration of the program.", exclusive: false },
 ];
 
 const INCLUDED_PREMIUM = [
-  { tag: "Core",       n: "16 wks",  title: "The 6-Phase Roadmap",      desc: "Reviewed with Cue personally on your orientation call. Customized to your starting point.", exclusive: false },
+  { tag: "Core",       n: "16 wks",  title: `The ${TOTAL_PHASES}-Phase Roadmap`,      desc: "Reviewed with Cue personally on your orientation call. Customized to your starting point.", exclusive: false },
   { tag: "Exclusive",  n: "10+ yrs", title: "Cue AI",                   desc: "AI trained on every session ever recorded. Ask anything — get the WSA answer.", exclusive: false },
-  { tag: "Archive",    n: "90+",     title: "Chart N Chill Sessions",    desc: "Full archive of live sessions on demand. Cue on charts, real setups.", exclusive: false },
-  { tag: "Archive",    n: "27+",     title: "CueCAST",                   desc: "Market analysis recordings. His actual weekly prep process.", exclusive: false },
-  { tag: "Structured", n: "6",       title: "Phase Drills",              desc: "Complete every drill to stay with your cohort. Accountability is built in.", exclusive: false },
-  { tag: "Shared",     n: "16",      title: "Weekly Webinars",            desc: "16 weekly 90-minute webinars shared with the Inner Circle cohort. One per week for the full 16 weeks.", exclusive: false },
+  { tag: "Archive",    n: `${CNC_COUNT}+`,     title: "Chart N Chill Sessions",    desc: "Full archive of live sessions on demand. Cue on charts, real setups.", exclusive: false },
+  { tag: "Archive",    n: `${CUECAST_COUNT}+`,     title: "CueCAST",                   desc: "Market analysis recordings. His actual weekly prep process.", exclusive: false },
+  { tag: "Structured", n: `${HOMEWORK_PHASE_COUNT}`,       title: "Phase Drills",              desc: "Homework required in the phases that build the core skills. Accountability is built in.", exclusive: false },
+  { tag: "Shared",    n: "16",      title: "Weekly Webinars",            desc: "16 weekly 90-minute webinars shared with the Inner Circle cohort. One per week for the full 16 weeks.", exclusive: false },
   { tag: "2.0 Only",   n: "1-on-1",  title: "Private Orientation w/ Cue", desc: "Cue builds your custom plan in your first call. Your situation, your targets, your roadmap.", exclusive: true },
   { tag: "2.0 Only",   n: "TBA",     title: "Special Guest Calls",       desc: "Access to calls with guest traders and mentors. Dates announced throughout the program.", exclusive: true },
   { tag: "2.0 Only",   n: "1-on-1",  title: "Private Final Win Call w/ Cue", desc: "Private close-out call with Quillan. Your wins, your progress, your next steps.", exclusive: true },
@@ -257,9 +276,9 @@ const COVER_CONTENT: Record<Tier, { headline: React.ReactNode; sub: string; stat
     headline: <>The system.<br />The AI.<br /><em style={{ color: acid, fontStyle: "normal" }}>Self-paced.</em></>,
     sub: "The complete WSA curriculum and an AI trained on 10 years of live sessions — yours to work through at your own pace over 4 months.",
     stats: [
-      { n: "6",   l: "Phases" },
+      { n: `${TOTAL_PHASES}`,   l: "Phases" },
       { n: "16",  l: "Weeks" },
-      { n: "90+", l: "Live Sessions" },
+      { n: `${ARCHIVE_TOTAL}+`, l: "Live Sessions" },
       { n: "5K",  l: "Investment" },
     ],
   },
@@ -270,7 +289,7 @@ const COVER_CONTENT: Record<Tier, { headline: React.ReactNode; sub: string; stat
       { n: "16",   l: "Webinars" },
       { n: "16",   l: "Weeks" },
       { n: "90min", l: "Per Session" },
-      { n: "90+",  l: "Archived Sessions" },
+      { n: `${ARCHIVE_TOTAL}+`,  l: "Archived Sessions" },
     ],
   },
   premium: {
@@ -547,7 +566,7 @@ export default function InnerCirclePage() {
         <Ghost n="07" />
         <div style={wrap}>
           <Eyebrow label="The roadmap" />
-          <Heading>Six phases.<br /><em style={{ color: acid, fontStyle: "normal" }}>In this order.</em></Heading>
+          <Heading>{TOTAL_PHASES} phases.<br /><em style={{ color: acid, fontStyle: "normal" }}>In this order.</em></Heading>
           {isPremium && (
             <div className="ic-reveal" style={{ fontFamily: body, fontSize: 16, lineHeight: 1.65, color: "rgba(37,99,235,0.65)", maxWidth: 560, margin: "16px 0 8px", borderLeft: "2px solid rgba(37,99,235,0.3)", paddingLeft: 18 }}>
               In 2.0, Quillan reviews this with you personally on your orientation call — adjusting emphasis and custom targets to match where you actually are.
@@ -582,14 +601,14 @@ export default function InnerCirclePage() {
           <Eyebrow label="Weekly webinars" />
           {isBasic ? (
             <>
-              <Heading>90+ sessions.<br /><em style={{ color: acid, fontStyle: "normal" }}>On demand.</em></Heading>
+              <Heading>{ARCHIVE_TOTAL}+ sessions.<br /><em style={{ color: acid, fontStyle: "normal" }}>On demand.</em></Heading>
               <p className="ic-reveal" style={{ fontFamily: body, fontSize: 19, lineHeight: 1.7, color: "rgba(255,255,255,0.42)", maxWidth: 580, margin: "20px 0 40px" }}>
                 No live webinars on Premium Group — but you get the full archive of Chart N Chill and CueCAST sessions. Every live trade, every analysis, every breakdown Cue has ever recorded.
               </p>
               <div className="ic-reveal" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1, background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.07)" }}>
                 {[
-                  { n: "90+", name: "Chart N Chill",  desc: "Cue live on charts. Real setups, real talk, real decisions. Every session on record." },
-                  { n: "27+", name: "CueCAST",         desc: "Market analysis sessions. How Cue prepares for the week — his actual process." },
+                  { n: `${CNC_COUNT}+`, name: "Chart N Chill",  desc: "Cue live on charts. Real setups, real talk, real decisions. Every session on record." },
+                  { n: `${CUECAST_COUNT}+`, name: "CueCAST",         desc: "Market analysis sessions. How Cue prepares for the week — his actual process." },
                 ].map(({ n, name, desc }) => (
                   <div key={name} style={{ background: "#000", padding: "36px 32px" }}>
                     <div style={{ fontFamily: display, fontSize: 56, fontWeight: 800, letterSpacing: "-0.05em", color: "rgba(255,255,255,0.18)", lineHeight: 1, marginBottom: 16 }}>{n}</div>

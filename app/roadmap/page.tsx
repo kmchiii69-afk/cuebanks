@@ -108,7 +108,7 @@ const INTRO_FOREX_DOC: DocContent = {
 };
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
-const CNC: Video[] = [
+export const CNC: Video[] = [
   { id: "1201290210", hash: "9363f5a5de", label: "6/14/26" },
   { id: "1197879523", hash: "b311ea99d1", label: "5/31/26" },
   { id: "1193112745", hash: "3863d9f697", label: "5/17/26" },
@@ -123,7 +123,7 @@ const CNC: Video[] = [
   { id: "1114762699", hash: "a850701f27", label: "8/31/25" },
 ];
 
-const CUECASTS: Video[] = [
+export const CUECASTS: Video[] = [
   { id: "1203318818", hash: "b8aac0cc6e", label: "6/21/26" },
   { id: "1195220470", hash: "274d018a3f", label: "5/24/26" },
   { id: "1191014940", hash: "a1cddec6bf", label: "5/10/26" },
