@@ -94,7 +94,8 @@ export async function POST(req: NextRequest) {
         controller.close();
         saveFreebieQA(cleanEmail, cleanQuestion, fullAnswer).catch(() => {});
       } catch (err) {
-        controller.enqueue(enc.encode(`\n\n[${err instanceof Error ? err.message : "Error"}]`));
+        console.error('[freebie/cue] stream error:', err);
+        controller.enqueue(enc.encode(`\n\nSorry — Cue hit a snag processing that. Try asking again in a moment.`));
         controller.close();
       }
     },
