@@ -1,22 +1,24 @@
 "use node";
 
-import { retrieveAccount } from "@convex-dev/auth/server";
+import {
+  createAccount,
+  retrieveAccount,
+} from "@convex-dev/auth/server";
+import bcrypt from "bcryptjs";
 import { v } from "convex/values";
 import { action } from "./_generated/server";
 import { api } from "./_generated/api";
+import type { ActionCtx } from "./_generated/server";
 import { assertBootstrapSecret } from "./lib/bootstrap";
 
 /**
  * Server-side password verification for the Next `/api/auth/login` route.
  *
- * Convex Auth's normal `signIn` flow sets cookies via the client. To keep the
- * existing server-rendered login form working during the migration, we
- * validate the password server-side through Convex Auth and hand back
- * enough profile info for the legacy caller to issue its own session marker.
- *
- * This is an action (requires `"use node"` because `retrieveAccount` is an
- * internal action) that internally calls `ctx.runQuery(api.members.getByEmail, ...)`
- * to read the member row.
+ * Order:
+ *   1. Convex Auth (source of truth after first successful login)
+ *   2. If no Convex Auth account yet, bcrypt against live Supabase `wsa_members`
+ *      and provision Convex Auth with the plaintext they just typed
+ *   3. Wrong Convex Auth password does not fall back to Supabase
  */
 type ValidateResult = {
   email: string;
@@ -25,6 +27,97 @@ type ValidateResult = {
   active: boolean;
   cohort: string;
 } | null;
+
+async function memberProfile(
+  ctx: ActionCtx,
+  secret: string,
+  email: string,
+  fallbackName: string,
+): Promise<ValidateResult> {
+  const member = await ctx.runQuery(api.members.getByEmail, {
+    secret,
+    email,
+  });
+
+  if (!member) {
+    return { email, role: "member", name: fallbackName, active: true, cohort: "" };
+  }
+
+  return {
+    email: member.email,
+    role: member.role,
+    name: member.name,
+    active: member.active,
+    cohort: member.cohort,
+  };
+}
+
+async function convexPasswordAccountExists(
+  ctx: ActionCtx,
+  email: string,
+): Promise<boolean> {
+  try {
+    await retrieveAccount(ctx, {
+      provider: "password",
+      account: { id: email },
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+type LegacyRow = {
+  email?: string;
+  name?: string;
+  password_hash?: string;
+  active?: boolean;
+};
+
+async function verifyLiveSupabasePassword(
+  email: string,
+  password: string,
+): Promise<{ ok: true; name: string } | { ok: false }> {
+  const baseUrl = process.env.SUPABASE_URL?.replace(/\/$/, "");
+  const serviceKey = process.env.SUPABASE_SERVICE_KEY;
+  if (!baseUrl || !serviceKey) {
+    console.warn("[auth] SUPABASE_URL / SUPABASE_SERVICE_KEY not set; skipping legacy password fallback");
+    return { ok: false };
+  }
+
+  const params = new URLSearchParams({
+    select: "email,name,password_hash,active",
+    email: `eq.${email}`,
+    limit: "1",
+  });
+  const response = await fetch(`${baseUrl}/rest/v1/wsa_members?${params.toString()}`, {
+    headers: {
+      apikey: serviceKey,
+      Authorization: `Bearer ${serviceKey}`,
+      Accept: "application/json",
+    },
+  });
+  if (!response.ok) {
+    console.error("[auth] Supabase member lookup failed:", response.status);
+    return { ok: false };
+  }
+
+  const rows = (await response.json()) as LegacyRow[];
+  const row = rows[0];
+  const hash = row?.password_hash;
+  if (!row || typeof hash !== "string" || !hash) {
+    return { ok: false };
+  }
+  if (row.active === false) {
+    return { ok: false };
+  }
+
+  const matches = await bcrypt.compare(password, hash);
+  if (!matches) {
+    return { ok: false };
+  }
+  return { ok: true, name: typeof row.name === "string" ? row.name : "" };
+}
 
 export const validateCredentials = action({
   args: {
@@ -51,25 +144,29 @@ export const validateCredentials = action({
         provider: "password",
         account: { id: email, secret: args.password },
       });
+      return await memberProfile(ctx, args.secret, email, "");
     } catch {
+      // Missing account or wrong password — continue.
+    }
+
+    if (await convexPasswordAccountExists(ctx, email)) {
       return null;
     }
 
-    const member = await ctx.runQuery(api.members.getByEmail, {
-      secret: args.secret,
-      email,
-    });
-
-    if (!member) {
-      return { email, role: "member", name: "", active: true, cohort: "" };
+    const legacy = await verifyLiveSupabasePassword(email, args.password);
+    if (!legacy.ok) {
+      return null;
     }
 
-    return {
-      email: member.email,
-      role: member.role,
-      name: member.name,
-      active: member.active,
-      cohort: member.cohort,
-    };
+    await createAccount(ctx, {
+      provider: "password",
+      account: { id: email, secret: args.password },
+      profile: {
+        email,
+        ...(legacy.name.trim() ? { name: legacy.name.trim() } : {}),
+      },
+    });
+
+    return await memberProfile(ctx, args.secret, email, legacy.name);
   },
 });

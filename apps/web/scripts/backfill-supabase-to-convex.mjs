@@ -7,18 +7,16 @@
  * wsa_cue_instructions, wsa_freebie_leads, wsa_freebie_qa) into the
  * equivalent Convex tables.
  *
- * Usage:
- *   1. Generate a Convex deploy key (`npx convex deploy --prod` flow or
- *      `npx convex dashboard` -> Settings -> Generate Deploy Key) and put it
- *      in CONVEX_DEPLOY_KEY.
- *   2. Set CONVEX_URL to your dev or prod deployment's https endpoint.
- *   3. Set SUPABASE_URL and SUPABASE_SERVICE_KEY to your Supabase project.
- *   4. Run: `node scripts/backfill-supabase-to-convex.mjs`
+ * The live cutover (2026-09-04) used mapped JSONL + `npx convex import`
+ * into both `resilient-dragon-967` (dev) and `marvelous-rook-270` (prod).
+ * Re-running this file only prints mapped rows; it does not write to Convex.
  *
- * This script is intentionally idempotent (uses email as the natural key) but
- * if you re-run it after a member has been provisioned into Convex Auth, the
- * legacy `passwordHash` field on the row will already be gone. That's
- * expected — provision each account by hand or via `authMigrate.provisionPasswordAccount`.
+ * To import again:
+ *   npx convex import --table members --append members.jsonl
+ *   npx convex import --prod --table members --append members.jsonl
+ *
+ * Passwords are NOT copied (bcrypt hashes cannot be imported into Convex Auth).
+ * Provision each account on next login via `authMigrate.provisionPasswordAccount`.
  *
  * Members table on Convex expects camelCase fields. Supabase uses snake_case.
  * The mapping is documented in convex/schema.ts.

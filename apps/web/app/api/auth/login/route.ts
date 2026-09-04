@@ -1,8 +1,8 @@
 // POST /api/auth/login
 //
-// Validates email/password against Convex Auth + the members table via the
-// bootstrap-secret-gated `authMigrate.validateCredentials` action, then
-// records the login timestamp on the member row.
+// Validates email/password via `authSession.validateCredentials` (Convex Auth,
+// then live Supabase bcrypt if no Auth account exists yet), then records the
+// login timestamp on the member row.
 //
 // Sets a legacy `wsa_auth_token` cookie so the existing proxy middleware
 // keeps working during the migration window. After proxy.ts is rewritten to
