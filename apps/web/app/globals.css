@@ -4,7 +4,6 @@
 @source "../app";
 @source "../components";
 @source "../lib";
-@source not inline("font-[family-name:var(--font-*)]");
 
 /* ─── Base + prose styles ───────────────────────────────────────────────────
    These stay in apps/web instead of tooling because they are not tokens —
