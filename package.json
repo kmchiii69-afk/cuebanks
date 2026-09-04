@@ -1,33 +1,17 @@
 {
-  "name": "quantum-cipher-app",
-  "version": "0.1.0",
+  "name": "cuebanks",
   "private": true,
+  "packageManager": "pnpm@10.19.0",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
-  },
-  "dependencies": {
-    "@anthropic-ai/sdk": "^0.106.0",
-    "@supabase/supabase-js": "^2.108.2",
-    "@types/bcryptjs": "^2.4.6",
-    "bcryptjs": "^3.0.3",
-    "jose": "^6.2.3",
-    "next": "16.2.6",
-    "posthog-js": "^1.374.2",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
-    "react-phone-number-input": "^3.4.16"
+    "build": "turbo run build",
+    "dev": "turbo run dev --filter=@cuebanks/web",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "format": "turbo run format",
+    "clean": "git clean -xdf node_modules .turbo apps/*/node_modules packages/*/node_modules tooling/*/node_modules"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.6",
-    "tailwindcss": "^4",
+    "turbo": "^2.5.4",
     "typescript": "^5"
   }
 }

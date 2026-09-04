@@ -1,0 +1,55 @@
+import type { Metadata } from "next";
+import "./globals.css";
+import PostHogProvider from "@/components/PostHogProvider";
+import SegMetricsPixel from "@/components/SegMetricsPixel";
+import { ConvexClientProvider } from "@/components/ConvexClientProvider";
+
+export const metadata: Metadata = {
+  title: "WSA",
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        {/* Calendly + YouTube preconnects shave ~200–400ms off iframe load on
+            the booking + training pages. Costs nothing for users who never
+            see those pages because the browser only opens the TCP/TLS
+            connection if it has a reason to (the preconnect is a hint, not a fetch). */}
+        <link rel="preconnect" href="https://calendly.com" />
+        <link rel="preconnect" href="https://assets.calendly.com" crossOrigin="" />
+        <link rel="preconnect" href="https://www.youtube.com" />
+        <link rel="preconnect" href="https://i.ytimg.com" crossOrigin="" />
+        <link rel="preconnect" href="https://player.vimeo.com" />
+        <link rel="preconnect" href="https://vimeo.com" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..600&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Space+Mono:wght@400;700&display=swap"
+          rel="stylesheet"
+        />
+        {/* WSA brand fonts — used by /free-course/broker + /free-course/confirm
+            via tokens in app/globals.css. Loaded separately so the rest of
+            the site doesn't pay the font-download cost. */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Open+Sans:wght@400;600;700;800&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body>
+        <ConvexClientProvider>
+          <PostHogProvider>{children}</PostHogProvider>
+          <SegMetricsPixel />
+        </ConvexClientProvider>
+      </body>
+    </html>
+  );
+}

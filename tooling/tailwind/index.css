@@ -1,0 +1,46 @@
+/*
+ * Shared Cuebanks design tokens — Tailwind v4 `@theme` block.
+ *
+ * Every variable declared here is consumed two ways:
+ *   1. As a generated utility class — `--color-bg-1` becomes `bg-bg-1`, `--font-mono`
+ *      becomes `font-mono`, etc.
+ *   2. As a raw CSS custom property available to any `.css` file via `var(--bg-1)`
+ *      — useful for the few pseudo-class selectors (`.PhoneInput`, `.qc-dv-slider`,
+ *      anim-defined elements) that still live in the prose stylesheet.
+ *
+ * The package exposes this file via `"./index.css"` in tooling/tailwind/package.json;
+ * the web app pulls it in once at `apps/web/app/globals.css`:
+ *   `@import "@cuebanks/tailwind-config";`
+ *
+ * Renaming history: prior to this migration tokens lived in
+ * `apps/web/app/globals.css :root` and were consumed everywhere as `var(--acid)`,
+ * `var(--font-body)`, etc. Tailwind v4 generates an equivalent prefix (`bg-acid`,
+ * `font-body`) automatically, so any `style={{ color: "var(--acid)" }}` usage
+ * becomes `className="text-acid"` with no token rename needed in code.
+ */
+@theme {
+  /* ── Surfaces ─────────────────────────────────────────────────────────── */
+  --color-bg:    #000000;
+  --color-bg-1:  #0c1018;
+  --color-bg-2:  #111827;
+  --color-bg-3:  #181f2b;
+
+  /* ── Borders / dividers ───────────────────────────────────────────────── */
+  --color-line:   #1a2230;
+  --color-line-2: #2b333f;
+
+  /* ── Foreground ───────────────────────────────────────────────────────── */
+  --color-bone:  #ffffff;
+  --color-ash:   #9aa3b2;
+  --color-muted: #707070;
+
+  /* ── Brand / accents ──────────────────────────────────────────────────── */
+  --color-acid:   #2563eb;
+  --color-acid-d: #1d4ed8;
+  --color-pink:   #e93d3d;
+
+  /* ── Type ─────────────────────────────────────────────────────────────── */
+  --font-display: "Sora", system-ui, sans-serif;
+  --font-body:    "DM Sans", system-ui, sans-serif;
+  --font-mono:    "Space Mono", ui-monospace, monospace;
+}
