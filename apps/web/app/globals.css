@@ -1,4 +1,10 @@
+@import "tailwindcss" source(none);
 @import "@cuebanks/tailwind-config";
+
+@source "../app";
+@source "../components";
+@source "../lib";
+@source not inline("font-[family-name:var(--font-*)]");
 
 /* ─── Base + prose styles ───────────────────────────────────────────────────
    These stay in apps/web instead of tooling because they are not tokens —
@@ -92,7 +98,7 @@ button { font-family: inherit; cursor: pointer; }
   to   { transform: translateX(-50%); }
 }
 .home-marquee {
-  animation: home-marquee 40s linear infinite;
+  animation: home-marquee 32s linear infinite;
 }
 
 .btn {

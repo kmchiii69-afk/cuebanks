@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 
 import HomeHero from "@/components/home/HomeHero";
 import TypeformEmbed from "@/components/home/TypeformEmbed";
+import CueMasonry from "@/components/home/CueMasonry";
 import WinsMasonry from "@/components/home/WinsMasonry";
 import YouCanBand from "@/components/home/YouCanBand";
 import PainSolutionMethod from "@/components/home/PainSolutionMethod";
@@ -22,9 +24,11 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <main className="bg-[var(--bg)] text-[var(--bone)]">
+    <main className="bg-bg font-h1 text-bone">
+      <Script src="https://embed.typeform.com/next/embed.js" strategy="afterInteractive" />
       <HomeHero />
       <TypeformEmbed />
+      <CueMasonry />
       <WinsMasonry />
       <YouCanBand />
       <PainSolutionMethod />

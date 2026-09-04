@@ -1,5 +1,6 @@
 import Reveal from "./Reveal";
-import { HomeEyebrow, HomeSecHead, HomeWrap } from "./HomeSection";
+import { HomeEyebrow, HomeSecHead, HomeWrap, TypeformApplyLink } from "./HomeSection";
+import { funnelBtn, funnelBtnGhost } from "./funnel";
 
 const INCLUDED = [
   {
@@ -42,15 +43,15 @@ const REVIEW_STATS = {
 
 export function ReviewsStrip() {
   return (
-    <section id="reviews" className="bg-[var(--bg-1)] py-[60px] text-center">
+    <section id="reviews" className="bg-white py-[60px] text-center text-black">
       <HomeWrap>
         <Reveal>
           <div className="text-[2rem] tracking-[0.1em] text-[#f6b500]">★★★★★</div>
-          <div className="my-2 text-[3rem] font-black tracking-[-0.03em] text-[var(--bone)]">
+          <div className="my-2 font-h2 text-[3rem] font-black text-black">
             {REVIEW_STATS.average.toFixed(2)}
-            <span className="text-[1.4rem] text-[var(--muted)]">/5</span>
+            <span className="text-[1.4rem] text-muted">/5</span>
           </div>
-          <div className="font-semibold text-[var(--muted)]">
+          <div className="font-h1 font-semibold text-muted">
             across {REVIEW_STATS.count}+ verified Inner Circle reviews
           </div>
         </Reveal>
@@ -63,7 +64,7 @@ export function IncludedSection() {
   return (
     <section
       id="included"
-      className="border-y border-[var(--line)] bg-[linear-gradient(180deg,var(--bg-2),var(--bg))] py-[74px]"
+      className="bg-[linear-gradient(180deg,#0a0d14,#05070b)] py-[74px]"
     >
       <HomeWrap>
         <Reveal>
@@ -73,16 +74,19 @@ export function IncludedSection() {
             sub="Everything used over the past 9 years to take traders from inconsistent and emotional to disciplined and profitable."
           />
         </Reveal>
-        <div className="grid gap-3.5 md:grid-cols-2">
+        <div className="grid gap-4 max-[760px]:grid-cols-1 min-[761px]:grid-cols-2">
           {INCLUDED.map((f, i) => (
             <Reveal key={f.title} delayMs={i * 50}>
-              <div className="flex items-start gap-3.5 rounded-[10px] border border-[var(--line)] bg-[var(--bg-1)] p-5">
-                <span className="mt-0.5 font-bold text-[var(--acid)]" aria-hidden>
+              <div className="flex items-start gap-3.5 rounded-[10px] border border-line-2 bg-[#0c0f16] p-5">
+                <span
+                  className="flex size-[26px] shrink-0 items-center justify-center rounded-full bg-wsa-green text-[0.9rem] font-black text-black"
+                  aria-hidden
+                >
                   ✓
                 </span>
                 <div>
-                  <h3 className="mb-1 text-base font-bold text-[var(--bone)]">{f.title}</h3>
-                  <p className="m-0 text-[var(--ash)]">{f.body}</p>
+                  <h3 className="mb-[3px] font-h2 text-[1.02rem] font-bold text-bone">{f.title}</h3>
+                  <p className="m-0 font-h1 text-[0.88rem] text-muted">{f.body}</p>
                 </div>
               </div>
             </Reveal>
@@ -95,16 +99,16 @@ export function IncludedSection() {
 
 export function MetricsStrip() {
   return (
-    <section className="bg-[var(--bg-1)] py-[34px]">
+    <section className="bg-white py-[34px] text-black">
       <HomeWrap>
-        <div className="grid grid-cols-2 gap-[26px] text-center lg:grid-cols-4 lg:gap-[18px]">
+        <div className="grid grid-cols-2 gap-[26px] text-center min-[761px]:grid-cols-4 min-[761px]:gap-[18px]">
           {METRICS.map((m) => (
             <div key={m.lab}>
-              <div className="text-[clamp(1.8rem,4vw,2.6rem)] font-black leading-none text-[var(--bone)]">
+              <div className="font-h2 text-[clamp(1.8rem,4vw,2.6rem)] font-black leading-none text-black">
                 {m.num}
-                {m.suffix ? <span className="text-[var(--acid)]">{m.suffix}</span> : null}
+                {m.suffix ? <span className="text-wsa-blue">{m.suffix}</span> : null}
               </div>
-              <div className="mt-2 text-sm text-[var(--muted)]">{m.lab}</div>
+              <div className="mt-2 font-h1 text-[0.82rem] font-semibold text-muted">{m.lab}</div>
             </div>
           ))}
         </div>
@@ -117,29 +121,27 @@ export function FinalCta() {
   return (
     <section
       id="apply"
-      className="bg-[radial-gradient(700px_400px_at_50%_0%,rgba(var(--acid-rgb),0.18),transparent_60%),var(--bg)] py-[84px] text-center"
+      className="bg-[radial-gradient(700px_400px_at_50%_0%,rgba(24,139,246,0.22),transparent_60%),linear-gradient(180deg,#05070b,#000)] py-[84px] text-center"
     >
       <HomeWrap>
         <Reveal>
           <div className="mb-3.5 inline-block">
             <HomeEyebrow>Limited Seats</HomeEyebrow>
           </div>
-          <h2 className="mx-auto mb-4 max-w-[18ch] text-[clamp(2rem,5vw,3.4rem)] font-bold tracking-[-0.03em] text-[var(--bone)]">
+          <h2 className="mx-auto mb-4 max-w-[18ch] font-h2 text-[clamp(2rem,5vw,3.4rem)] font-extrabold tracking-[-0.01em] text-bone">
             Stop watching videos. Start following a system.
           </h2>
-          <p className="mx-auto mb-7 max-w-[48ch] text-[1.08rem] text-[var(--ash)]">
-            This is your roadmap — the same framework that took Cue from retail shelves to
+          <p className="mx-auto mb-7 max-w-[48ch] font-h1 text-[1.08rem] text-[#cbd5e0]">
+            This is your roadmap — the same framework that took me from retail shelves to
             six-figure trades, now helping everyday traders win in real time.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <a href="#apply-form" className="btn">
+          <div className="flex flex-wrap items-center justify-center gap-3.5">
+            <TypeformApplyLink className={funnelBtn}>
               Apply For Your Seat <span aria-hidden>→</span>
-            </a>
-            <a href="#apply-form" className="btn btn-ghost">
-              Book A Free Strategy Call
-            </a>
+            </TypeformApplyLink>
+            <TypeformApplyLink className={funnelBtnGhost}>Book A Free Strategy Call</TypeformApplyLink>
           </div>
-          <div className="mt-[22px] inline-block rounded-lg border border-dashed border-[var(--acid)] px-5 py-2.5 font-[family-name:var(--font-mono)] text-sm font-extrabold tracking-[0.06em] text-[var(--acid)]">
+          <div className="mt-[22px] inline-block rounded-lg border border-dashed border-acid px-5 py-2.5 font-h2 text-[0.95rem] font-extrabold tracking-[0.08em] text-acid">
             GET 20% OFF YOUR FIRST MONTH — CODE: CUEWEBBY20
           </div>
         </Reveal>
@@ -150,7 +152,7 @@ export function FinalCta() {
 
 export function Disclaimer() {
   return (
-    <p className="border-t border-[var(--line)] px-[22px] py-[26px] text-center font-serif text-[0.8rem] text-[var(--muted)]">
+    <p className="border-t border-line-2 px-[22px] py-[26px] text-center font-accent text-[0.8rem] text-muted">
       Disclaimer: This is for educational purposes only. Trading involves risk, and you should never
       trade with money you can&apos;t afford to lose. Results are not typical and individual results
       will vary.

@@ -18,10 +18,10 @@ export function ContentPlaceholderShell({
       <div className="pointer-events-none absolute inset-0 opacity-[0.35] [background-image:linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)] [background-size:28px_28px]" />
       <div className="relative z-[1] p-5 sm:p-7">
         <div className="mb-4 flex flex-wrap items-center gap-2.5">
-          <span className="rounded-md border border-[var(--acid)]/35 bg-[rgba(var(--acid-rgb),0.08)] px-2.5 py-1 font-[family-name:var(--font-mono)] text-[10px] font-extrabold uppercase tracking-[0.18em] text-[var(--acid)]">
+          <span className="rounded-md border border-[var(--acid)]/35 bg-[rgba(var(--acid-rgb),0.08)] px-2.5 py-1 font-mono text-[10px] font-extrabold uppercase tracking-[0.18em] text-[var(--acid)]">
             {badge}
           </span>
-          <span className="font-[family-name:var(--font-mono)] text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--fg-faint)]">
+          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--fg-faint)]">
             {title}
           </span>
         </div>
@@ -40,7 +40,7 @@ export function HeroVideoPlaceholder() {
             <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/25 bg-white/10 text-2xl text-white">
               ▶
             </div>
-            <div className="font-[family-name:var(--font-display)] text-lg font-semibold tracking-[-0.02em] text-[var(--bone)]">
+            <div className="font-display text-lg font-semibold tracking-[-0.02em] text-[var(--bone)]">
               WSA hero video goes here
             </div>
             <p className="max-w-[36ch] text-sm leading-relaxed text-[var(--fg-muted)]">
@@ -51,7 +51,7 @@ export function HeroVideoPlaceholder() {
         </div>
 
         <div className="space-y-3 text-left">
-          <h3 className="font-[family-name:var(--font-display)] text-base font-semibold tracking-[-0.02em] text-[var(--bone)]">
+          <h3 className="font-display text-base font-semibold tracking-[-0.02em] text-[var(--bone)]">
             What to send us
           </h3>
           <ul className="space-y-2 text-[13px] leading-relaxed text-[var(--ash)]">
@@ -70,7 +70,7 @@ export function HeroVideoPlaceholder() {
               frame + captions
             </li>
           </ul>
-          <p className="border-t border-[var(--line)] pt-3 font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.12em] text-[var(--fg-faint)]">
+          <p className="border-t border-[var(--line)] pt-3 font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--fg-faint)]">
             Drop-in: Vimeo ID → home hero embed
           </p>
         </div>
@@ -93,7 +93,7 @@ export function TypeformPlaceholder() {
     <ContentPlaceholderShell badge="Replace me" title="Application Typeform embed">
       <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
         <div className="space-y-3 text-left">
-          <h3 className="font-[family-name:var(--font-display)] text-xl font-semibold tracking-[-0.02em] text-[var(--bone)]">
+          <h3 className="font-display text-xl font-semibold tracking-[-0.02em] text-[var(--bone)]">
             Qualification form slot
           </h3>
           <p className="text-[15px] leading-relaxed text-[var(--ash)]">
@@ -114,14 +114,14 @@ export function TypeformPlaceholder() {
               want lead alerts
             </li>
           </ul>
-          <p className="border-t border-[var(--line)] pt-3 font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.12em] text-[var(--fg-faint)]">
+          <p className="border-t border-[var(--line)] pt-3 font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--fg-faint)]">
             Drop-in: Typeform ID → homepage + Apply popups
           </p>
         </div>
 
         <div className="rounded-lg border border-[var(--line)] bg-[var(--bg)]/70 p-4 sm:p-5">
           <div className="mb-4 flex items-center justify-between gap-3">
-            <div className="font-[family-name:var(--font-mono)] text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--fg-faint)]">
+            <div className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--fg-faint)]">
               Suggested question flow
             </div>
             <div className="h-2 w-24 overflow-hidden rounded-full bg-white/10">
@@ -134,7 +134,7 @@ export function TypeformPlaceholder() {
                 key={label}
                 className="flex items-center gap-3 rounded-md border border-[var(--line)] bg-[var(--bg-1)] px-3 py-2.5"
               >
-                <span className="font-[family-name:var(--font-mono)] text-[10px] font-bold text-[var(--fg-faint)]">
+                <span className="font-mono text-[10px] font-bold text-[var(--fg-faint)]">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <div className="h-2.5 flex-1 rounded-sm bg-white/10" />

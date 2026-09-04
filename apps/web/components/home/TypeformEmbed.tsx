@@ -1,6 +1,6 @@
 import Reveal from "./Reveal";
-import { TypeformPlaceholder } from "./ContentPlaceholder";
 import { HomeSecHead, HomeWrap } from "./HomeSection";
+import { TYPEFORM_ID } from "./funnel";
 
 export default function TypeformEmbed() {
   return (
@@ -11,11 +11,10 @@ export default function TypeformEmbed() {
             center
             eyebrow="Apply Now"
             title="Go through this and find out if you're a fit."
-            sub="Form embed reserved below — swap in your WSA Typeform when ready."
           />
         </Reveal>
-        <div className="mx-auto max-w-[920px]">
-          <TypeformPlaceholder />
+        <div className="mx-auto max-w-[860px] overflow-hidden rounded-[14px] border border-line-2 border-t-2 border-t-wsa-blue bg-bg-2">
+          <div data-tf-live={TYPEFORM_ID} className="min-h-[560px]" />
         </div>
       </HomeWrap>
     </section>

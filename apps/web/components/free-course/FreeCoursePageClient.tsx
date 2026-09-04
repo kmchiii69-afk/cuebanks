@@ -167,7 +167,7 @@ export default function FreeCoursePageClient() {
                   See What&apos;s Inside
                 </a>
               </div>
-              <p className="font-[family-name:var(--font-mono)] text-[0.82rem] text-[var(--muted)]">
+              <p className="font-mono text-[0.82rem] text-[var(--muted)]">
                 10,000+ traders trained · Profits posted publicly since{" "}
                 <b className="text-[var(--acid)]">2019</b>
               </p>
@@ -176,7 +176,7 @@ export default function FreeCoursePageClient() {
             <Reveal className="mt-10" delayMs={60}>
               <div className="rounded-xl border border-[var(--line)] bg-[var(--bg-1)] p-5 sm:p-6">
                 <div className="mb-4 flex items-center justify-between gap-3">
-                  <div className="font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-[0.16em] text-[var(--muted)]">
+                  <div className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-[var(--muted)]">
                     The WSA Protocol — Free Lessons
                   </div>
                   <span className="rounded bg-[var(--acid)] px-2 py-0.5 text-[0.7rem] font-bold text-[var(--primary-foreground)]">
@@ -196,7 +196,7 @@ export default function FreeCoursePageClient() {
                         <div className="truncate font-bold">{l.title}</div>
                         <div className="truncate text-sm text-[var(--muted)]">{l.sub}</div>
                       </div>
-                      <div className="shrink-0 font-[family-name:var(--font-mono)] text-xs text-[var(--muted)]">
+                      <div className="shrink-0 font-mono text-xs text-[var(--muted)]">
                         {l.time}
                       </div>
                     </div>
@@ -211,7 +211,7 @@ export default function FreeCoursePageClient() {
           <HomeWrap>
             <div className="grid items-start gap-10 lg:grid-cols-[1.1fr_0.9fr]">
               <Reveal>
-                <div className="mb-2 font-[family-name:var(--font-mono)] text-xs text-[var(--muted)]">
+                <div className="mb-2 font-mono text-xs text-[var(--muted)]">
                   📈 Cue Banks · Founder, Wall Street Academy
                 </div>
                 <HomeEyebrow>Who&apos;s Teaching You</HomeEyebrow>
@@ -263,12 +263,12 @@ export default function FreeCoursePageClient() {
               {CURRICULUM.map((c, i) => (
                 <Reveal key={c.n} delayMs={i * 60}>
                   <div className="h-full rounded-xl border border-[var(--line)] bg-[var(--bg-1)] p-6">
-                    <div className="mb-2 font-[family-name:var(--font-mono)] text-[0.7rem] font-bold tracking-[0.16em] text-[var(--acid)]">
+                    <div className="mb-2 font-mono text-[0.7rem] font-bold tracking-[0.16em] text-[var(--acid)]">
                       LESSON {c.n} · {c.tag}
                     </div>
                     <h3 className="mb-2 text-lg font-bold">{c.title}</h3>
                     <p className="mb-4 text-[var(--ash)]">{c.body}</p>
-                    <div className="font-[family-name:var(--font-mono)] text-xs text-[var(--muted)]">
+                    <div className="font-mono text-xs text-[var(--muted)]">
                       {c.time}
                     </div>
                   </div>

@@ -10,14 +10,16 @@ export default function Reveal({
   className = "",
   delayMs = 0,
   once = true,
+  startVisible = false,
 }: {
   children: ReactNode;
   className?: string;
   delayMs?: number;
   once?: boolean;
+  startVisible?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
+  const [inView, setInView] = useState(startVisible);
 
   useEffect(() => {
     const el = ref.current;

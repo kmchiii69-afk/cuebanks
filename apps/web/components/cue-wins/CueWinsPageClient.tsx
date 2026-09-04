@@ -73,7 +73,7 @@ export default function CueWinsPageClient() {
                 <div className="text-[clamp(1.6rem,3vw,2.2rem)] font-black text-[var(--acid)]">
                   {m.n}
                 </div>
-                <div className="mt-1 font-[family-name:var(--font-mono)] text-[0.7rem] font-bold uppercase tracking-[0.14em] text-[var(--muted)]">
+                <div className="mt-1 font-mono text-[0.7rem] font-bold uppercase tracking-[0.14em] text-[var(--muted)]">
                   {m.l}
                 </div>
               </div>
@@ -139,7 +139,7 @@ export default function CueWinsPageClient() {
                 Back To Home
               </Link>
             </div>
-            <div className="mt-[22px] inline-block rounded-lg border border-dashed border-[var(--acid)] px-5 py-2.5 font-[family-name:var(--font-mono)] text-sm font-extrabold tracking-[0.06em] text-[var(--acid)]">
+            <div className="mt-[22px] inline-block rounded-lg border border-dashed border-[var(--acid)] px-5 py-2.5 font-mono text-sm font-extrabold tracking-[0.06em] text-[var(--acid)]">
               GET 20% OFF YOUR FIRST MONTH — CODE: CUEWEBBY20
             </div>
           </Reveal>

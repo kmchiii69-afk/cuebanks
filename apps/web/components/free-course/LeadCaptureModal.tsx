@@ -96,7 +96,7 @@ export default function LeadCaptureModal({ open, onClose }: { open: boolean; onC
       />
       <div className="relative w-full max-w-[460px] rounded-[14px] border border-[var(--line-2)] bg-[var(--bg-1)] shadow-[0_30px_90px_rgba(0,0,0,0.7),0_0_0_1px_rgba(var(--acid-rgb),0.08)] overflow-hidden">
         <div className="flex items-center justify-between border-b border-[var(--line-2)] px-5 py-4">
-          <span className="font-[family-name:var(--font-mono)] text-[11px] font-extrabold uppercase tracking-[0.22em] text-[var(--acid)]">
+          <span className="font-mono text-[11px] font-extrabold uppercase tracking-[0.22em] text-[var(--acid)]">
             Free Training Access
           </span>
           <button
@@ -110,7 +110,7 @@ export default function LeadCaptureModal({ open, onClose }: { open: boolean; onC
         </div>
 
         <form onSubmit={submit} className="flex flex-col gap-3.5 px-5 pb-[26px] pt-6">
-          <h3 className="m-0 font-[family-name:var(--font-display)] text-[22px] font-extrabold leading-[1.15] tracking-[-0.02em] text-[var(--bone)]">
+          <h3 className="m-0 font-display text-[22px] font-extrabold leading-[1.15] tracking-[-0.02em] text-[var(--bone)]">
             Unlock all 5 lessons
           </h3>
           <p className="m-0 mb-1 text-[13.5px] leading-[1.5] text-[var(--ash)]">
@@ -135,7 +135,7 @@ export default function LeadCaptureModal({ open, onClose }: { open: boolean; onC
               opacity: dis ? 0.6 : 1,
               cursor: dis ? "default" : "pointer",
             }}
-            className="mt-1 rounded-lg border-0 bg-[var(--acid)] px-6 py-4 font-[family-name:var(--font-mono)] text-[15px] font-extrabold uppercase tracking-[0.06em] text-[var(--primary-foreground)] transition-transform duration-150"
+            className="mt-1 rounded-lg border-0 bg-[var(--acid)] px-6 py-4 font-mono text-[15px] font-extrabold uppercase tracking-[0.06em] text-[var(--primary-foreground)] transition-transform duration-150"
           >
             {dis ? "Sending…" : "Get Free Access →"}
           </button>
@@ -167,7 +167,7 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block font-[family-name:var(--font-mono)] text-[9.5px] font-bold uppercase tracking-[0.18em] text-[var(--muted)]">
+      <span className="mb-1.5 block font-mono text-[9.5px] font-bold uppercase tracking-[0.18em] text-[var(--muted)]">
         {label}
         {required ? " *" : ""}
       </span>
@@ -178,7 +178,7 @@ function Field({
         required={required}
         disabled={disabled}
         autoFocus={autoFocus}
-        className="w-full rounded-lg border border-[var(--line-2)] bg-[var(--bg-2)] px-3 py-3 font-[family-name:var(--font-body)] text-[14px] text-[var(--bone)] outline-none focus:border-[var(--acid)]"
+        className="w-full rounded-lg border border-[var(--line-2)] bg-[var(--bg-2)] px-3 py-3 font-body text-[14px] text-[var(--bone)] outline-none focus:border-[var(--acid)]"
       />
     </label>
   );

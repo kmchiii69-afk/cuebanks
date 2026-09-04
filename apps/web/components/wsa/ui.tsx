@@ -23,9 +23,9 @@ const BORDER_COLOR: Record<string, string> = {
   [wsa.panelLine]: "border-[var(--wsa-panel-line,#1a2230)]",
 };
 
-const FONT_H2 = "font-[family-name:var(--wsa-font-h2,'Montserrat',sans-serif)]";
-const FONT_BODY = "font-[family-name:var(--wsa-font-body,'Open_Sans',sans-serif)]";
-const FONT_ACCENT = "font-[family-name:var(--wsa-font-accent,'Times_New_Roman',Times,serif)]";
+const FONT_H2 = "font-h2";
+const FONT_BODY = "font-h1";
+const FONT_ACCENT = "font-accent";
 
 /* Shared Wall Street Academy primitives for the re-skinned funnel pages.
    Visual system only — pages keep their own backend wiring/handlers. */
