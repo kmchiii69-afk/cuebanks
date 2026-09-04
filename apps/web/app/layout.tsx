@@ -36,6 +36,13 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Space+Mono:wght@400;700&display=swap"
           rel="stylesheet"
         />
+        {/* WSA brand fonts — used by /free-course/broker + /free-course/confirm
+            via tokens in app/globals.css. Loaded separately so the rest of
+            the site doesn't pay the font-download cost. */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Open+Sans:wght@400;600;700;800&display=swap"
+          rel="stylesheet"
+        />
       </head>
       <body>
         <ConvexClientProvider>

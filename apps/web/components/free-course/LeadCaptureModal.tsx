@@ -3,11 +3,18 @@
 import { useEffect, useState } from "react";
 import posthog from "posthog-js";
 
+/**
+ * WSA-branded lead-capture modal. Posts to /api/free-course (same backend the
+ * legacy free-course funnel used) and redirects to the broker step on success.
+ */
 export default function LeadCaptureModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [form, setForm] = useState({ first_name: "", last_name: "", email: "", phone: "" });
   const [status, setStatus] = useState<"idle" | "submitting" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
+  // Reset the form shortly after close — gives the close animation time to finish
+  // before wiping state, so any in-flight field doesn't flash back to "empty" while
+  // the modal is still fading.
   useEffect(() => {
     if (!open) {
       const t = setTimeout(() => {
@@ -56,6 +63,8 @@ export default function LeadCaptureModal({ open, onClose }: { open: boolean; onC
       }
       posthog.identify(form.email.trim(), { first_name: form.first_name.trim(), email: form.email.trim() });
       posthog.capture("free_course_submitted", { first_name: form.first_name.trim(), email: form.email.trim() });
+      // Same redirect logic as the legacy free-course funnel (free.* subdomain → /broker;
+      // direct domain → /free-course/broker). Keeps history identical to the old flow.
       const brokerPath =
         typeof window !== "undefined" && window.location.hostname.includes("free.")
           ? "/broker"
@@ -82,27 +91,29 @@ export default function LeadCaptureModal({ open, onClose }: { open: boolean; onC
     >
       <div
         onClick={onClose}
+        aria-hidden
         className="absolute inset-0 bg-[rgba(0,0,0,0.82)] backdrop-blur-[10px]"
       />
-      <div className="relative w-full max-w-[460px] bg-[#0a0d14] border border-[#2b333f] rounded-[14px] overflow-hidden shadow-[0_30px_90px_rgba(0,0,0,0.7),0_0_0_1px_rgba(249,255,60,0.08)]">
-        <div className="px-5 py-4 border-b border-[#2b333f] flex justify-between items-center">
-          <span className="font-['Montserrat'] font-extrabold text-[11px] tracking-[0.22em] uppercase text-[#f9ff3c]">
+      <div className="relative w-full max-w-[460px] rounded-[14px] border border-[var(--line-2)] bg-[var(--bg-1)] shadow-[0_30px_90px_rgba(0,0,0,0.7),0_0_0_1px_rgba(var(--acid-rgb),0.08)] overflow-hidden">
+        <div className="flex items-center justify-between border-b border-[var(--line-2)] px-5 py-4">
+          <span className="font-[family-name:var(--font-mono)] text-[11px] font-extrabold uppercase tracking-[0.22em] text-[var(--acid)]">
             Free Training Access
           </span>
           <button
+            type="button"
             onClick={onClose}
             aria-label="Close"
-            className="bg-transparent border border-[#2b333f] text-[#9aa3b2] w-[30px] h-[30px] rounded-lg cursor-pointer text-[15px] leading-none"
+            className="flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-lg border border-[var(--line-2)] bg-transparent text-[15px] leading-none text-[var(--ash)]"
           >
             ✕
           </button>
         </div>
 
-        <form onSubmit={submit} className="px-5 py-6 pb-6.5 flex flex-col gap-3.5">
-          <h3 className="font-['Montserrat'] font-extrabold text-[22px] leading-[1.15] text-white m-0">
+        <form onSubmit={submit} className="flex flex-col gap-3.5 px-5 pb-[26px] pt-6">
+          <h3 className="m-0 font-[family-name:var(--font-display)] text-[22px] font-extrabold leading-[1.15] tracking-[-0.02em] text-[var(--bone)]">
             Unlock all 5 lessons
           </h3>
-          <p className="font-['Open_Sans'] text-[13.5px] leading-[1.5] text-[#9aa3b2] m-0 mb-1">
+          <p className="m-0 mb-1 text-[13.5px] leading-[1.5] text-[var(--ash)]">
             Enter your details and the WSA Protocol training is yours — instant access, zero charge.
           </p>
 
@@ -113,9 +124,9 @@ export default function LeadCaptureModal({ open, onClose }: { open: boolean; onC
           <Field label="Email" type="email" required value={form.email} onChange={f("email")} disabled={dis} />
           <Field label="Phone" type="tel" value={form.phone} onChange={f("phone")} disabled={dis} />
 
-          {status === "error" && (
-            <div className="font-['Open_Sans'] text-[12.5px] text-[#e93d3d]">{errorMsg}</div>
-          )}
+          {status === "error" ? (
+            <div className="text-[12.5px] text-[var(--pink)]">{errorMsg}</div>
+          ) : null}
 
           <button
             type="submit"
@@ -124,11 +135,11 @@ export default function LeadCaptureModal({ open, onClose }: { open: boolean; onC
               opacity: dis ? 0.6 : 1,
               cursor: dis ? "default" : "pointer",
             }}
-            className="mt-1 font-['Montserrat'] font-extrabold uppercase tracking-[0.06em] text-[15px] bg-[#f9ff3c] text-black px-6 py-4 border-0 rounded-lg transition-transform duration-150"
+            className="mt-1 rounded-lg border-0 bg-[var(--acid)] px-6 py-4 font-[family-name:var(--font-mono)] text-[15px] font-extrabold uppercase tracking-[0.06em] text-[var(--primary-foreground)] transition-transform duration-150"
           >
             {dis ? "Sending…" : "Get Free Access →"}
           </button>
-          <p className="font-['Times_New_Roman'] italic text-[11px] text-[#707070] text-center m-0">
+          <p className="m-0 text-center font-serif text-[11px] italic text-[var(--muted)]">
             We respect your inbox. Unsubscribe anytime.
           </p>
         </form>
@@ -156,7 +167,7 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="block font-['Montserrat'] text-[9.5px] font-bold tracking-[0.18em] uppercase text-[#707070] mb-1.5">
+      <span className="mb-1.5 block font-[family-name:var(--font-mono)] text-[9.5px] font-bold uppercase tracking-[0.18em] text-[var(--muted)]">
         {label}
         {required ? " *" : ""}
       </span>
@@ -167,7 +178,7 @@ function Field({
         required={required}
         disabled={disabled}
         autoFocus={autoFocus}
-        className="w-full bg-[#111827] border border-[#2b333f] text-white py-3 px-3 font-['Open_Sans'] text-[14px] rounded-lg outline-none"
+        className="w-full rounded-lg border border-[var(--line-2)] bg-[var(--bg-2)] px-3 py-3 font-[family-name:var(--font-body)] text-[14px] text-[var(--bone)] outline-none focus:border-[var(--acid)]"
       />
     </label>
   );

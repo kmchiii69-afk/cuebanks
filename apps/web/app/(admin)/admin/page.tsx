@@ -2,86 +2,20 @@
 
 import { useState, useEffect, Fragment } from 'react';
 import { useRouter } from 'next/navigation';
-import { PHASES, TOTAL_PHASES, isPhaseComplete, isPhaseUnlocked, type PhaseProgress } from '@/lib/phases';
-
-type Plan = '5k' | '7.5k' | '15k' | 'low_ticket';
-
-interface Member {
-  id: string;
-  email: string;
-  name: string;
-  role: 'member' | 'admin' | 'team';
-  active: boolean;
-  cohort: string;
-  discord_id: string;
-  notes: string;
-  created_at: number;
-  last_login: number;
-  current_phase: number;
-  phase_progress: PhaseProgress;
-  plan: Plan;
-  expires_at: string | null;
-  goal: string;
-  onboarded: boolean;
-  portal_unlocked: boolean;
-  skip_contract: boolean;
-}
-
-interface CueInstruction {
-  id: string;
-  type: 'do' | 'dont';
-  instruction: string;
-  active: boolean;
-  created_at: string;
-}
-
-interface Webinar {
-  id: string;
-  title: string;
-  description: string;
-  scheduled_at: string;
-  join_link: string;
-  recording_url: string;
-  is_published: boolean;
-  created_at: string;
-  created_by: string;
-}
-
-interface FreebieLead {
-  id: string;
-  email: string;
-  first_name: string;
-  last_name: string;
-  phone: string;
-  experience: string;
-  questions_asked: number;
-  clicked_cta: boolean;
-  created_at: string;
-}
-
-interface FreebieQA {
-  id: string;
-  email: string;
-  question: string;
-  answer: string;
-  created_at: string;
-}
-
-const EXPERIENCE_LABELS: Record<string, string> = {
-  under_1y: 'Under a year',
-  '1_3y': '1–3 years',
-  '3_5y': '3–5 years',
-  '5y_plus': '5+ years',
-};
+import { PHASES, TOTAL_PHASES, isPhaseComplete, isPhaseUnlocked } from '@/lib/phases';
+import {
+  EXPERIENCE_LABELS,
+  type CueInstruction,
+  type FreebieLead,
+  type FreebieQA,
+  type Member,
+  type Plan,
+  type Webinar,
+} from '@/components/admin/types';
 
 function fmt(ts: number) {
   if (!ts) return '—';
   return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-}
-
-function fmtIso(iso: string) {
-  if (!iso) return '—';
-  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
 }
 
 function toLocalInput(iso: string) {
@@ -620,7 +554,7 @@ export default function AdminPage() {
                   </div>
                   {upcoming.length === 0 ? (
                     <div style={{ padding: '20px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10, fontFamily: S, fontSize: 13, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>
-                      No upcoming calls scheduled. Click "+ Schedule Call" to add one.
+                      No upcoming calls scheduled. Click &ldquo;+ Schedule Call&rdquo; to add one.
                     </div>
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>

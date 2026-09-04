@@ -1,6 +1,12 @@
 // Wall Street Academy design tokens — single source of truth for the
-// re-skinned funnel pages. Mirrors the palette/typography baked into the
-// authored funnel HTML (see app/_funnels/*).
+// re-skinned broker/confirm pages and any future WSA-branded marketing page.
+//
+// Color palette is kept distinct from `@cuebanks/tailwind-config` on purpose:
+// broker logos (Hydra, BloFin) and the "you've registered" green need their
+// own hex codes that don't collide with the cuebanks token system. These
+// tokens are consumed by `components/wsa/ui.tsx` via plain CSS variables
+// (`var(--wsa-yellow)` etc) and Tailwind arbitrary values
+// (`text-[var(--wsa-yellow)]`). Adding a new token = add it here + use it.
 export const wsa = {
   // palette
   black: "#000000",
@@ -19,7 +25,10 @@ export const wsa = {
   ash: "#9aa3b2",
   line: "#2b333f",
 
-  // typography (loaded globally in app/layout.tsx)
+  // typography — these specific families are only loaded on the broker/confirm
+  // pages via the `@import` block in app/globals.css. The rest of the site
+  // (home / cue-wins / free-course / innercircle) uses the cuebanks token
+  // family in @cuebanks/tailwind-config instead.
   fontH1: "'Open Sans', sans-serif",
   fontH2: "'Montserrat', sans-serif",
   fontBody: "'Open Sans', sans-serif",

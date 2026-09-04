@@ -18,7 +18,38 @@ body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
 em { font-style: italic; }
 a { color: inherit; text-decoration: none; }
 button { font-family: inherit; cursor: pointer; }
-::selection { background: var(--acid); color: #fff; }
+::selection { background: var(--acid); color: var(--primary-foreground); }
+
+/* ─── Token additions for Tailwind-converted pages ─────────────────────────
+   `--acid-rgb` powers the `rgba(var(--acid-rgb), 0.5)`-style classes used by
+   the new home/cue-wins/free-course sections; `--primary-foreground`,
+   `--fg-muted`, and `--fg-faint` are referenced by Tailwind arbitrary values
+   like `text-[var(--fg-faint)]`. Tokens live here (not in `@theme`) because
+   the rgba() calls need a raw `--acid-rgb: 37, 99, 235` triplet to work. */
+:root {
+  --acid-rgb: 37, 99, 235;
+  --primary-foreground: #ffffff;
+  --fg-muted: rgba(255, 255, 255, 0.45);
+  --fg-faint: rgba(255, 255, 255, 0.32);
+
+  /* WSA-only tokens — consumed by `components/wsa/ui.tsx` and broker/confirm
+     pages. Brand palette diverges from the cuebanks tokens because the
+     WSA pages need hex codes that don't collide with the rest of the
+     site's design system. */
+  --wsa-yellow: #f9ff3c;
+  --wsa-blue: #188bf6;
+  --wsa-green: #12da00;
+  --wsa-green-2: #37ca37;
+  --wsa-red: #e93d3d;
+  --wsa-muted: #707070;
+  --wsa-ash: #9aa3b2;
+  --wsa-line: #2b333f;
+  --wsa-panel: #0c1018;
+  --wsa-panel-line: #1a2230;
+  --wsa-font-h2: "Montserrat", sans-serif;
+  --wsa-font-body: "Open Sans", sans-serif;
+  --wsa-font-accent: "Times New Roman", Times, serif;
+}
 
 @keyframes pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
@@ -52,6 +83,16 @@ button { font-family: inherit; cursor: pointer; }
     linear-gradient(to right, rgba(255,255,255,0.018) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255,255,255,0.018) 1px, transparent 1px);
   background-size: 56px 56px;
+}
+
+/* Home wins marquee — pause-on-hover is handled in component via
+   `group-hover:[animation-play-state:paused]`. */
+@keyframes home-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.home-marquee {
+  animation: home-marquee 40s linear infinite;
 }
 
 .btn {
