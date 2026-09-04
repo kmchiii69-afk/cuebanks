@@ -9,10 +9,6 @@ import type { CSSProperties, ReactNode } from "react";
 // under either the static or client page wrapper.
 // ─────────────────────────────────────────────────────────────────
 
-const FX_DISPLAY = "font-[family-name:var(--font-display)]";
-const FX_BODY = "font-[family-name:var(--font-body)]";
-const FX_MONO = "font-[family-name:var(--font-mono)]";
-
 export function Wrap({
   children,
   max = 1320,
@@ -65,18 +61,18 @@ export function H({
   return (
     <div className="mb-[60px]">
       <div className="mb-6 flex flex-wrap items-center gap-4">
-        <span className="border border-[var(--acid)] px-3 py-1.5 font-[family-name:var(--font-mono)] text-[11px] font-semibold tracking-[0.22em] text-[var(--acid)]">
+        <span className="border border-[var(--acid)] px-3 py-1.5 font-mono text-[11px] font-semibold tracking-[0.22em] text-[var(--acid)]">
           § {num}
         </span>
-        <span className="font-[family-name:var(--font-mono)] text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--acid)]">
+        <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--acid)]">
           {label}
         </span>
       </div>
-      <h2 className="m-0 mb-6 max-w-[1100px] font-[family-name:var(--font-display)] text-[76px] font-semibold leading-[0.98] tracking-[-0.04em] text-[var(--bone)]">
+      <h2 className="m-0 mb-6 max-w-[1100px] font-display text-[76px] font-semibold leading-[0.98] tracking-[-0.04em] text-[var(--bone)]">
         {title}
       </h2>
       {sub ? (
-        <p className="m-0 max-w-[820px] font-[family-name:var(--font-body)] text-[19px] font-normal leading-[1.6] text-[var(--ash)]">
+        <p className="m-0 max-w-[820px] font-body text-[19px] font-normal leading-[1.6] text-[var(--ash)]">
           {sub}
         </p>
       ) : null}
@@ -179,8 +175,3 @@ export function StarRow({
     </div>
   );
 }
-
-// Make Tailwind happy if anyone tree-shakes the FX_* constants — these are
-// referenced through the arbitrary `font-[family-name:var(--font-*)]` classes
-// and don't show up in the import graph otherwise.
-export const _fontClassRefs = { FX_DISPLAY, FX_BODY, FX_MONO };

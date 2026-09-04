@@ -3,9 +3,6 @@
 import Reveal from "./Reveal";
 import { HomeSecHead, HomeWrap } from "./HomeSection";
 
-// Wins data mirrors the card data the legacy home.ts funnel renders
-// inside the marquee — kept inline because it isn't user-editable and
-// doesn't need a data-fetching boundary.
 const WINS = [
   {
     name: "Cornelius",
@@ -70,27 +67,30 @@ function WinCard({
 }) {
   const initial = name.replace(/[^A-Za-z]/g, "").charAt(0) || "W";
   return (
-    <div className="w-[300px] shrink-0 rounded-3xl border border-[var(--line)] border-t-[3px] border-t-[var(--acid)] bg-[linear-gradient(160deg,var(--bg-1),var(--bg-2))] p-6 shadow-[0_10px_30px_rgba(0,0,0,0.12)] sm:w-[320px]">
+    <div className="w-[320px] shrink-0 rounded-3xl border border-line-2 border-t-[3px] border-t-wsa-green bg-[linear-gradient(160deg,rgba(34,34,34,0.9),rgba(17,24,39,0.85))] p-6 shadow-[0_10px_30px_rgba(0,0,0,0.35)] backdrop-blur-[10px]">
       <div className="mb-3.5 flex items-center gap-3">
-        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--acid)] text-[1.1rem] font-black text-[var(--primary-foreground)]">
+        <div className="flex size-11 shrink-0 items-center justify-center rounded-full border-2 border-wsa-green bg-[linear-gradient(135deg,#188bf6,#0b3c6b)] font-h2 text-[1.1rem] font-black text-white">
           {initial}
         </div>
         <div>
-          <div className="text-base font-extrabold leading-tight text-[var(--bone)]">{name}</div>
-          <div className="text-[0.82rem] text-[var(--ash)] opacity-80">{role}</div>
+          <div className="font-h2 text-base font-extrabold leading-tight text-bone">{name}</div>
+          <div className="text-[0.82rem] text-[#cbd5e0] opacity-70">{role}</div>
         </div>
       </div>
-      <div className="mb-2 text-[1.7rem] font-black text-[var(--acid)]">{amt}</div>
-      <p className="mb-3 text-[0.9rem] text-[var(--ash)]">{note}</p>
-      <div className="text-[#f6b500]" aria-hidden>
-        ★★★★★
+      <div className="mb-2 font-h2 text-[1.7rem] font-black text-wsa-green">{amt}</div>
+      <p className="mb-3 font-h1 text-[0.9rem] text-[#cbd5e0]">{note}</p>
+      <div className="flex gap-1 text-acid" aria-hidden>
+        {Array.from({ length: 5 }).map((_, i) => (
+          <svg key={i} viewBox="0 0 24 24" className="size-4 fill-acid">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14l-5-4.87 6.91-1.01L12 2z" />
+          </svg>
+        ))}
       </div>
     </div>
   );
 }
 
 export default function WinsMarquee() {
-  // Doubling creates a seamless -50% keyframe loop — first half ends where second half begins.
   const loop = [...WINS, ...WINS];
 
   return (
@@ -102,14 +102,14 @@ export default function WinsMarquee() {
             title={
               <>
                 No other program has everyday traders posting{" "}
-                <span className="text-emerald-500">5-figures</span> day after day.
+                <span className="text-wsa-green">5-figures</span> day after day.
               </>
             }
           />
         </Reveal>
       </HomeWrap>
-      <div className="group relative mt-2">
-        <div className="home-marquee flex w-max gap-4 px-5 group-hover:[animation-play-state:paused]">
+      <div className="group relative mt-2 mask-[linear-gradient(to_right,transparent,#000_8%,#000_92%,transparent)] [-webkit-mask-image:linear-gradient(to_right,transparent,#000_8%,#000_92%,transparent)]">
+        <div className="home-marquee flex w-max gap-[18px] px-5 group-hover:[animation-play-state:paused] motion-reduce:animate-none">
           {loop.map((w, i) => (
             <WinCard key={`${w.name}-${i}`} {...w} />
           ))}

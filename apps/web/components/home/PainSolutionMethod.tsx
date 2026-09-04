@@ -55,7 +55,7 @@ export default function PainSolutionMethod() {
     <>
       <section
         id="problem"
-        className="border-y border-[var(--line)] bg-[linear-gradient(180deg,var(--bg-2),var(--bg))] py-[74px]"
+        className="bg-[linear-gradient(180deg,#0a0d14,#05070b)] py-[74px]"
       >
         <HomeWrap>
           <Reveal>
@@ -64,21 +64,22 @@ export default function PainSolutionMethod() {
               title={
                 <>
                   You&apos;ve been told you need to be a{" "}
-                  <span className="text-[var(--acid)]">finance genius.</span> You don&apos;t.
+                  <span className="font-accent italic text-wsa-blue">finance genius.</span> You
+                  don&apos;t.
                 </>
               }
               sub="If you've failed at trading before, it's probably not your fault — you were missing structure, not talent."
             />
           </Reveal>
-          <div className="grid gap-3.5">
+          <div className="mt-2 grid gap-3.5">
             {PAINS.map((p, i) => (
               <Reveal key={p.title} delayMs={i * 60}>
-                <div className="flex items-start gap-3.5 rounded-[10px] border border-[var(--line)] border-l-[3px] border-l-[var(--pink)] bg-[var(--bg-1)] px-5 py-[18px]">
-                  <span className="mt-0.5 font-extrabold text-[var(--pink)]" aria-hidden>
+                <div className="flex items-start gap-3.5 rounded-lg border border-line-2 border-l-[3px] border-l-pink bg-[#0d0d0d] px-5 py-[18px]">
+                  <span className="mt-0.5 text-[1.2rem] font-black leading-[1.3] text-pink" aria-hidden>
                     ✕
                   </span>
-                  <p className="m-0 text-[var(--ash)]">
-                    <b className="text-[var(--bone)]">{p.title}</b> {p.body}
+                  <p className="m-0 font-h1 text-[#d1d5db]">
+                    <b className="text-bone">{p.title}</b> {p.body}
                   </p>
                 </div>
               </Reveal>
@@ -95,21 +96,23 @@ export default function PainSolutionMethod() {
               title={
                 <>
                   It&apos;s not a new indicator. It&apos;s a{" "}
-                  <span className="text-[var(--acid)]">repeatable framework.</span>
+                  <span className="text-acid">repeatable framework.</span>
                 </>
               }
               sub="The WSA Protocol removes emotion so success becomes mechanical — telling you exactly when to enter, manage, and exit."
             />
           </Reveal>
-          <div className="grid gap-[18px] md:grid-cols-3">
+          <div className="grid gap-[18px] max-[820px]:grid-cols-1 min-[821px]:grid-cols-3">
             {STEPS.map((s, i) => (
               <Reveal key={s.n} delayMs={i * 70}>
-                <div className="relative overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--bg-1)] p-[26px]">
-                  <div className="pointer-events-none absolute right-[18px] top-2 font-[family-name:var(--font-mono)] text-[3rem] font-black text-[rgba(var(--acid-rgb),0.25)]">
+                <div className="relative overflow-hidden rounded-xl border border-line-2 bg-bg-2 p-[26px]">
+                  <div className="pointer-events-none absolute right-[18px] top-2 font-h2 text-[3rem] font-black text-[rgba(24,139,246,0.25)]">
                     {s.n}
                   </div>
-                  <h3 className="relative mb-2 text-[1.15rem] font-bold text-[var(--bone)]">{s.title}</h3>
-                  <p className="relative m-0 text-[var(--ash)] leading-relaxed">{s.body}</p>
+                  <h3 className="relative mb-2 font-h2 text-[1.15rem] font-bold text-bone">{s.title}</h3>
+                  <p className="relative m-0 font-h1 text-[0.95rem] leading-relaxed text-[#cbd5e0]">
+                    {s.body}
+                  </p>
                 </div>
               </Reveal>
             ))}
@@ -119,7 +122,7 @@ export default function PainSolutionMethod() {
 
       <section
         id="method"
-        className="border-y border-[var(--line)] bg-[linear-gradient(180deg,var(--bg-2),var(--bg))] py-[74px]"
+        className="bg-[linear-gradient(180deg,#0a0d14,#05070b)] py-[74px]"
       >
         <HomeWrap>
           <Reveal>
@@ -129,15 +132,15 @@ export default function PainSolutionMethod() {
               sub="The same nine-part process used to go from celebrating $200 days to documented six-figure weeks."
             />
           </Reveal>
-          <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-3.5 max-[520px]:grid-cols-1 max-[820px]:grid-cols-2 min-[821px]:grid-cols-3">
             {PHASES.map((p, i) => (
               <Reveal key={p.n} delayMs={i * 40}>
-                <div className="rounded-[10px] border border-[var(--line)] bg-[var(--bg-1)] p-5">
-                  <div className="mb-2 font-[family-name:var(--font-mono)] text-[0.7rem] font-bold tracking-[0.16em] text-[var(--acid)]">
+                <div className="rounded-[10px] border border-line-2 bg-[#0c0f16] px-5 py-[18px] transition duration-[180ms] hover:-translate-y-[3px] hover:border-wsa-blue">
+                  <div className="font-h2 text-[0.85rem] font-black tracking-[0.1em] text-acid">
                     {p.n}
                   </div>
-                  <h3 className="mb-1.5 text-base font-bold text-[var(--bone)]">{p.title}</h3>
-                  <p className="m-0 text-sm leading-relaxed text-[var(--ash)]">{p.body}</p>
+                  <h3 className="my-1.5 font-h2 text-[1.02rem] font-bold text-bone">{p.title}</h3>
+                  <p className="m-0 font-h1 text-[0.86rem] text-muted">{p.body}</p>
                 </div>
               </Reveal>
             ))}

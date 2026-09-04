@@ -35,12 +35,39 @@
   --color-muted: #707070;
 
   /* ── Brand / accents ──────────────────────────────────────────────────── */
-  --color-acid:   #2563eb;
-  --color-acid-d: #1d4ed8;
-  --color-pink:   #e93d3d;
+  --color-acid:      #2563eb;
+  --color-acid-d:    #1d4ed8;
+  --color-pink:      #e93d3d;
+  --color-wsa-blue:  #188bf6;
+  --color-wsa-green: #37ca37;
 
   /* ── Type ─────────────────────────────────────────────────────────────── */
   --font-display: "Sora", system-ui, sans-serif;
   --font-body:    "DM Sans", system-ui, sans-serif;
   --font-mono:    "Space Mono", ui-monospace, monospace;
+  --font-h1:      "Open Sans", sans-serif;
+  --font-h2:      "Montserrat", sans-serif;
+  --font-accent:  "Times New Roman", Times, serif;
+}
+
+/* Tailwind v4 exposes colors as `--color-*`. Existing pages still use
+   `var(--bg)`, `var(--acid)`, etc. Keep those names as aliases. */
+:root {
+  --bg: var(--color-bg);
+  --bg-1: var(--color-bg-1);
+  --bg-2: var(--color-bg-2);
+  --bg-3: var(--color-bg-3);
+  --line: var(--color-line);
+  --line-2: var(--color-line-2);
+  --bone: var(--color-bone);
+  --ash: var(--color-ash);
+  --muted: var(--color-muted);
+  --acid: var(--color-acid);
+  --acid-d: var(--color-acid-d);
+  --pink: var(--color-pink);
+  --wsa-blue: var(--color-wsa-blue);
+  --wsa-green: var(--color-wsa-green);
+  --font-display: "Sora", system-ui, sans-serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
 }
