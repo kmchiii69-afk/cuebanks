@@ -139,34 +139,48 @@ export const validateCredentials = action({
     assertBootstrapSecret(args.secret);
     const email = args.email.trim().toLowerCase();
 
+    let fallbackName = "";
+
     try {
       await retrieveAccount(ctx, {
         provider: "password",
         account: { id: email, secret: args.password },
       });
-      return await memberProfile(ctx, args.secret, email, "");
     } catch {
-      // Missing account or wrong password — continue.
+      if (await convexPasswordAccountExists(ctx, email)) {
+        return null;
+      }
+
+      const legacy = await verifyLiveSupabasePassword(email, args.password);
+      if (!legacy.ok) {
+        return null;
+      }
+
+      await createAccount(ctx, {
+        provider: "password",
+        account: { id: email, secret: args.password },
+        profile: {
+          email,
+          ...(legacy.name.trim() ? { name: legacy.name.trim() } : {}),
+        },
+      });
+      fallbackName = legacy.name;
     }
 
-    if (await convexPasswordAccountExists(ctx, email)) {
-      return null;
-    }
-
-    const legacy = await verifyLiveSupabasePassword(email, args.password);
-    if (!legacy.ok) {
-      return null;
-    }
-
-    await createAccount(ctx, {
-      provider: "password",
-      account: { id: email, secret: args.password },
-      profile: {
-        email,
-        ...(legacy.name.trim() ? { name: legacy.name.trim() } : {}),
-      },
+    const existing = await ctx.runQuery(api.members.getByEmail, {
+      secret: args.secret,
+      email,
     });
+    if (!existing) {
+      await ctx.runMutation(api.members.create, {
+        secret: args.secret,
+        email,
+        name: fallbackName,
+        role: "member",
+        portalUnlocked: true,
+      });
+    }
 
-    return await memberProfile(ctx, args.secret, email, legacy.name);
+    return await memberProfile(ctx, args.secret, email, fallbackName);
   },
 });
