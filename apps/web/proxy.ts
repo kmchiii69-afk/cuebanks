@@ -22,8 +22,6 @@ const isProtectedPage = createRouteMatcher([
   "/admin/(.*)",
 ]);
 
-const ADMIN_ONLY_PREFIXES = ["/admin"];
-
 const LEGACY_COOKIE = "wsa_auth_token";
 
 function readLegacySecret(): Uint8Array {
@@ -69,7 +67,6 @@ export const proxy = convexAuthNextjsMiddleware(async (request, { convexAuth }) 
   const convexAuthed = await convexAuth.isAuthenticated();
   const legacy = await isLegacyAuthed(request);
   const authed = convexAuthed || legacy.ok;
-  const effectiveRole = legacy.ok ? legacy.role : "member"; // convex-auth role check happens server-side per route
 
   if (isProtectedPage(request) && !authed) {
     const returnTo = request.nextUrl.pathname + request.nextUrl.search;
@@ -78,12 +75,8 @@ export const proxy = convexAuthNextjsMiddleware(async (request, { convexAuth }) 
     return nextjsMiddlewareRedirect(request, `${login.pathname}${login.search}`);
   }
 
-  if (effectiveRole) {
-    const needsAdmin = ADMIN_ONLY_PREFIXES.some((p) => path === p || path.startsWith(`${p}/`));
-    if (needsAdmin && effectiveRole !== "admin" && effectiveRole !== "team") {
-      return NextResponse.redirect(new URL("/portal", request.url));
-    }
-  }
+  // /admin role is enforced in getAuthUser / requireAdminAuth (users.role),
+  // not from the legacy JWT payload.
 
   // /wolfpack-global PPP redirect
   if (path === "/wolfpack-global" && request.nextUrl.searchParams.get("preview") !== "1") {

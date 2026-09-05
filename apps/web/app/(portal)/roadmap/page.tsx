@@ -25,6 +25,7 @@ import type {
   Member,
   ModalVideo,
 } from "@/components/roadmap/types";
+import { isStaffRole } from "@/lib/roles";
 
 // Globe parallax position per visible section — snaps to the closest.
 const GLOBE_POS = [
@@ -67,7 +68,12 @@ export default function RoadmapPage() {
         return r.json();
       })
       .then((data) => {
-        if (data) setMember(data);
+        if (!data) return;
+        if (data.plan === "low_ticket" && !isStaffRole(data.role)) {
+          router.replace("/portal");
+          return;
+        }
+        setMember(data);
       })
       .catch(() => router.replace("/login"));
   }, [router]);

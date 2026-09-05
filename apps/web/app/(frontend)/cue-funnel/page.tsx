@@ -14,7 +14,7 @@ const CHIPS = [
   { label: "How do I manage a trade?",  icon: "⬡" },
 ];
 
-export default function CuePage() {
+export default function CuePage({ homeHref = "/roadmap" }: { homeHref?: string }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput]       = useState("");
   const [streaming, setStreaming] = useState(false);
@@ -170,7 +170,7 @@ export default function CuePage() {
           backdropFilter: "blur(16px)",
         }}
       >
-        <Link href="/roadmap" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+        <Link href={homeHref} style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
           <div
             style={{
               width: 34,
@@ -190,6 +190,23 @@ export default function CuePage() {
             <div style={{ fontFamily: "var(--font-body)", fontSize: 10, color: "var(--muted)", marginTop: 1 }}>Wall Street Academy</div>
           </div>
         </Link>
+
+        {homeHref === "/portal" ? (
+          <Link
+            href="/portal"
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 10,
+              fontWeight: 700,
+              letterSpacing: "0.14em",
+              textTransform: "uppercase",
+              color: "rgba(255,255,255,0.35)",
+              textDecoration: "none",
+            }}
+          >
+            Portal
+          </Link>
+        ) : null}
 
         <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 16 }}>
           {historyLoaded && messages.length > 0 && (

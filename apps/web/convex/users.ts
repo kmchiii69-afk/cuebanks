@@ -2,7 +2,7 @@ import { getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
 import { internalMutation, mutation, query } from "./_generated/server";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
-import { roleValidator } from "./lib/bootstrap";
+import { assertBootstrapSecret, roleValidator } from "./lib/bootstrap";
 import { syncUserRole } from "./lib/userRole";
 
 const userRoleValidator = v.union(
@@ -26,7 +26,6 @@ export async function requireAdminUser(ctx: QueryCtx | MutationCtx) {
   return user;
 }
 
-/** Current Convex Auth user — includes app role for client gates. */
 export const viewer = query({
   args: {},
   returns: v.union(
@@ -47,6 +46,20 @@ export const viewer = query({
       name: user.name ?? null,
       role: user.role ?? null,
     };
+  },
+});
+
+/** Secret-gated role lookup for Next routes (legacy JWT sessions). */
+export const getRoleByEmail = query({
+  args: { email: v.string(), secret: v.string() },
+  returns: v.union(userRoleValidator, v.null()),
+  handler: async (ctx, args) => {
+    assertBootstrapSecret(args.secret);
+    const user = await ctx.db
+      .query("users")
+      .withIndex("email", (q) => q.eq("email", args.email.toLowerCase().trim()))
+      .unique();
+    return user?.role ?? null;
   },
 });
 

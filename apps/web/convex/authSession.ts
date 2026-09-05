@@ -34,18 +34,23 @@ async function memberProfile(
   email: string,
   fallbackName: string,
 ): Promise<ValidateResult> {
-  const member = await ctx.runQuery(api.members.getByEmail, {
-    secret,
-    email,
-  });
+  const [member, userRole] = await Promise.all([
+    ctx.runQuery(api.members.getByEmail, { secret, email }),
+    ctx.runQuery(api.users.getRoleByEmail, { secret, email }),
+  ]);
+
+  const role =
+    userRole === "admin" || userRole === "team"
+      ? userRole
+      : (member?.role ?? "member");
 
   if (!member) {
-    return { email, role: "member", name: fallbackName, active: true, cohort: "" };
+    return { email, role, name: fallbackName, active: true, cohort: "" };
   }
 
   return {
     email: member.email,
-    role: member.role,
+    role,
     name: member.name,
     active: member.active,
     cohort: member.cohort,
@@ -172,11 +177,17 @@ export const validateCredentials = action({
       email,
     });
     if (!existing) {
+      const userRole = await ctx.runQuery(api.users.getRoleByEmail, {
+        secret: args.secret,
+        email,
+      });
+      const role =
+        userRole === "admin" || userRole === "team" ? userRole : "member";
       await ctx.runMutation(api.members.create, {
         secret: args.secret,
         email,
         name: fallbackName,
-        role: "member",
+        role,
         portalUnlocked: true,
       });
     }
