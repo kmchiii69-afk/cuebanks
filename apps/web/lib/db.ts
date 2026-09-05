@@ -54,6 +54,15 @@ export async function getMember(email: string): Promise<Member | null> {
   })) as Member | null;
 }
 
+export async function getUserRole(
+  email: string,
+): Promise<"member" | "admin" | "team" | null> {
+  return await client().query(api.users.getRoleByEmail, {
+    email,
+    secret: secret(),
+  });
+}
+
 export async function getAllMembers(): Promise<Member[]> {
   return (await client().query(api.members.list, {
     secret: secret(),

@@ -31,6 +31,7 @@ import {
 } from "@/components/portal/types";
 import { M, S, D } from "@/components/portal/fonts";
 import LoadingScreen from "@/components/portal/LoadingScreen";
+import { isStaffRole } from "@/lib/roles";
 // ONBOARDING_TOUR_STEPS moved to components/portal/types.ts and consumed
 // by OnboardingOverlay. The 9 dashboard rows below stay inline because
 // each one needs access to ~6–12 pieces of the parent component's state
@@ -127,13 +128,7 @@ export default function PortalPage() {
       })
       .then((data) => {
         if (!data) return;
-        // Expiry check (non-admins only)
-        if (
-          data.role !== "admin" &&
-          data.role !== "team" &&
-          data.expires_at &&
-          new Date(data.expires_at) < new Date()
-        ) {
+        if (!isStaffRole(data.role) && data.expires_at && new Date(data.expires_at) < new Date()) {
           router.replace("/login?expired=1");
           return;
         }
@@ -143,7 +138,12 @@ export default function PortalPage() {
         setNotes(localStorage.getItem(`wsa-notes-${data.email}`) || "");
         const savedTz = localStorage.getItem(`wsa-tz-${data.email}`);
         if (savedTz && TZ_OPTIONS.some((t) => t.key === savedTz)) setDashTz(savedTz);
-        if (data.plan !== "low_ticket" && !data.portal_unlocked && (!data.onboarded || !data.goal))
+        if (
+          !isStaffRole(data.role) &&
+          data.plan !== "low_ticket" &&
+          !data.portal_unlocked &&
+          (!data.onboarded || !data.goal)
+        )
           setOnboarding(true);
         setLoading(false);
       })
@@ -280,16 +280,14 @@ export default function PortalPage() {
   // Locked: onboarding done but the CSM call hasn't happened yet.
   const needsCallUnlock =
     member &&
-    member.role !== "admin" &&
-    member.role !== "team" &&
+    !isStaffRole(member.role) &&
     !member.portal_unlocked &&
     (member.plan === "low_ticket" || member.onboarded);
   if (needsCallUnlock) {
     return <LockedScreen member={member!} loggingOut={loggingOut} onLogout={logout} />;
   }
 
-  // Low-ticket members only see Cue AI — no roadmap / tools.
-  if (member?.plan === "low_ticket") {
+  if (member?.plan === "low_ticket" && !isStaffRole(member.role)) {
     return (
       <LowTicketScreen
         member={member}
@@ -299,12 +297,12 @@ export default function PortalPage() {
     );
   }
 
+  const isAdmin = isStaffRole(member?.role);
   const phase = member?.current_phase ?? 0;
   const completedPhaseCount = PHASES.filter((p) =>
     isPhaseComplete(member?.phase_progress, p.id),
   ).length;
   const allPhasesComplete = completedPhaseCount >= TOTAL_PHASES;
-  const isAdmin = member?.role === "admin" || member?.role === "team";
   const liveCount = openSessions.filter(Boolean).length;
   const overlap = openSessions[0] && openSessions[1];
   const checkDone = CHECKLIST.filter((c) => checklist[c.id]).length;
