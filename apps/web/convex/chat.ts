@@ -93,7 +93,7 @@ export const appendMessages = mutation({
   },
 });
 
-/** Called from Next `/api/cue` after a turn (bootstrap secret). */
+/** Called after a Cue turn (bootstrap secret). Prefer Convex `cue.beginTurn`. */
 export const recordAnalytic = mutation({
   args: {
     secret: v.string(),

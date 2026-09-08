@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, FormEvent } from "react";
 import Link from "next/link";
+import { useCueChatRequest } from "@/lib/useCueChatRequest";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -15,6 +16,7 @@ const CHIPS = [
 ];
 
 export default function CuePage({ homeHref = "/roadmap" }: { homeHref?: string }) {
+  const requestCue = useCueChatRequest();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput]       = useState("");
   const [streaming, setStreaming] = useState(false);
@@ -57,11 +59,7 @@ export default function CuePage({ homeHref = "/roadmap" }: { homeHref?: string }
     setMessages([...next, assistantMsg]);
 
     try {
-      const res = await fetch("/api/cue", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next }),
-      });
+      const res = await requestCue(next);
 
       if (!res.ok || !res.body) {
         setMessages((prev) => {

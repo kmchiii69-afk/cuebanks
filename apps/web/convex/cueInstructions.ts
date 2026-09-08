@@ -26,7 +26,7 @@ function toPublic(doc: Doc<"cueInstructions">) {
   };
 }
 
-/** Secret-gated list for Next `/api/cue` prompt assembly. */
+/** Secret-gated list for server prompt assembly. */
 export const listActiveForServer = query({
   args: { secret: v.string() },
   returns: v.array(instructionPublicValidator),
