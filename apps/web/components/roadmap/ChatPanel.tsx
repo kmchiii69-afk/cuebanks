@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useCueChatRequest } from "@/lib/useCueChatRequest";
 
-// Cue AI chat — streaming assistant responses from /api/cue.
-// Open via floating button bottom-right. Keeps message history in state,
-// scrolls to bottom on each update.
+// Cue AI chat — streams MiniMax via Convex `/cue` (or same-origin proxy).
 type ChatMessage = { role: "user" | "assistant"; content: string };
 
 export default function ChatPanel() {
+  const requestCue = useCueChatRequest();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -30,11 +30,7 @@ export default function ChatPanel() {
     setMessages([...next, assistantMsg]);
 
     try {
-      const res = await fetch("/api/cue", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next }),
-      });
+      const res = await requestCue(next);
       if (!res.ok || !res.body) throw new Error("fetch failed");
       const reader = res.body.getReader();
       const dec = new TextDecoder();
