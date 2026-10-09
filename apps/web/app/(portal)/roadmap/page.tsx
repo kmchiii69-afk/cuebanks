@@ -81,7 +81,13 @@ export default function RoadmapPage() {
   async function markPhaseComplete(phaseId: number) {
     if (!member || completingPhase) return;
     const def = getPhase(phaseId);
-    if (def?.hasHomework && !member.phase_progress?.[String(phaseId)]?.status) return;
+    if (def?.hasHomework && !homeworkChecked[phaseId]) {
+      setCompleteError((e) => ({
+        ...e,
+        [phaseId]: "Confirm you've submitted homework first",
+      }));
+      return;
+    }
     setCompletingPhase(phaseId);
     setCompleteError((e) => ({ ...e, [phaseId]: "" }));
     try {
